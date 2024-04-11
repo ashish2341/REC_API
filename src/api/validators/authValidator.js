@@ -13,7 +13,7 @@ const registerSchema =  Joi.object().keys({
         State: Joi.string().optional(),
         Country: Joi.string().optional(),
         PinCode: Joi.string().optional(),
-        RoleId: Joi.string().optional(), // Assuming RoleId is a string
+        RoleId: Joi.string().valid("Buyer","Developer","Client","Agent").required(), // Assuming RoleId is a string
         IsEnabled: Joi.boolean().default(true),
         IsDeleted: Joi.boolean().default(false),
         ProfilePhoto: Joi.string().optional(),
@@ -28,8 +28,17 @@ const loginSchema = Joi.object().keys({
         Password: Joi.string().required().error(new Error('Password is required')),
         
     })
-
+    const roleSchema = Joi.object().keys({
+        Role: Joi.string().valid("Buyer","Developer","Agent","Client").required(),
+        
+    })
+    const idRoleSchema = Joi.object({
+        id: Joi.string().required().length(24).error(new Error('Id is inValid')),
+       
+      });
 module.exports = {
     registerSchema,
-    loginSchema
+    loginSchema,
+    roleSchema,
+    idRoleSchema
 };
