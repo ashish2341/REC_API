@@ -24,8 +24,7 @@ exports.register =  async (req, res) => {
 exports.login =  async (req, res) => {
   try {
     const { UserName, Password } = req.body;
-   const encryptUsernme = await bcrypt.hash(UserName, 8)
-   
+  console.log('body',req.body)
     // Find the user by username
     const user = await Login.findOne({ UserName});
    

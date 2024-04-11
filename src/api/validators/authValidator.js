@@ -1,9 +1,7 @@
- 
 
 const Joi = require('joi');
 
-const registerSchema = {
-    body: Joi.object().keys({
+const registerSchema =  Joi.object().keys({
         FirstName: Joi.string().required().error(new Error('First Name is required')),
         LastName: Joi.string().optional(),
         Age: Joi.number().optional(),
@@ -22,16 +20,15 @@ const registerSchema = {
         UserName: Joi.string().required().error(new Error('UserName is required')),
         Password: Joi.string().required().error(new Error('Password is required')),
         EmailId: Joi.string().email().required().error(new Error('Email is required and should be valid')),
-    }),
-};
+    })
 
-const loginSchema = {
-    body: Joi.object().keys({
+
+const loginSchema = Joi.object().keys({
         UserName: Joi.string().required().error(new Error('UserName is required')),
         Password: Joi.string().required().error(new Error('Password is required')),
         
-    }),
-};
+    })
+
 module.exports = {
     registerSchema,
     loginSchema
