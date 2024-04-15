@@ -13,19 +13,19 @@ exports.addRole = async (req, res) => {
         }
         
         const role = await Role.create(req.body);
-        res.status(constants.status_code.header.ok).send({ statusCode: 201, message: constants.curd.add, success: true });
+       return res.status(constants.status_code.header.ok).send({ statusCode: 201, message: constants.curd.add, success: true });
     } catch (error) {
-        res.status(constants.status_code.header.server_error).send({ statusCode: 500, error:error.message, success: false });
+        return res.status(constants.status_code.header.server_error).send({ statusCode: 500, error:error.message, success: false });
     }
 };
 
 exports.getAllRole = async (req, res) => {
     try {
-        const roles = await Role.find() 
-        res.status(constants.status_code.header.ok).send({
+        const roles = await Role.find({IsDeleted:false}) 
+        return res.status(constants.status_code.header.ok).send({
             statusCode: 200, data: roles, success: true });
     } catch (error) {
-        res.status(constants.status_code.header.server_error).send({ statusCode: 500, error, success: false });
+       return  res.status(constants.status_code.header.server_error).send({ statusCode: 500, error:error.message, success: false });
     }
 }
 
@@ -37,9 +37,9 @@ exports.updateRole = async (req, res) => {
         if (!role) {
             return res.status(404).json({ error: 'Role not found',success:false });
         }
-        res.status(constants.status_code.header.ok).send({ statusCode: 200, message: constants.curd.update,success:true });
+       return  res.status(constants.status_code.header.ok).send({ statusCode: 200, message: constants.curd.update,success:true });
     } catch (error) {
-        res.status(constants.status_code.header.server_error).send({ statusCode: 500, error,success:false });
+       return  res.status(constants.status_code.header.server_error).send({ statusCode: 500, error,success:false });
     }
 }
 exports.deleteRole = async (req, res) => {
@@ -48,10 +48,10 @@ exports.deleteRole = async (req, res) => {
         if (!role) {
             return res.status(404).json({ error: 'Role not found',success:false });
         }
-        res.status(constants.status_code.header.ok).send({ statusCode: 200, message: constants.curd.delete,success:true });
+        return res.status(constants.status_code.header.ok).send({ statusCode: 200, message: constants.curd.delete,success:true });
     } catch (error) {
 
-        res.status(constants.status_code.header.server_error).send({ statusCode: 500, error,success:false });
+       return  res.status(constants.status_code.header.server_error).send({ statusCode: 500, error:error.message,success:false });
     }
 }
 
