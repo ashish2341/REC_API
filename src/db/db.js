@@ -1,9 +1,21 @@
-
 const mongoose = require('mongoose');
-const { MONGODB_URL } = require('../helper/config');
-
-mongoose.connect(MONGODB_URL)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
-
  
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.DB_HOST);
+    console.log('MongoDB connected');
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    throw error;
+  }
+};
+
+const getDB = () => {
+  if (mongoose.connection.readyState !== 1) {
+    throw new Error('MongoDB connection not established');
+  }
+  return mongoose.connection.db;
+};
+
+module.exports = { connectDB, getDB };
