@@ -1,8 +1,5 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
-const constants = require('../helper/constants')
  
-
 const userSchema = mongoose.Schema({
     FirstName: {
         type: String,
@@ -20,7 +17,8 @@ const userSchema = mongoose.Schema({
     },
     Mobile: {
         type: String,
-        required: true
+        required: true,
+        unique:true,
     },
     Phone: String,
     Area: String,
@@ -28,31 +26,42 @@ const userSchema = mongoose.Schema({
     State: String,
     Country: String,
     PinCode: String,
-    RoleId: {
+    Roles: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Role'
-    },
+        ref: 'Role',
+    }],
 
     IsEnabled: {
         type: Boolean,
         default: true
     },
+    CreatedDate: {
+        type: Date,
+        default: Date.now()
+    },
+    UpdatedDate: {
+        type: Date,
+        default: Date.now()
+    },
     IsDeleted: {
         type: Boolean,
         default: false
+    },
+    CreatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    UpdatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     },
     ProfilePhoto: String,
 
     EmailId: {
         type: String,
         required: true,
-        unique: true,
         lowercase: true,
-        validate: value => {
-            if (!validator.isEmail(value)) {
-                throw { message: constants.model.user.email_invalid }
-            }
-        }
+        unique:true,
     },
 
 },)
