@@ -65,7 +65,7 @@ exports.updateFeature = async (req, res) => {
 
 exports.deleteFeature = async (req, res) => {
     try {
-        const feature = await Feature.findByIdAndDelete(req.params.id);
+        const feature = await Feature.findByIdAndUpdate(req.params.id,{IsDeleted:true});
         if (!feature) {
             return res.status(404).json({ error: 'Feature not found',success:false });
         }

@@ -7,9 +7,9 @@ exports.addAminity = async (req, res) => {
         req.body.CreatedBy = req.user._id
         req.body.UpdatedBy = req.user._id
         const aminity = await Aminity.create(req.body);
-        res.status(constants.status_code.header.ok).send({ statusCode: 201, message: constants.curd.add, success: true });
+       return  res.status(constants.status_code.header.ok).send({ message: constants.curd.add, success: true });
     } catch (error) {
-        res.status(constants.status_code.header.server_error).send({ statusCode: 500, error, success: false });
+        return res.status(constants.status_code.header.server_error).send({ error:error.message, success: false });
     }
 };
 
@@ -65,7 +65,7 @@ exports.updateAminity = async (req, res) => {
 
 exports.deleteAminity = async (req, res) => {
     try {
-        const aminity = await Aminity.findByIdAndDelete(req.params.id);
+        const aminity = await Aminity.findByIdAndUpdate(req.params.id,{IsDeleted:true});
         if (!aminity) {
             return res.status(404).json({ error: 'Aminity not found',success:false });
         }
