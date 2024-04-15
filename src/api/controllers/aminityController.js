@@ -19,11 +19,11 @@ exports.getAllAminity = async (req, res) => {
         const pageNumber = parseInt(page) || 1;
         const size = parseInt(pageSize) || 10;
 
-        const totalCount = await Aminity.countDocuments();
+        const totalCount = await Aminity.countDocuments({IsDeleted:false});
         const totalPages = Math.ceil(totalCount / size);
 
-        const records = await Aminity.find().skip((pageNumber - 1) * size).limit(size);
-        res.status(constants.status_code.header.ok).send({
+        const records = await Aminity.find({IsDeleted:false}).skip((pageNumber - 1) * size).limit(size);
+       return  res.status(constants.status_code.header.ok).send({
             statusCode: 200, data:
                 records, success: true, totalCount: totalCount,
             count: records.length,
@@ -31,7 +31,7 @@ exports.getAllAminity = async (req, res) => {
             totalPages: totalPages,
         });
     } catch (error) {
-        res.status(constants.status_code.header.server_error).send({ statusCode: 500, error, success: false });
+        res.status(constants.status_code.header.server_error).send({ statusCode: 500, error:error.message, success: false });
     }
 }
 
@@ -41,10 +41,10 @@ exports.getAminityById = async (req, res) => {
         if (!aminity) {
             return res.status(404).json({ error: 'Aminity not found',success:false });
         }
-        res.status(constants.status_code.header.ok).send({ statusCode: 200, data: aminity,success:true });
+       return res.status(constants.status_code.header.ok).send({ statusCode: 200, data: aminity,success:true });
     } catch (error) {
 
-        res.status(constants.status_code.header.server_error).send({ statusCode: 500, error,success:false });
+        return res.status(constants.status_code.header.server_error).send({ statusCode: 500, error:error.message,success:false });
     }
 }
 
@@ -59,7 +59,7 @@ exports.updateAminity = async (req, res) => {
         }
         res.status(constants.status_code.header.ok).send({ statusCode: 200, message: constants.curd.update,success:true });
     } catch (error) {
-        res.status(constants.status_code.header.server_error).send({ statusCode: 500, error,success:false });
+        return res.status(constants.status_code.header.server_error).send({ statusCode: 500, error:error.message,success:false });
     }
 }
 
@@ -72,7 +72,7 @@ exports.deleteAminity = async (req, res) => {
         res.status(constants.status_code.header.ok).send({ statusCode: 200, message: constants.curd.delete,success:true });
     } catch (error) {
 
-        res.status(constants.status_code.header.server_error).send({ statusCode: 500, error,success:false });
+       return  res.status(constants.status_code.header.server_error).send({ statusCode: 500, error:error.message,success:false });
     }
 }
 

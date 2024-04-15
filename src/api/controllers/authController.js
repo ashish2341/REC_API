@@ -25,7 +25,7 @@ exports.register = async (req, res) => {
     await login.save();
     return res.status(constants.status_code.header.ok).send({ message: constants.auth.register_success,success:true});
   } catch (error) {
-    res.status(constants.status_code.header.server_error).send({ error: errorResponse(error),success:false });
+    return res.status(constants.status_code.header.server_error).send({ error: errorResponse(error),success:false });
   }
 };
 
@@ -47,7 +47,7 @@ exports.login = async (req, res) => {
     res.status(constants.status_code.header.ok).send({ success:true, message: token });
   } catch (error) {
 
-    res.status(constants.status_code.header.server_error).send({ success:false, error: error.message });
+    return res.status(constants.status_code.header.server_error).send({ success:false, error: error.message });
   }
 };
 
@@ -58,7 +58,7 @@ exports.uploadSingleImage = async (req, res) => {
     res.status(200).send({ imageUrl, success: true });
   } catch (error) {
 
-    res.status(500).json({ error: error.message, success: false });
+    return res.status(500).json({ error: error.message, success: false });
   }
 }
 
@@ -76,7 +76,7 @@ exports.sendOtp = async(req,res) => {
       
   }
    catch(error){
-    res.status(500).json({ error: error.message, success: false });
+   return  res.status(500).json({ error: error.message, success: false });
    }
 
 }
@@ -94,7 +94,7 @@ exports.verifyOtp = async(req,res) => {
       
   }
    catch(error){
-    res.status(500).json({ error: error.message, success: false });
+   return  res.status(500).json({ error: error.message, success: false });
    }
 
 }
@@ -115,7 +115,7 @@ exports.forgetPassword = async(req,res) => {
       
   }
    catch(error){
-    res.status(500).json({ error: error.message, success: false });
+    return res.status(500).json({ error: error.message, success: false });
    }
 
 }

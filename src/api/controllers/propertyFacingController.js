@@ -6,13 +6,9 @@ exports.addPropertyFacing = async (req, res) => {
     req.body.CreatedBy = req.user._id;
     req.body.UpdatedBy = req.user._id;
     const propertyFacing = await PropertyFacing.create(req.body);
-    res
-      .status(constants.status_code.header.ok)
-      .send({ statusCode: 201, message: constants.curd.add, success: true });
+    return res.status(constants.status_code.header.ok).send({ statusCode: 201, message: constants.curd.add, success: true });
   } catch (error) {
-    res
-      .status(constants.status_code.header.server_error)
-      .send({ statusCode: 500, error, success: false });
+   return res.status(constants.status_code.header.server_error).send({ statusCode: 500, error:error.message, success: false });
   }
 };
 
@@ -22,13 +18,13 @@ exports.getAllPropertyFacing = async (req, res) => {
     const pageNumber = parseInt(page) || 1;
     const size = parseInt(pageSize) || 10;
 
-    const totalCount = await PropertyFacing.countDocuments();
+    const totalCount = await PropertyFacing.countDocuments({IsDeleted:false});
     const totalPages = Math.ceil(totalCount / size);
 
-    const records = await PropertyFacing.find()
+    const records = await PropertyFacing.find({IsDeleted:false})
       .skip((pageNumber - 1) * size)
       .limit(size);
-    res.status(constants.status_code.header.ok).send({
+   return  res.status(constants.status_code.header.ok).send({
       statusCode: 200,
       data: records,
       success: true,
@@ -38,9 +34,9 @@ exports.getAllPropertyFacing = async (req, res) => {
       totalPages: totalPages,
     });
   } catch (error) {
-    res
+   return  res
       .status(constants.status_code.header.server_error)
-      .send({ statusCode: 500, error, success: false });
+      .send({ statusCode: 500, error:error.message, success: false });
   }
 };
 
@@ -52,13 +48,13 @@ exports.getPropertyFacingById = async (req, res) => {
         .status(404)
         .json({ error: "PropertyFacing not found", success: false });
     }
-    res
+    return res
       .status(constants.status_code.header.ok)
       .send({ statusCode: 200, data: propertyFacing, success: true });
   } catch (error) {
-    res
+    return res
       .status(constants.status_code.header.server_error)
-      .send({ statusCode: 500, error, success: false });
+      .send({ statusCode: 500, error:error.message, success: false });
   }
 };
 
@@ -74,13 +70,13 @@ exports.updatePropertyFacing = async (req, res) => {
         .status(404)
         .json({ error: "PropertyFacing not found", success: false });
     }
-    res
+    return res
       .status(constants.status_code.header.ok)
       .send({ statusCode: 200, message: constants.curd.update, success: true });
   } catch (error) {
-    res
+   return  res
       .status(constants.status_code.header.server_error)
-      .send({ statusCode: 500, error, success: false });
+      .send({ statusCode: 500, error:error.message, success: false });
   }
 };
 
@@ -94,12 +90,12 @@ exports.deletePropertyFacing = async (req, res) => {
         .status(404)
         .json({ error: "PropertyFacing not found", success: false });
     }
-    res
+   return  res
       .status(constants.status_code.header.ok)
       .send({ statusCode: 200, message: constants.curd.delete, success: true });
   } catch (error) {
-    res
+   return  res
       .status(constants.status_code.header.server_error)
-      .send({ statusCode: 500, error, success: false });
+      .send({ statusCode: 500, error:error.message, success: false });
   }
 };
