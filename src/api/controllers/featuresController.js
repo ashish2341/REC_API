@@ -76,22 +76,39 @@ exports.deleteFeature = async (req, res) => {
 
 exports.searchFeatures = async (req, res) => {
     try {
-        
+        const page = parseInt(req.query.page) || 1; 
+        const limit = parseInt(req.query.limit) || 10; 
         const search = req.query.search || '';
        
         const searchQuery = {
             $or: [
                 { Feature: { $regex: search, $options: 'i' } },
-                ]
+                
+            ]
         };
+
+        
         const count = await Feature.countDocuments(searchQuery);
 
-        const features = await Feature.find(searchQuery)
-            
+        
+        const totalPages = Math.ceil(count / limit);
+
+        
+        const currentPage = Math.min(Math.max(page, 1), totalPages);
+
+       
+        const skip = (currentPage - 1) * limit;
+
+        
+        const features= await Feature.find(searchQuery)
+            .skip(skip)
+            .limit(limit);
 
         return res.status(constants.status_code.header.ok).send({
             statusCode: 200,
             data: features,
+            currentPage: currentPage,
+            totalPages: totalPages,
             totalCount: count,
             success: true
         });

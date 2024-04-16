@@ -78,22 +78,39 @@ exports.deleteAminity = async (req, res) => {
 
 exports.searchAminity = async (req, res) => {
     try {
-        
+        const page = parseInt(req.query.page) || 1; 
+        const limit = parseInt(req.query.limit) || 10; 
         const search = req.query.search || '';
        
         const searchQuery = {
             $or: [
                 { Aminity: { $regex: search, $options: 'i' } },
-                ]
+                
+            ]
         };
+
+        
         const count = await Aminity.countDocuments(searchQuery);
 
+        
+        const totalPages = Math.ceil(count / limit);
+
+        
+        const currentPage = Math.min(Math.max(page, 1), totalPages);
+
+       
+        const skip = (currentPage - 1) * limit;
+
+        
         const aminities = await Aminity.find(searchQuery)
-            
+            .skip(skip)
+            .limit(limit);
 
         return res.status(constants.status_code.header.ok).send({
             statusCode: 200,
             data: aminities,
+            currentPage: currentPage,
+            totalPages: totalPages,
             totalCount: count,
             success: true
         });

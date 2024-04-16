@@ -14,9 +14,15 @@ const getAllFeatureSchema = Joi.object({
     pageSize: Joi.number().integer().min(1)
   });
 
+  const getSearchFeatureSchema = Joi.object({
+    page: Joi.number().integer().min(1),
+    pageSize: Joi.number().integer().min(1),
+    search: Joi.string().allow('')
+  });
+
   const idFeatureSchema = Joi.object({
     id: Joi.string().required().length(24).error(new Error('Id is inValid')),
    
   });
 
-module.exports = {addFeatureSchema,getAllFeatureSchema,idFeatureSchema};
+module.exports = {addFeatureSchema,getAllFeatureSchema,idFeatureSchema,getSearchFeatureSchema};

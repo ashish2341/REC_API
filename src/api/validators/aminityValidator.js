@@ -12,8 +12,14 @@ const getAllAminitySchema = Joi.object({
     pageSize: Joi.number().integer().min(1)
   });
 
+  const getSearchAminitySchema = Joi.object({
+    page: Joi.number().integer().min(1),
+    pageSize: Joi.number().integer().min(1),
+    search: Joi.string().allow('')
+  });
+
   const idAminitySchema = Joi.object({
     id: Joi.string().required().length(24).error(new Error('Id is inValid')),
    
   });
-module.exports = {AddAminitySchema,getAllAminitySchema,idAminitySchema};
+module.exports = {AddAminitySchema,getAllAminitySchema,idAminitySchema,getSearchAminitySchema};
