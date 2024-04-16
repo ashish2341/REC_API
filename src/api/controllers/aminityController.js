@@ -76,6 +76,35 @@ exports.deleteAminity = async (req, res) => {
     }
 }
 
+exports.searchAminity = async (req, res) => {
+    try {
+        
+        const search = req.query.search || '';
+       
+        const searchQuery = {
+            $or: [
+                { Aminity: { $regex: search, $options: 'i' } },
+                ]
+        };
+        const count = await Aminity.countDocuments(searchQuery);
+
+        const aminities = await Aminity.find(searchQuery)
+            
+
+        return res.status(constants.status_code.header.ok).send({
+            statusCode: 200,
+            data: aminities,
+            totalCount: count,
+            success: true
+        });
+    } catch (error) {
+        return res.status(constants.status_code.header.server_error).send({
+            statusCode: 500,
+            error: error.message,
+            success: false
+        });
+    }
+};
 
 
 
