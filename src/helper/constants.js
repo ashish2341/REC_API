@@ -60,5 +60,15 @@ module.exports = {
             unauthorized: 401,
             server_error: 500
         }
+    },
+    dbCollectionName:{
+        facings:'facings',
+        propertyOwnerShips:"propertyOwnerShips",
+        propertyStatus:"propertyStatus",
+        preferences:"preferences",
+        soils:"soils",
+        propertyWithSubTypes:"propertyWithSubTypes",
+        features:"features",
+        aminities:"aminities"
     }
 }
