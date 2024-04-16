@@ -35,15 +35,18 @@ const projectSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    Features: [{
-        type: String
-    }],
-    Amenities: [{
-        type: String
-    }],
-    Facing: [{
-        type: String
-    }],
+    Features: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Features"
+    },
+    Amenities:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Aminity"
+    },
+    Facing: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Facing"
+    },
     City: {
         type: String
     },
