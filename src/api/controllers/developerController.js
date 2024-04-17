@@ -92,7 +92,7 @@ exports.updateDeveloper = async (req, res) => {
 
 exports.deleteDeveloper = async (req, res) => {
   try {
-    const developer = await Developer.findByIdAndDelete(req.params.id, {
+    const developer = await Developer.findByIdAndUpdate(req.params.id, {
       IsDeleted: true,
     });
     if (!developer) {

@@ -92,7 +92,7 @@ exports.updateFAQ = async (req, res) => {
 
 exports.deleteFAQ = async (req, res) => {
   try {
-    const faq = await FAQ.findByIdAndDelete(req.params.id, {
+    const faq = await FAQ.findByIdAndUpdate(req.params.id, {
       IsDeleted: true,
     });
     if (!faq) {

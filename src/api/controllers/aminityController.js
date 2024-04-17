@@ -92,7 +92,7 @@ exports.updateAminity = async (req, res) => {
 
 exports.deleteAminity = async (req, res) => {
   try {
-    const aminity = await Aminity.findByIdAndDelete(req.params.id, {
+    const aminity = await Aminity.findByIdAndUpdate(req.params.id, {
       IsDeleted: true,
     });
     if (!aminity) {
