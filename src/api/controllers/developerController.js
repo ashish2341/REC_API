@@ -21,11 +21,19 @@ exports.getAllDeveloper = async (req, res) => {
     const { page, pageSize } = req.query;
     const pageNumber = parseInt(page) || 1;
     const size = parseInt(pageSize) || 10;
+    const search = req.query.search || '';
+       
+    const searchQuery = {
+      IsDeleted:false,
+        $or: [
+            { Name: { $regex: search, $options: 'i' } },
+        ]
+    };
 
-    const totalCount = await Developer.countDocuments({ IsDeleted: false });
+    const totalCount = await Developer.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalCount / size);
 
-    const records = await Developer.find({ IsDeleted: false })
+    const records = await Developer.find(searchQuery)
       .skip((pageNumber - 1) * size)
       .limit(size);
     return res.status(constants.status_code.header.ok).send({

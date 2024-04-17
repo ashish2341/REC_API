@@ -47,19 +47,9 @@ const AddDeveloperSchema = Joi.object({
     
 });
 
-const getAllDeveloperSchema = Joi.object({
-    page: Joi.number().integer().min(1),
-    pageSize: Joi.number().integer().min(1)
-  });
 
-  const getSearchDeveloperSchema = Joi.object({
-    page: Joi.number().integer().min(1),
-    pageSize: Joi.number().integer().min(1),
-    search: Joi.string().allow('')
-  });
 
-  const idDeveloperSchema = Joi.object({
-    id: Joi.string().required().length(24).error(new Error('Id is inValid')),
-   
-  });
-module.exports = {AddDeveloperSchema,getAllDeveloperSchema,idDeveloperSchema,getSearchDeveloperSchema};
+  
+
+  
+module.exports = {AddDeveloperSchema};
