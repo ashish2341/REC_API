@@ -1,33 +1,37 @@
+ 
 const mongoose = require('mongoose');
+const { dbCollectionName } = require('../helper/constants');
 
 
 const PropertySchema = new  mongoose.Schema({
-    Titile: String,
-    Description: String,
+    Titile: {type:String,required:true},
+    Description:{type:String,required:true},
     Highlight: String,
-    ProeprtyFor: { type: String, enum: ['Rent', 'Sale', 'Lease'] },
+    ProeprtyFor: { type: String, enum: ['Rent', 'Sale', 'Lease'],required:true },
     ProjectId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Project",
     },
-    PropertyTypeWithSubtype: [String],
-    IsDeleted: Boolean,
-    IsEnabled: Boolean,
+    PropertyTypeWithSubtype: [{TypeId:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.propertyWithSubTypes},
+    SubTypeId:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.propertyWithSubTypes}
+}],
+    IsDeleted: {type:Boolean,default:false},
+    IsEnabled: {type:Boolean,default:true},
     IsExclusive: Boolean,
     IsFeatured: Boolean,
     IsNew: Boolean,
-    Features:{
+    Features:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Features",
-    },
-    Aminities: {
+    }],
+    Aminities: [{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Aminity",
-    },
-    Facing: {
+    }],
+    Facing: [{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Facing",
-    },
+        ref:dbCollectionName.facings,
+    }],
     City: String,
     State: String,
     Country: String,
@@ -44,8 +48,7 @@ const PropertySchema = new  mongoose.Schema({
         ref:"User",
     },
     UpdatedDate:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User",
+        type: Date, default: Date.now
     },
     UpdatedBy: {
         type:mongoose.Schema.Types.ObjectId,
@@ -73,14 +76,14 @@ const PropertySchema = new  mongoose.Schema({
     FloorsAllowed: Number,
     IsInterstedInJoinedVenture: Boolean,
     Balconies: Number,
-    ApprovedBy: {
+    ApprovedBy: [{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
-    },
+    }],
     ReraNumber: String,
     Soil: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Soil"
+        ref: dbCollectionName.soils
     },
     IsLoanable: Boolean,
     IsAlreadyLoaned: Boolean,
@@ -89,10 +92,13 @@ const PropertySchema = new  mongoose.Schema({
         LoanSince: Date,
         LoanTill: Date
     },
-    OwnershipType: String,//mongoose
+    OwnershipType: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: dbCollectionName.propertyOwnerShips
+    },
     PropertyStatus: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "PropertyStatus"
+        ref: dbCollectionName.propertyStatus
     },
     Images: [{
         Name: String,
@@ -119,33 +125,12 @@ const PropertySchema = new  mongoose.Schema({
         IsEnabled: Boolean
     }],
     IsSold: Boolean,
-    PurchaseRentBy: {
-        BuyerId: {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User",
-        },
-        PurchaseDate: Date,
-        PurchaseAmount: Number,
-        RegistryNumber: String,
-        TenantId: {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User",
-        },
-        RentAmount: Number,
-        RentStartDate: Date,
-        RentEndDate: Date,
-        RenewedOn: Date,
-        SellerId: {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User",
-        },
-        Documents: [String]
-    },
-    Preferences: {
+    PurchaseRentBy:mongoose.Schema.Types.Mixed,
+    Preferences: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Preference"
+        ref: dbCollectionName.preferences
         
-    },
+    }],
     DiscountPercentage: Number,
     DiscountForYears: Number,
     Surveillance: [String]

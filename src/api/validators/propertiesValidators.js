@@ -1,20 +1,37 @@
 const Joi = require('joi');
 
+const PurchaseRentSchema = Joi.object({
+    BuyerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    PurchaseDate: Joi.date(),
+    PurchaseAmount: Joi.number().min(0),
+    RegistryNumber: Joi.string(),
+    TenantId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    RentAmount: Joi.number().min(0),
+    RentStartDate: Joi.date(),
+    RentEndDate: Joi.date(),
+    RenewedOn: Joi.date(),
+    SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    Documents: Joi.array().items(Joi.string())
+});
+
 const propertySchema = Joi.object({
     Titile: Joi.string().required(),
     Description: Joi.string().required(),
     Highlight: Joi.string().required(),
     ProeprtyFor: Joi.string().valid('Rent', 'Sale', 'Lease').required(),
     ProjectId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    PropertyTypeWithSubtype: Joi.array().items(Joi.string()),
+    PropertyTypeWithSubtype: Joi.array().items(Joi.object({
+        TypeId:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+        SubTypeId:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    })),
     IsDeleted: Joi.boolean(),
     IsEnabled: Joi.boolean(),
     IsExclusive: Joi.boolean(),
     IsFeatured: Joi.boolean(),
     IsNew: Joi.boolean(),
-    Features: Joi.array().items(Joi.string()),
-    Aminities: Joi.array().items(Joi.string()),
-    Facing: Joi.array().items(Joi.string()),
+    Features: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+    Aminities: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+    Facing: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     City: Joi.string(),
     State: Joi.string(),
     Country: Joi.string(),
@@ -25,10 +42,6 @@ const propertySchema = Joi.object({
         Latitude: Joi.number(),
         Longitude: Joi.number()
     }),
-    CreatedDate: Joi.date(),
-    CreatedBy: Joi.string(),
-    UpdatedDate: Joi.date(),
-    UpdatedBy: Joi.string(),
     Bedrooms: Joi.number().integer().min(0),
     Bathrooms: Joi.number().integer().min(0),
     Fencing: Joi.string(),
@@ -51,9 +64,9 @@ const propertySchema = Joi.object({
     FloorsAllowed: Joi.number().integer().min(0),
     IsInterstedInJoinedVenture: Joi.boolean(),
     Balconies: Joi.number().integer().min(0),
-    ApprovedBy: Joi.array().items(Joi.string()),
+    ApprovedBy: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     ReraNumber: Joi.string(),
-    Soil: Joi.string(),
+    Soil:  Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     IsLoanable: Joi.boolean(),
     IsAlreadyLoaned: Joi.boolean(),
     LoanDetails: Joi.object({
@@ -61,8 +74,8 @@ const propertySchema = Joi.object({
         LoanSince: Joi.date(),
         LoanTill: Joi.date()
     }),
-    OwnershipType: Joi.string(),
-    PropertyStatus: Joi.string(),
+    OwnershipType: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    PropertyStatus: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     Images: Joi.array().items(Joi.object({
         Name: Joi.string(),
         Titile: Joi.string(),
@@ -100,11 +113,19 @@ const propertySchema = Joi.object({
         RenewedOn: Joi.date(),
         SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
         Documents: Joi.array().items(Joi.string())
-    }),
-    Preferences: Joi.array().items(Joi.string()),
-    DiscountPercentage: Joi.number().min(0),
-    DiscountForYears: Joi.number().min(0),
-    Surveillance: Joi.array().items(Joi.string())
+    }).when('ProeprtyFor', {
+        is: 'Rent',
+        then: PurchaseRentSchema
+    }).when('ProeprtyFor', {
+        is: 'Sale',
+        then: PurchaseRentSchema.keys({
+            BuyerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
+            PurchaseDate: Joi.date().required(),
+            PurchaseAmount: Joi.number().min(0).required(),
+            SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
+            Documents: Joi.array().items(Joi.string())
+        })
+    })
 });
 
 module.exports = propertySchema;
