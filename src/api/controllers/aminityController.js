@@ -21,11 +21,19 @@ exports.getAllAminity = async (req, res) => {
     const { page, pageSize } = req.query;
     const pageNumber = parseInt(page) || 1;
     const size = parseInt(pageSize) || 10;
+    const search = req.query.search || '';
+       
+    const searchQuery = {
+      IsDeleted: false,
+        $or: [
+            { Aminity: { $regex: search, $options: 'i' } }, 
+        ]
+    };
 
-    const totalCount = await Aminity.countDocuments({ IsDeleted: false });
+    const totalCount = await Aminity.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalCount / size);
 
-    const records = await Aminity.find({ IsDeleted: false })
+    const records = await Aminity.find(searchQuery)
       .skip((pageNumber - 1) * size)
       .limit(size);
     return res.status(constants.status_code.header.ok).send({
@@ -102,39 +110,4 @@ exports.deleteAminity = async (req, res) => {
   }
 };
 
-exports.searchAminity = async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const search = req.query.search || "";
-
-    const searchQuery = {
-      $or: [{ Aminity: { $regex: search, $options: "i" } }],
-    };
-
-    const count = await Aminity.countDocuments(searchQuery);
-
-    const totalPages = Math.ceil(count / limit);
-
-    const currentPage = Math.min(Math.max(page, 1), totalPages);
-
-    const skip = (currentPage - 1) * limit;
-
-    const aminities = await Aminity.find(searchQuery).skip(skip).limit(limit);
-
-    return res.status(constants.status_code.header.ok).send({
-      statusCode: 200,
-      data: aminities,
-      currentPage: currentPage,
-      totalPages: totalPages,
-      totalCount: count,
-      success: true,
-    });
-  } catch (error) {
-    return res.status(constants.status_code.header.server_error).send({
-      statusCode: 500,
-      error: error.message,
-      success: false,
-    });
-  }
-};
+ 

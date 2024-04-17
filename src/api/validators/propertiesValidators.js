@@ -1,19 +1,5 @@
 const Joi = require('joi');
 
-const PurchaseRentSchema = Joi.object({
-    BuyerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    PurchaseDate: Joi.date(),
-    PurchaseAmount: Joi.number().min(0),
-    RegistryNumber: Joi.string(),
-    TenantId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    RentAmount: Joi.number().min(0),
-    RentStartDate: Joi.date(),
-    RentEndDate: Joi.date(),
-    RenewedOn: Joi.date(),
-    SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    Documents: Joi.array().items(Joi.string())
-});
-
 const propertySchema = Joi.object({
     Titile: Joi.string().required(),
     Description: Joi.string().required(),
@@ -101,11 +87,18 @@ const propertySchema = Joi.object({
         IsEnabled: Joi.boolean()
     })),
     IsSold: Joi.boolean(),
-    PurchaseRentBy: Joi.object({
-        BuyerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-        PurchaseDate: Joi.date(),
-        PurchaseAmount: Joi.number().min(0),
-        RegistryNumber: Joi.string(),
+    PurchaseRentBy: Joi.object().required().when('ProeprtyFor', {
+        is: 'Sale',
+        then: Joi.object({
+            BuyerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
+            PurchaseDate: Joi.date().required(),
+            PurchaseAmount: Joi.number().min(0).required(),
+            RegistryNumber: Joi.string().required(),
+            SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+            Documents: Joi.array().items(Joi.string())
+        }).options({ presence: 'required' }),
+        // can put one more then for "Lease"
+        otherwise: Joi.object({
         TenantId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
         RentAmount: Joi.number().min(0),
         RentStartDate: Joi.date(),
@@ -113,19 +106,9 @@ const propertySchema = Joi.object({
         RenewedOn: Joi.date(),
         SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
         Documents: Joi.array().items(Joi.string())
-    }).when('ProeprtyFor', {
-        is: 'Rent',
-        then: PurchaseRentSchema
-    }).when('ProeprtyFor', {
-        is: 'Sale',
-        then: PurchaseRentSchema.keys({
-            BuyerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
-            PurchaseDate: Joi.date().required(),
-            PurchaseAmount: Joi.number().min(0).required(),
-            SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
-            Documents: Joi.array().items(Joi.string())
-        })
-    })
+        }).options({ presence: 'required' })
+    }),
+   
 });
 
-module.exports = propertySchema;
+module.exports ={ propertySchema};

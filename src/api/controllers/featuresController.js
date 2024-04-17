@@ -21,11 +21,18 @@ exports.getAllFeature = async (req, res) => {
     const { page, pageSize } = req.query;
     const pageNumber = parseInt(page) || 1;
     const size = parseInt(pageSize) || 10;
-
-    const totalCount = await Feature.countDocuments({ IsDeleted: false });
+    const search = req.query.search || '';
+       
+    const searchQuery = {
+      IsDeleted: false,
+        $or: [
+            { Feature: { $regex: search, $options: 'i' } }, 
+        ]
+    };
+    const totalCount = await Feature.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalCount / size);
 
-    const records = await Feature.find({ IsDeleted: false })
+    const records = await Feature.find(searchQuery)
       .skip((pageNumber - 1) * size)
       .limit(size);
     return res.status(constants.status_code.header.ok).send({
@@ -102,39 +109,4 @@ exports.deleteFeature = async (req, res) => {
   }
 };
 
-exports.searchFeatures = async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const search = req.query.search || "";
-
-    const searchQuery = {
-      $or: [{ Feature: { $regex: search, $options: "i" } }],
-    };
-
-    const count = await Feature.countDocuments(searchQuery);
-
-    const totalPages = Math.ceil(count / limit);
-
-    const currentPage = Math.min(Math.max(page, 1), totalPages);
-
-    const skip = (currentPage - 1) * limit;
-
-    const features = await Feature.find(searchQuery).skip(skip).limit(limit);
-
-    return res.status(constants.status_code.header.ok).send({
-      statusCode: 200,
-      data: features,
-      currentPage: currentPage,
-      totalPages: totalPages,
-      totalCount: count,
-      success: true,
-    });
-  } catch (error) {
-    return res.status(constants.status_code.header.server_error).send({
-      statusCode: 500,
-      error: error.message,
-      success: false,
-    });
-  }
-};
+ 
