@@ -31,10 +31,7 @@ const loginSchema = Joi.object().keys({
         Role: Joi.string().valid("Buyer","Developer","Agent","Client").required(),
         
     })
-    const idRoleSchema = Joi.object({
-        id: Joi.string().required().length(24).error(new Error('Id is inValid')),
-       
-      });
+ 
       const sendOtpSchema = Joi.object({
         Mobile: Joi.string().pattern(/^[0-9]{10}$/).required().error(new Error('Mobile number is required and should be 10 digits')),
        
@@ -52,7 +49,6 @@ module.exports = {
     registerSchema,
     loginSchema,
     roleSchema,
-    idRoleSchema,
     verifyOtpSchema,
     sendOtpSchema,
     forgetSchema
