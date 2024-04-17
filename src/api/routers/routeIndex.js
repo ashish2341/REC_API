@@ -6,7 +6,8 @@ const featureRoutes = require('./featuresRoute');
 const dbMasters = require('./dbMasterRoute');
 const propertiesRoutes = require('./propertiesRoute');
 const developerRoutes = require('./developerRoute');
-const faqRoutes = require('./faqRoute')
+const faqRoutes = require('./faqRoute');
+const testimonialRoutes = require('./testimonialRoute')
 
 
 
@@ -21,6 +22,7 @@ allRouters.use('/masters',dbMasters);
 allRouters.use('/properties',propertiesRoutes);
 allRouters.use('/developer',developerRoutes);
 allRouters.use('/faq',faqRoutes);
+allRouters.use('/testimonial',testimonialRoutes);
 
 
 module.exports =  allRouters;
