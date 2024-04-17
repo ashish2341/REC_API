@@ -1,11 +1,11 @@
 const constants = require("../../helper/constants");
-const Developer = require("../../models/developerModel");
+const FAQ = require("../../models/faqModel");
 
-exports.addDeveloper = async (req, res) => {
+exports.addFAQ = async (req, res) => {
   try {
     req.body.CreatedBy = req.user._id;
     req.body.UpdatedBy = req.user._id;
-    const developer = await Developer.create(req.body);
+    const faq= await FAQ.create(req.body);
     return res
       .status(constants.status_code.header.ok)
       .send({ message: constants.curd.add, success: true });
@@ -16,7 +16,7 @@ exports.addDeveloper = async (req, res) => {
   }
 };
 
-exports.getAllDeveloper = async (req, res) => {
+exports.getAllFAQ = async (req, res) => {
   try {
     const { page, pageSize } = req.query;
     const pageNumber = parseInt(page) || 1;
@@ -24,16 +24,16 @@ exports.getAllDeveloper = async (req, res) => {
     const search = req.query.search || '';
        
     const searchQuery = {
-      IsDeleted:false,
+      IsDeleted: false,
         $or: [
-            { Name: { $regex: search, $options: 'i' } },
+            { Subject: { $regex: search, $options: 'i' } }, 
         ]
     };
 
-    const totalCount = await Developer.countDocuments(searchQuery);
+    const totalCount = await FAQ.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalCount / size);
 
-    const records = await Developer.find(searchQuery)
+    const records = await FAQ.find(searchQuery)
       .skip((pageNumber - 1) * size)
       .limit(size);
     return res.status(constants.status_code.header.ok).send({
@@ -52,17 +52,17 @@ exports.getAllDeveloper = async (req, res) => {
   }
 };
 
-exports.getDeveloperById = async (req, res) => {
+exports.getFAQById = async (req, res) => {
   try {
-    const developer = await Developer.findById(req.params.id);
-    if (!developer) {
+    const faq = await FAQ.findById(req.params.id);
+    if (!faq) {
       return res
         .status(404)
-        .json({ error: "Developer not found", success: false });
+        .json({ error: "FAQ not found", success: false });
     }
     return res
       .status(constants.status_code.header.ok)
-      .send({ statusCode: 200, data: developer, success: true });
+      .send({ statusCode: 200, data: faq, success: true });
   } catch (error) {
     return res
       .status(constants.status_code.header.server_error)
@@ -70,15 +70,15 @@ exports.getDeveloperById = async (req, res) => {
   }
 };
 
-exports.updateDeveloper = async (req, res) => {
+exports.updateFAQ = async (req, res) => {
   try {
-    const developer = await Developer.findByIdAndUpdate(req.params.id, req.body, {
+    const faq = await FAQ.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!developer) {
+    if (!faq) {
       return res
         .status(404)
-        .json({ error: "Developer not found", success: false });
+        .json({ error: "FAQ not found", success: false });
     }
     res
       .status(constants.status_code.header.ok)
@@ -90,15 +90,15 @@ exports.updateDeveloper = async (req, res) => {
   }
 };
 
-exports.deleteDeveloper = async (req, res) => {
+exports.deleteFAQ = async (req, res) => {
   try {
-    const developer = await Developer.findByIdAndDelete(req.params.id, {
+    const faq = await FAQ.findByIdAndDelete(req.params.id, {
       IsDeleted: true,
     });
-    if (!developer) {
+    if (!faq) {
       return res
         .status(404)
-        .json({ error: "Developer not found", success: false });
+        .json({ error: "FAQ not found", success: false });
     }
     res
       .status(constants.status_code.header.ok)
@@ -110,3 +110,4 @@ exports.deleteDeveloper = async (req, res) => {
   }
 };
 
+ 
