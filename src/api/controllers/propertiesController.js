@@ -137,19 +137,30 @@ exports.getPropertiesByArea = async (req, res) => {
 };
 exports.getPropertiesByType = async (req, res) => {
     try {
-        const propertiesByCity = await Properties.aggregate([
+        let properties = await Properties.aggregate([
             {
-                $group: {
-                    _id: '$PropertyType',
-                    properties: { $push: '$$ROOT' } 
-                }
+              $lookup: {
+                from: "propertywithsubtypes",  // Name of the collection to join with
+                localField: "PropertyType",  // Field in the "properties" collection
+                foreignField: "_id",   // Field in the "propertywithsubtypes" collection
+                as: "area"   // Name for the joined field
+              }
+            },
+            {
+              $unwind: "$area"   // Unwind the array created by the lookup
+            },
+            {
+              $group: {
+                _id: "$area.Type",   // Group by the "Type" field of the "propertywithsubtypes" collection
+                properties: { $push: "$$ROOT" }   // Push entire documents into the "properties" array
+              }
             }
-        ]);
+          ])
       
         
         return res.status(constants.status_code.header.ok).send({
             statusCode: 200,
-            data: propertiesByCity,
+            data: properties,
             success: true
         });
     } catch (error) {

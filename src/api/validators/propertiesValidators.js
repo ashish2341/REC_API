@@ -16,7 +16,7 @@ const propertySchema = Joi.object({
     Aminities: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     Facing: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     City: Joi.string(),
-    Area:JobInstance.string().required(),
+    Area:Joi.string().required(),
     State: Joi.string(),
     Country: Joi.string(),
     Address: Joi.string(),
