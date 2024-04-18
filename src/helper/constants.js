@@ -73,6 +73,7 @@ module.exports = {
         fencings:"fencings",
         floorings:"floorings",
         furnishedes:"furnishedes",
-        builtAreaTypes:"builtAreaTypes"
+        builtAreaTypes:"builtareatypes",
+        area:"areas"
     }
 }

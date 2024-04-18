@@ -1,6 +1,7 @@
  
 const mongoose = require('mongoose');
 const { dbCollectionName } = require('../helper/constants');
+ 
 
 
 const PropertySchema = new  mongoose.Schema({
@@ -12,7 +13,7 @@ const PropertySchema = new  mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Project",
     },
-    PropertyType: [{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.propertyWithSubTypes}],
+    PropertyType: {type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.propertyWithSubTypes},
     IsDeleted: {type:Boolean,default:false},
     IsEnabled: {type:Boolean,default:true},
     IsExclusive: Boolean,
@@ -30,6 +31,7 @@ const PropertySchema = new  mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:dbCollectionName.facings,
     }],
+    Area:{type:String,required:true},
     City: String,
     State: String,
     Country: String,
@@ -123,7 +125,7 @@ const PropertySchema = new  mongoose.Schema({
         IsEnabled: Boolean
     }],
     IsSold: Boolean,
-    PurchaseRentBy:mongoose.Schema.Types.Mixed,
+    // PurchaseRentBy:mongoose.Schema.Types.Mixed,
     Preferences: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: dbCollectionName.preferences
