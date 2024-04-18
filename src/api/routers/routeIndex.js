@@ -1,4 +1,5 @@
 const express = require('express');
+
 const authRoutes = require('./authRoute');
 const aminityRoutes = require('./aminityRoute');
 const roleRoutes = require('./roleRoute');
@@ -7,7 +8,8 @@ const dbMasters = require('./dbMasterRoute');
 const propertiesRoutes = require('./propertiesRoute');
 const developerRoutes = require('./developerRoute');
 const faqRoutes = require('./faqRoute');
-const testimonialRoutes = require('./testimonialRoute')
+const testimonialRoutes = require('./testimonialRoute');
+const projectEnquiryRoutes = require('./projectEnquiryRoute')
 
 
 
@@ -23,6 +25,7 @@ allRouters.use('/properties',propertiesRoutes);
 allRouters.use('/developer',developerRoutes);
 allRouters.use('/faq',faqRoutes);
 allRouters.use('/testimonial',testimonialRoutes);
+allRouters.use('/enquiry',projectEnquiryRoutes);
 
 
 module.exports =  allRouters;
