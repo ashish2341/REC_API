@@ -63,12 +63,16 @@ module.exports = {
     },
     dbCollectionName:{
         facings:'facings',
-        propertyOwnerShips:"propertyOwnerShips",
-        propertyStatus:"propertyStatus",
+        propertyOwnerShips:"propertyownerships",
+        propertyStatus:"propertystatus",
         preferences:"preferences",
         soils:"soils",
-        propertyWithSubTypes:"propertyWithSubTypes",
+        propertyWithSubTypes:"propertywithsubtypes",
         features:"features",
-        aminities:"aminities"
+        aminities:"aminities",
+        fencings:"fencings",
+        floorings:"floorings",
+        furnishedes:"furnishedes",
+        builtAreaTypes:"builtAreaTypes"
     }
 }
