@@ -74,6 +74,7 @@ module.exports = {
         floorings:"floorings",
         furnishedes:"furnishedes",
         builtAreaTypes:"builtareatypes",
-        area:"areas"
+        area:"areas",
+        areaUnits:"areaunits"
     }
 }
