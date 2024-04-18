@@ -17,6 +17,10 @@ const testimonialSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    IsDeleted: {
+        type: Boolean,
+        default: false
+    },
     Image: {
         type: String,
         required: true

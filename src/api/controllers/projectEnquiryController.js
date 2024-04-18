@@ -1,10 +1,9 @@
 const constants = require("../../helper/constants");
-const Testimonial = require("../../models/testimonialModel");
+const ProjectEnquiry = require("../../models/projectEnquiryModel");
 
-exports.addTestimonial = async (req, res) => {
+exports.addProjectEnquiry = async (req, res) => {
   try {
-    
-    const testimonial = await Testimonial.create(req.body);
+    const projectEnquiry = await ProjectEnquiry.create(req.body);
     return res
       .status(constants.status_code.header.ok)
       .send({ message: constants.curd.add, success: true });
@@ -15,7 +14,7 @@ exports.addTestimonial = async (req, res) => {
   }
 };
 
-exports.getAllTestimonial = async (req, res) => {
+exports.getAllProjectEnquiry = async (req, res) => {
   try {
     const { page, pageSize } = req.query;
     const pageNumber = parseInt(page) || 1;
@@ -23,16 +22,16 @@ exports.getAllTestimonial = async (req, res) => {
     const search = req.query.search || '';
        
     const searchQuery = {
-      IsDeleted: false,
+        IsDeleted: false,
         $or: [
-            { MemberName: { $regex: search, $options: 'i' } }, 
+            { Name: { $regex: search, $options: 'i' } }, 
         ]
     };
 
-    const totalCount = await Testimonial.countDocuments(searchQuery);
+    const totalCount = await ProjectEnquiry.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalCount / size);
 
-    const records = await Testimonial.find(searchQuery)
+    const records = await ProjectEnquiry.find(searchQuery)
       .skip((pageNumber - 1) * size)
       .limit(size);
     return res.status(constants.status_code.header.ok).send({
@@ -51,17 +50,17 @@ exports.getAllTestimonial = async (req, res) => {
   }
 };
 
-exports.getTestimonialById = async (req, res) => {
+exports.getProjectEnquiryById = async (req, res) => {
   try {
-    const testimonial = await Testimonial.findById(req.params.id);
-    if (!testimonial) {
+    const projectEnquiry = await ProjectEnquiry.findById(req.params.id);
+    if (!projectEnquiry) {
       return res
         .status(404)
-        .json({ error: "Testimonial not found", success: false });
+        .json({ error: "ProjectEnquiry not found", success: false });
     }
     return res
       .status(constants.status_code.header.ok)
-      .send({ statusCode: 200, data: testimonial, success: true });
+      .send({ statusCode: 200, data: projectEnquiry, success: true });
   } catch (error) {
     return res
       .status(constants.status_code.header.server_error)
@@ -69,15 +68,15 @@ exports.getTestimonialById = async (req, res) => {
   }
 };
 
-exports.updateTestimonial = async (req, res) => {
+exports.updateProjectEnquiry = async (req, res) => {
   try {
-    const testimonial = await Testimonial.findByIdAndUpdate(req.params.id, req.body, {
+    const projectEnquiry = await ProjectEnquiry.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!testimonial) {
+    if (!projectEnquiry) {
       return res
         .status(404)
-        .json({ error: "Testimonial not found", success: false });
+        .json({ error: "ProjectEnquiry not found", success: false });
     }
     res
       .status(constants.status_code.header.ok)
@@ -89,15 +88,15 @@ exports.updateTestimonial = async (req, res) => {
   }
 };
 
-exports.deleteTestimonial = async (req, res) => {
+exports.deleteProjectEnquiry = async (req, res) => {
   try {
-    const testimonial = await Testimonial.findByIdAndUpdate(req.params.id, {
-      IsDeleted: true,
+    const projectEnquiry = await ProjectEnquiry.findByIdAndUpdate(req.params.id,{
+        IsDeleted: true,
     });
-    if (!testimonial) {
+    if (!projectEnquiry) {
       return res
         .status(404)
-        .json({ error: "Testimonial not found", success: false });
+        .json({ error: "ProjectEnquiry not found", success: false });
     }
     res
       .status(constants.status_code.header.ok)
