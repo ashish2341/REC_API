@@ -37,19 +37,13 @@ exports.getAllProperties = async (req, res) => {
         const totalPages = Math.ceil(count / limit);
         const currentPage = Math.min(Math.max(page, 1), totalPages);
         const skip = (currentPage - 1) * limit;
-        const properties = await Properties.find(searchQuery).populate({ 
-            path: 'Soil', 
-            model: Soils, 
-        }).populate({
+        const properties = await Properties.find(searchQuery).populate({
             path:"Facing",
             model:Facings
         }) .populate({
             path: 'PropertyType',
             model: PropertyWithSubTypes,
-           
-          })
-          
-            .skip(skip)
+          }).skip(skip)
             .limit(limit);
         return res.status(constants.status_code.header.ok).send({
             statusCode: 200,
@@ -75,10 +69,13 @@ exports.getPropertiesByDirections = async (req, res) => {
         
         let faceQuery = {Facing: { $regex: directions, $options: 'i' } }
         const db = getDB()
-        let faceRecords = await db.collection(dbCollectionName.facings).find(faceQuery).toArray() 
+        let faceRecords = await db.collection(dbCollectionName.facings).findOne(faceQuery)
         
+        if(!faceRecords){
+            return res.status(404).send({status:false,error:"Data not found"})
+        }
         const query = {
-            Facing: { $in: faceRecords?.map( dir => dir._id) }
+            Facing: faceRecords._id 
         };
 
         const properties = await Properties.find(query);
@@ -118,7 +115,7 @@ exports.getPropertiesByArea = async (req, res) => {
         const propertiesByCity = await Properties.aggregate([
             {
                 $group: {
-                    _id: '$City',
+                    _id: '$Area',
                     properties: { $push: '$$ROOT' } 
                 }
             }

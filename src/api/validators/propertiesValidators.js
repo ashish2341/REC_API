@@ -6,7 +6,7 @@ const propertySchema = Joi.object({
     Highlight: Joi.string().required(),
     ProeprtyFor: Joi.string().valid('Rent', 'Sale', 'Lease').required(),
     ProjectId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    PropertyType:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)).required(),
+    PropertyType:Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
     IsDeleted: Joi.boolean(),
     IsEnabled: Joi.boolean(),
     IsExclusive: Joi.boolean(),
@@ -16,6 +16,7 @@ const propertySchema = Joi.object({
     Aminities: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     Facing: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     City: Joi.string(),
+    Area:JobInstance.string().required(),
     State: Joi.string(),
     Country: Joi.string(),
     Address: Joi.string(),
@@ -84,27 +85,27 @@ const propertySchema = Joi.object({
         IsEnabled: Joi.boolean()
     })),
     IsSold: Joi.boolean(),
-    PurchaseRentBy: Joi.object().optional().when('ProeprtyFor', {
-        is: 'Sale',
-        then: Joi.object({
-            BuyerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
-            PurchaseDate: Joi.date().required(),
-            PurchaseAmount: Joi.number().min(0).required(),
-            RegistryNumber: Joi.string().required(),
-            SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-            Documents: Joi.array().items(Joi.string())
-        }).options({ presence: 'required' }),
+    // PurchaseRentBy: Joi.object().optional().when('ProeprtyFor', {
+    //     is: 'Sale',
+    //     then: Joi.object({
+    //         BuyerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
+    //         PurchaseDate: Joi.date().required(),
+    //         PurchaseAmount: Joi.number().min(0).required(),
+    //         RegistryNumber: Joi.string().required(),
+    //         SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    //         Documents: Joi.array().items(Joi.string())
+    //     }).options({ presence: 'required' }),
         // can put one more `then` for "Lease"
-        otherwise: Joi.object({
-        TenantId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-        RentAmount: Joi.number().min(0),
-        RentStartDate: Joi.date(),
-        RentEndDate: Joi.date(),
-        RenewedOn: Joi.date(),
-        SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-        Documents: Joi.array().items(Joi.string())
-        }).options({ presence: 'required' })
-    }),
+    //     otherwise: Joi.object({
+    //     TenantId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    //     RentAmount: Joi.number().min(0),
+    //     RentStartDate: Joi.date(),
+    //     RentEndDate: Joi.date(),
+    //     RenewedOn: Joi.date(),
+    //     SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    //     Documents: Joi.array().items(Joi.string())
+    //     }).options({ presence: 'required' })
+    // }),
    
 });
 const directionSchema = Joi.object({
