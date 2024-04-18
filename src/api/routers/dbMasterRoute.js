@@ -19,5 +19,6 @@ router.get('/floorings',auth,getMasterDBRecords(dbCollectionName.floorings))
 router.get('/furnishedes',auth,getMasterDBRecords(dbCollectionName.furnishedes))
 router.get('/builtAreaTypes',auth,getMasterDBRecords(dbCollectionName.builtAreaTypes))
 router.get('/areas',auth,getMasterDBRecords(dbCollectionName.area))
+router.get('/areaunits',auth,getMasterDBRecords(dbCollectionName.areaUnits))
 
 module.exports = router
