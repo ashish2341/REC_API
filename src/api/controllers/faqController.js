@@ -1,11 +1,11 @@
 const constants = require("../../helper/constants");
-const Aminity = require("../../models/aminityModel");
+const FAQ = require("../../models/faqModel");
 
-exports.addAminity = async (req, res) => {
+exports.addFAQ = async (req, res) => {
   try {
     req.body.CreatedBy = req.user._id;
     req.body.UpdatedBy = req.user._id;
-    const aminity = await Aminity.create(req.body);
+    const faq= await FAQ.create(req.body);
     return res
       .status(constants.status_code.header.ok)
       .send({ message: constants.curd.add, success: true });
@@ -16,7 +16,7 @@ exports.addAminity = async (req, res) => {
   }
 };
 
-exports.getAllAminity = async (req, res) => {
+exports.getAllFAQ = async (req, res) => {
   try {
     const { page, pageSize } = req.query;
     const pageNumber = parseInt(page) || 1;
@@ -26,14 +26,14 @@ exports.getAllAminity = async (req, res) => {
     const searchQuery = {
       IsDeleted: false,
         $or: [
-            { Aminity: { $regex: search, $options: 'i' } }, 
+            { Subject: { $regex: search, $options: 'i' } }, 
         ]
     };
 
-    const totalCount = await Aminity.countDocuments(searchQuery);
+    const totalCount = await FAQ.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalCount / size);
 
-    const records = await Aminity.find(searchQuery)
+    const records = await FAQ.find(searchQuery)
       .skip((pageNumber - 1) * size)
       .limit(size);
     return res.status(constants.status_code.header.ok).send({
@@ -52,17 +52,17 @@ exports.getAllAminity = async (req, res) => {
   }
 };
 
-exports.getAminityById = async (req, res) => {
+exports.getFAQById = async (req, res) => {
   try {
-    const aminity = await Aminity.findById(req.params.id);
-    if (!aminity) {
+    const faq = await FAQ.findById(req.params.id);
+    if (!faq) {
       return res
         .status(404)
-        .json({ error: "Aminity not found", success: false });
+        .json({ error: "FAQ not found", success: false });
     }
     return res
       .status(constants.status_code.header.ok)
-      .send({ statusCode: 200, data: aminity, success: true });
+      .send({ statusCode: 200, data: faq, success: true });
   } catch (error) {
     return res
       .status(constants.status_code.header.server_error)
@@ -70,15 +70,15 @@ exports.getAminityById = async (req, res) => {
   }
 };
 
-exports.updateAminity = async (req, res) => {
+exports.updateFAQ = async (req, res) => {
   try {
-    const aminity = await Aminity.findByIdAndUpdate(req.params.id, req.body, {
+    const faq = await FAQ.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!aminity) {
+    if (!faq) {
       return res
         .status(404)
-        .json({ error: "Aminity not found", success: false });
+        .json({ error: "FAQ not found", success: false });
     }
     res
       .status(constants.status_code.header.ok)
@@ -90,15 +90,15 @@ exports.updateAminity = async (req, res) => {
   }
 };
 
-exports.deleteAminity = async (req, res) => {
+exports.deleteFAQ = async (req, res) => {
   try {
-    const aminity = await Aminity.findByIdAndUpdate(req.params.id, {
+    const faq = await FAQ.findByIdAndUpdate(req.params.id, {
       IsDeleted: true,
     });
-    if (!aminity) {
+    if (!faq) {
       return res
         .status(404)
-        .json({ error: "Aminity not found", success: false });
+        .json({ error: "FAQ not found", success: false });
     }
     res
       .status(constants.status_code.header.ok)

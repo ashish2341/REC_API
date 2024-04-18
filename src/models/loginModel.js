@@ -1,11 +1,10 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const constants = require('../helper/constants')
 const config = require('../helper/config')
 
 const loginSchema = mongoose.Schema({
-    UserName: {
+    Mobile: {
         type: String,
         required: true,
         trim: true,

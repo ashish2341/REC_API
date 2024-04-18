@@ -1,22 +1,22 @@
 const constants = require("../../helper/constants");
-const Aminity = require("../../models/aminityModel");
+const Feature = require("../../models/featuresModel");
 
-exports.addAminity = async (req, res) => {
+exports.addFeature = async (req, res) => {
   try {
     req.body.CreatedBy = req.user._id;
     req.body.UpdatedBy = req.user._id;
-    const aminity = await Aminity.create(req.body);
+    const feature = await Feature.create(req.body);
     return res
       .status(constants.status_code.header.ok)
-      .send({ message: constants.curd.add, success: true });
+      .send({ statusCode: 201, message: constants.curd.add, success: true });
   } catch (error) {
     return res
       .status(constants.status_code.header.server_error)
-      .send({ error: error.message, success: false });
+      .send({ statusCode: 500, error: error.message, success: false });
   }
 };
 
-exports.getAllAminity = async (req, res) => {
+exports.getAllFeature = async (req, res) => {
   try {
     const { page, pageSize } = req.query;
     const pageNumber = parseInt(page) || 1;
@@ -26,14 +26,13 @@ exports.getAllAminity = async (req, res) => {
     const searchQuery = {
       IsDeleted: false,
         $or: [
-            { Aminity: { $regex: search, $options: 'i' } }, 
+            { Feature: { $regex: search, $options: 'i' } }, 
         ]
     };
-
-    const totalCount = await Aminity.countDocuments(searchQuery);
+    const totalCount = await Feature.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalCount / size);
 
-    const records = await Aminity.find(searchQuery)
+    const records = await Feature.find(searchQuery)
       .skip((pageNumber - 1) * size)
       .limit(size);
     return res.status(constants.status_code.header.ok).send({
@@ -46,23 +45,23 @@ exports.getAllAminity = async (req, res) => {
       totalPages: totalPages,
     });
   } catch (error) {
-    res
+    return res
       .status(constants.status_code.header.server_error)
       .send({ statusCode: 500, error: error.message, success: false });
   }
 };
 
-exports.getAminityById = async (req, res) => {
+exports.getFeatureById = async (req, res) => {
   try {
-    const aminity = await Aminity.findById(req.params.id);
-    if (!aminity) {
+    const feature = await Feature.findById(req.params.id);
+    if (!feature) {
       return res
         .status(404)
-        .json({ error: "Aminity not found", success: false });
+        .json({ error: "Feature not found", success: false });
     }
     return res
       .status(constants.status_code.header.ok)
-      .send({ statusCode: 200, data: aminity, success: true });
+      .send({ statusCode: 200, data: feature, success: true });
   } catch (error) {
     return res
       .status(constants.status_code.header.server_error)
@@ -70,17 +69,17 @@ exports.getAminityById = async (req, res) => {
   }
 };
 
-exports.updateAminity = async (req, res) => {
+exports.updateFeature = async (req, res) => {
   try {
-    const aminity = await Aminity.findByIdAndUpdate(req.params.id, req.body, {
+    const feature = await Feature.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!aminity) {
+    if (!feature) {
       return res
         .status(404)
-        .json({ error: "Aminity not found", success: false });
+        .json({ error: "Feature not found", success: false });
     }
-    res
+    return res
       .status(constants.status_code.header.ok)
       .send({ statusCode: 200, message: constants.curd.update, success: true });
   } catch (error) {
@@ -90,17 +89,17 @@ exports.updateAminity = async (req, res) => {
   }
 };
 
-exports.deleteAminity = async (req, res) => {
+exports.deleteFeature = async (req, res) => {
   try {
-    const aminity = await Aminity.findByIdAndUpdate(req.params.id, {
+    const feature = await Feature.findByIdAndUpdate(req.params.id, {
       IsDeleted: true,
     });
-    if (!aminity) {
+    if (!feature) {
       return res
         .status(404)
-        .json({ error: "Aminity not found", success: false });
+        .json({ error: "Feature not found", success: false });
     }
-    res
+    return res
       .status(constants.status_code.header.ok)
       .send({ statusCode: 200, message: constants.curd.delete, success: true });
   } catch (error) {

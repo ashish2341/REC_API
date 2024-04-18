@@ -1,21 +1,21 @@
-const successResponse = (req, res, data, code = 200, message) =>
-  res.status(code).send({
-    code,
-    data,
-    success: true,
-    message
-  });
+ 
 
-const errorResponse = (req, res, code = 500, errorMessage = "Something went wrong") => {
-  res.status(code).json({
-    code,
-    errorMessage,
-    message : errorMessage,
-    success: false,
-  });
+const errorResponse = (error) => {
+  let errorMsg=''
+  if (error?.code === 11000 && error?.errmsg.indexOf('dup key') > -1) {
+   return errorMsg = Object.keys(error.keyPattern)[0] + ' is already in use'
+    
+}
+else if (error?.errors?.role?.properties?.message) {
+  return errorMsg = error.errors.role.properties.message
+    
+}
+else {
+    errorMsg = error.message
+}
+  return errorMsg
 };
 
 module.exports = {
-    successResponse,
     errorResponse
   };

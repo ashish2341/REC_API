@@ -1,11 +1,11 @@
 const constants = require("../../helper/constants");
-const Aminity = require("../../models/aminityModel");
+const Developer = require("../../models/developerModel");
 
-exports.addAminity = async (req, res) => {
+exports.addDeveloper = async (req, res) => {
   try {
     req.body.CreatedBy = req.user._id;
     req.body.UpdatedBy = req.user._id;
-    const aminity = await Aminity.create(req.body);
+    const developer = await Developer.create(req.body);
     return res
       .status(constants.status_code.header.ok)
       .send({ message: constants.curd.add, success: true });
@@ -16,7 +16,7 @@ exports.addAminity = async (req, res) => {
   }
 };
 
-exports.getAllAminity = async (req, res) => {
+exports.getAllDeveloper = async (req, res) => {
   try {
     const { page, pageSize } = req.query;
     const pageNumber = parseInt(page) || 1;
@@ -24,16 +24,16 @@ exports.getAllAminity = async (req, res) => {
     const search = req.query.search || '';
        
     const searchQuery = {
-      IsDeleted: false,
+      IsDeleted:false,
         $or: [
-            { Aminity: { $regex: search, $options: 'i' } }, 
+            { Name: { $regex: search, $options: 'i' } },
         ]
     };
 
-    const totalCount = await Aminity.countDocuments(searchQuery);
+    const totalCount = await Developer.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalCount / size);
 
-    const records = await Aminity.find(searchQuery)
+    const records = await Developer.find(searchQuery)
       .skip((pageNumber - 1) * size)
       .limit(size);
     return res.status(constants.status_code.header.ok).send({
@@ -52,17 +52,17 @@ exports.getAllAminity = async (req, res) => {
   }
 };
 
-exports.getAminityById = async (req, res) => {
+exports.getDeveloperById = async (req, res) => {
   try {
-    const aminity = await Aminity.findById(req.params.id);
-    if (!aminity) {
+    const developer = await Developer.findById(req.params.id);
+    if (!developer) {
       return res
         .status(404)
-        .json({ error: "Aminity not found", success: false });
+        .json({ error: "Developer not found", success: false });
     }
     return res
       .status(constants.status_code.header.ok)
-      .send({ statusCode: 200, data: aminity, success: true });
+      .send({ statusCode: 200, data: developer, success: true });
   } catch (error) {
     return res
       .status(constants.status_code.header.server_error)
@@ -70,15 +70,15 @@ exports.getAminityById = async (req, res) => {
   }
 };
 
-exports.updateAminity = async (req, res) => {
+exports.updateDeveloper = async (req, res) => {
   try {
-    const aminity = await Aminity.findByIdAndUpdate(req.params.id, req.body, {
+    const developer = await Developer.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!aminity) {
+    if (!developer) {
       return res
         .status(404)
-        .json({ error: "Aminity not found", success: false });
+        .json({ error: "Developer not found", success: false });
     }
     res
       .status(constants.status_code.header.ok)
@@ -90,15 +90,15 @@ exports.updateAminity = async (req, res) => {
   }
 };
 
-exports.deleteAminity = async (req, res) => {
+exports.deleteDeveloper = async (req, res) => {
   try {
-    const aminity = await Aminity.findByIdAndUpdate(req.params.id, {
+    const developer = await Developer.findByIdAndUpdate(req.params.id, {
       IsDeleted: true,
     });
-    if (!aminity) {
+    if (!developer) {
       return res
         .status(404)
-        .json({ error: "Aminity not found", success: false });
+        .json({ error: "Developer not found", success: false });
     }
     res
       .status(constants.status_code.header.ok)
@@ -110,4 +110,3 @@ exports.deleteAminity = async (req, res) => {
   }
 };
 
- 

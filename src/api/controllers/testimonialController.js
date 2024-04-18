@@ -1,11 +1,10 @@
 const constants = require("../../helper/constants");
-const Aminity = require("../../models/aminityModel");
+const Testimonial = require("../../models/testimonialModel");
 
-exports.addAminity = async (req, res) => {
+exports.addTestimonial = async (req, res) => {
   try {
-    req.body.CreatedBy = req.user._id;
-    req.body.UpdatedBy = req.user._id;
-    const aminity = await Aminity.create(req.body);
+    
+    const testimonial = await Testimonial.create(req.body);
     return res
       .status(constants.status_code.header.ok)
       .send({ message: constants.curd.add, success: true });
@@ -16,7 +15,7 @@ exports.addAminity = async (req, res) => {
   }
 };
 
-exports.getAllAminity = async (req, res) => {
+exports.getAllTestimonial = async (req, res) => {
   try {
     const { page, pageSize } = req.query;
     const pageNumber = parseInt(page) || 1;
@@ -26,14 +25,14 @@ exports.getAllAminity = async (req, res) => {
     const searchQuery = {
       IsDeleted: false,
         $or: [
-            { Aminity: { $regex: search, $options: 'i' } }, 
+            { MemberName: { $regex: search, $options: 'i' } }, 
         ]
     };
 
-    const totalCount = await Aminity.countDocuments(searchQuery);
+    const totalCount = await Testimonial.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalCount / size);
 
-    const records = await Aminity.find(searchQuery)
+    const records = await Testimonial.find(searchQuery)
       .skip((pageNumber - 1) * size)
       .limit(size);
     return res.status(constants.status_code.header.ok).send({
@@ -52,17 +51,17 @@ exports.getAllAminity = async (req, res) => {
   }
 };
 
-exports.getAminityById = async (req, res) => {
+exports.getTestimonialById = async (req, res) => {
   try {
-    const aminity = await Aminity.findById(req.params.id);
-    if (!aminity) {
+    const testimonial = await Testimonial.findById(req.params.id);
+    if (!testimonial) {
       return res
         .status(404)
-        .json({ error: "Aminity not found", success: false });
+        .json({ error: "Testimonial not found", success: false });
     }
     return res
       .status(constants.status_code.header.ok)
-      .send({ statusCode: 200, data: aminity, success: true });
+      .send({ statusCode: 200, data: testimonial, success: true });
   } catch (error) {
     return res
       .status(constants.status_code.header.server_error)
@@ -70,15 +69,15 @@ exports.getAminityById = async (req, res) => {
   }
 };
 
-exports.updateAminity = async (req, res) => {
+exports.updateTestimonial = async (req, res) => {
   try {
-    const aminity = await Aminity.findByIdAndUpdate(req.params.id, req.body, {
+    const testimonial = await Testimonial.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!aminity) {
+    if (!testimonial) {
       return res
         .status(404)
-        .json({ error: "Aminity not found", success: false });
+        .json({ error: "Testimonial not found", success: false });
     }
     res
       .status(constants.status_code.header.ok)
@@ -90,15 +89,15 @@ exports.updateAminity = async (req, res) => {
   }
 };
 
-exports.deleteAminity = async (req, res) => {
+exports.deleteTestimonial = async (req, res) => {
   try {
-    const aminity = await Aminity.findByIdAndUpdate(req.params.id, {
+    const testimonial = await Testimonial.findByIdAndUpdate(req.params.id, {
       IsDeleted: true,
     });
-    if (!aminity) {
+    if (!testimonial) {
       return res
         .status(404)
-        .json({ error: "Aminity not found", success: false });
+        .json({ error: "Testimonial not found", success: false });
     }
     res
       .status(constants.status_code.header.ok)

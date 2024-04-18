@@ -60,5 +60,21 @@ module.exports = {
             unauthorized: 401,
             server_error: 500
         }
+    },
+    dbCollectionName:{
+        facings:'facings',
+        propertyOwnerShips:"propertyownerships",
+        propertyStatus:"propertystatus",
+        preferences:"preferences",
+        soils:"soils",
+        propertyWithSubTypes:"propertywithsubtypes",
+        features:"features",
+        aminities:"aminities",
+        fencings:"fencings",
+        floorings:"floorings",
+        furnishedes:"furnishedes",
+        builtAreaTypes:"builtareatypes",
+        area:"areas",
+        areaUnits:"areaunits"
     }
 }
