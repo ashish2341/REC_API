@@ -1,6 +1,8 @@
 
+const { getDB } = require("../../db/db");
 const constants = require("../../helper/constants");
-const { Soils, Facings } = require("../../models/masterModel");
+const {dbCollectionName} = require("../../helper/constants");
+const { Soils, Facings,PropertyWithSubTypes } = require("../../models/masterModel");
 const Properties = require("../../models/propertiesModel");
  
 
@@ -41,7 +43,12 @@ exports.getAllProperties = async (req, res) => {
         }).populate({
             path:"Facing",
             model:Facings
-        })
+        }) .populate({
+            path: 'PropertyType',
+            model: PropertyWithSubTypes,
+           
+          })
+          
             .skip(skip)
             .limit(limit);
         return res.status(constants.status_code.header.ok).send({
@@ -61,8 +68,101 @@ exports.getAllProperties = async (req, res) => {
     }
 };
 
- 
+exports.getPropertiesByDirections = async (req, res) => {
+    try {
+       
+        const directions = req.query.direction;
+        
+        let faceQuery = {Facing: { $regex: directions, $options: 'i' } }
+        const db = getDB()
+        let faceRecords = await db.collection(dbCollectionName.facings).find(faceQuery).toArray() 
+        
+        const query = {
+            Facing: { $in: faceRecords?.map( dir => dir._id) }
+        };
 
+        const properties = await Properties.find(query);
+        return res.status(constants.status_code.header.ok).send({
+            statusCode: 200,
+            data: properties,
+            success: true
+        });
+    } catch (error) {
+        return res.status(constants.status_code.header.server_error).send({
+            statusCode: 500,
+            error: error.message,
+            success: false
+        });
+    }
+};
+
+exports.getPopularProperties = async (req, res) => {
+    try {
+      const query = {IsDeleted:false,IsFeatured:true}
+        const properties = await Properties.find(query);
+        return res.status(constants.status_code.header.ok).send({
+            statusCode: 200,
+            data: properties,
+            success: true
+        });
+    } catch (error) {
+        return res.status(constants.status_code.header.server_error).send({
+            statusCode: 500,
+            error: error.message,
+            success: false
+        });
+    }
+};
+exports.getPropertiesByArea = async (req, res) => {
+    try {
+        const propertiesByCity = await Properties.aggregate([
+            {
+                $group: {
+                    _id: '$City',
+                    properties: { $push: '$$ROOT' } 
+                }
+            }
+        ]);
+      
+        
+        return res.status(constants.status_code.header.ok).send({
+            statusCode: 200,
+            data: propertiesByCity,
+            success: true
+        });
+    } catch (error) {
+        return res.status(constants.status_code.header.server_error).send({
+            statusCode: 500,
+            error: error.message,
+            success: false
+        });
+    }
+};
+exports.getPropertiesByType = async (req, res) => {
+    try {
+        const propertiesByCity = await Properties.aggregate([
+            {
+                $group: {
+                    _id: '$PropertyType',
+                    properties: { $push: '$$ROOT' } 
+                }
+            }
+        ]);
+      
+        
+        return res.status(constants.status_code.header.ok).send({
+            statusCode: 200,
+            data: propertiesByCity,
+            success: true
+        });
+    } catch (error) {
+        return res.status(constants.status_code.header.server_error).send({
+            statusCode: 500,
+            error: error.message,
+            success: false
+        });
+    }
+};
 
 
 

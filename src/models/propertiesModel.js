@@ -12,9 +12,7 @@ const PropertySchema = new  mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Project",
     },
-    PropertyTypeWithSubtype: [{TypeId:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.propertyWithSubTypes},
-    SubTypeId:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.propertyWithSubTypes}
-}],
+    PropertyType: [{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.propertyWithSubTypes}],
     IsDeleted: {type:Boolean,default:false},
     IsEnabled: {type:Boolean,default:true},
     IsExclusive: Boolean,

@@ -6,10 +6,7 @@ const propertySchema = Joi.object({
     Highlight: Joi.string().required(),
     ProeprtyFor: Joi.string().valid('Rent', 'Sale', 'Lease').required(),
     ProjectId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    PropertyTypeWithSubtype: Joi.array().items(Joi.object({
-        TypeId:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-        SubTypeId:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    })),
+    PropertyType:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)).required(),
     IsDeleted: Joi.boolean(),
     IsEnabled: Joi.boolean(),
     IsExclusive: Joi.boolean(),
@@ -87,7 +84,7 @@ const propertySchema = Joi.object({
         IsEnabled: Joi.boolean()
     })),
     IsSold: Joi.boolean(),
-    PurchaseRentBy: Joi.object().required().when('ProeprtyFor', {
+    PurchaseRentBy: Joi.object().optional().when('ProeprtyFor', {
         is: 'Sale',
         then: Joi.object({
             BuyerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
@@ -97,7 +94,7 @@ const propertySchema = Joi.object({
             SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
             Documents: Joi.array().items(Joi.string())
         }).options({ presence: 'required' }),
-        // can put one more then for "Lease"
+        // can put one more `then` for "Lease"
         otherwise: Joi.object({
         TenantId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
         RentAmount: Joi.number().min(0),
@@ -110,5 +107,7 @@ const propertySchema = Joi.object({
     }),
    
 });
-
-module.exports ={ propertySchema};
+const directionSchema = Joi.object({
+    direction:Joi.string().required()
+})
+module.exports ={ propertySchema,directionSchema};
