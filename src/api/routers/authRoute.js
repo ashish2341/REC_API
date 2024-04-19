@@ -12,7 +12,7 @@ router.post('/login',validate(loginSchema,'body'),authController.login)
 router.post('/sendOtp',validate(sendOtpSchema,'body'),authController.sendOtp)
 router.post('/verifyOtp',validate(verifyOtpSchema,'body'),authController.verifyOtp)
 router.post('/upload',uploadSingleFile.single('profilePic'),authController.uploadSingleImage)
-
+router.post('/uploadMultipleFiles',uploadSingleFile.array('mutipleFiles'),authController.uploadMultipleFile)
  
  
 
