@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { dbCollectionName } = require('../helper/constants');
 
 const projectSchema = new mongoose.Schema({
     Title: {
@@ -12,9 +13,7 @@ const projectSchema = new mongoose.Schema({
     Highlight: {
         type: String
     },
-    PropertyTypes: [{
-        type: String
-    }],
+    PropertyTypes: [{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.propertyWithSubTypes}],
     IsDeleted: {
         type: Boolean,
         default: false
@@ -35,20 +34,23 @@ const projectSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    Features: {
+    Features: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Features"
-    },
-    Amenities:{
+    }],
+    Amenities:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Aminity"
-    },
-    Facing: {
+    }],
+    Facing: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Facing"
-    },
+    }],
     City: {
         type: String
+    },
+    Area:{
+        type:String
     },
     State: {
         type: String

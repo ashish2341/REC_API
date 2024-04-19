@@ -43,7 +43,8 @@ exports.getAllProperties = async (req, res) => {
         }) .populate({
             path: 'PropertyType',
             model: PropertyWithSubTypes,
-          }).skip(skip)
+          }).sort({ CreatedDate: -1 })
+            .skip(skip)
             .limit(limit);
         return res.status(constants.status_code.header.ok).send({
             statusCode: 200,
