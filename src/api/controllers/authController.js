@@ -62,6 +62,25 @@ exports.uploadSingleImage = async (req, res) => {
   }
 }
 
+exports.uploadMultipleFile = async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: 'No files uploaded', success: false });
+    }
+
+    const imageUrls = [];
+    req.files.forEach(file => {
+      const imageUrl = `${req.protocol}://${req.hostname}:${PORT}/uploads/${file.filename}`;
+      imageUrls.push(imageUrl);
+    });
+
+    res.status(200).send({ imageUrls, success: true });
+  } catch (error) {
+    return res.status(500).json({ error: error.message, success: false });
+  }
+}
+
+
 exports.sendOtp = async(req,res) => {
   try{
     const {Mobile} = req.body

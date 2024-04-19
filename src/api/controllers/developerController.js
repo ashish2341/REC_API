@@ -34,6 +34,7 @@ exports.getAllDeveloper = async (req, res) => {
     const totalPages = Math.ceil(totalCount / size);
 
     const records = await Developer.find(searchQuery)
+      .sort({ CreatedDate: -1 })
       .skip((pageNumber - 1) * size)
       .limit(size);
     return res.status(constants.status_code.header.ok).send({
