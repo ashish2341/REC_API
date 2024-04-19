@@ -34,8 +34,10 @@ exports.getAllAminity = async (req, res) => {
     const totalPages = Math.ceil(totalCount / size);
 
     const records = await Aminity.find(searchQuery)
+      .sort({ CreatedDate: -1 })
       .skip((pageNumber - 1) * size)
-      .limit(size);
+      .limit(size)
+      ;
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
       data: records,
