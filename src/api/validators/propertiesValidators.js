@@ -15,6 +15,7 @@ const propertySchema = Joi.object({
     Features: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     Aminities: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     Facing: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+    Preferences: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     City: Joi.string(),
     Area:Joi.string().required(),
     State: Joi.string(),
@@ -26,8 +27,8 @@ const propertySchema = Joi.object({
         Latitude: Joi.number(),
         Longitude: Joi.number()
     }),
-    Bedrooms: Joi.number().integer().min(0),
-    Bathrooms: Joi.number().integer().min(0),
+    Bedrooms: Joi.number().integer().min(0).required(),
+    Bathrooms: Joi.number().integer().min(0).required(),
     Fencing: Joi.string(),
     Flooring: Joi.string(),
     Furnished: Joi.string(),
@@ -35,7 +36,8 @@ const propertySchema = Joi.object({
     LandArea: Joi.number().min(0),
     CoveredArea: Joi.number().min(0),
     CarpetArea: Joi.number().min(0),
-    TotalPrice: Joi.number().min(0),
+    TotalPrice: Joi.number().min(0).required(),
+    DiscountPercentage: Joi.number().min(0).required(),
     PerUnitPrice: Joi.number().min(0),
     IsDisplayPrice: Joi.boolean(),
     IsNegotiable: Joi.boolean(),
@@ -59,15 +61,15 @@ const propertySchema = Joi.object({
         LoanTill: Joi.date()
     }),
     OwnershipType: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    DiscountForYears:Joi.number(),
+    Surveillance:Joi.array().items(Joi.string()),
     PropertyStatus: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     Images: Joi.array().items(Joi.object({
-        Name: Joi.string(),
-        Titile: Joi.string(),
-        URL: Joi.string(),
+        Name: Joi.string().required(),
+        Titile: Joi.string().required(),
+        URL: Joi.string().required(),
         Type: Joi.string(),
-        IsDeleted: Joi.boolean(),
-        IsEnabled: Joi.boolean()
-    })),
+    })).required(),
     Documents: Joi.array().items(Joi.object({
         Name: Joi.string(),
         Titile: Joi.string(),
@@ -111,4 +113,9 @@ const propertySchema = Joi.object({
 const directionSchema = Joi.object({
     direction:Joi.string().required()
 })
-module.exports ={ propertySchema,directionSchema};
+const budgetSchema = Joi.object({
+    budget:Joi.string().required(),
+    propertyType:Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
+    buyType:Joi.string().valid('Rent', 'Sale', 'Lease').required()
+})
+module.exports ={ propertySchema,directionSchema,budgetSchema};

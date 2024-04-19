@@ -116,10 +116,27 @@ exports.getPropertiesByArea = async (req, res) => {
             {
                 $group: {
                     _id: '$Area',
-                    properties: { $push: '$$ROOT' } 
+                    propertiesCount: { $count: {} } 
+                }
+            },
+            {
+                $lookup: {
+                    from: "properties", // Assuming the collection name is "properties"
+                    localField: "_id",
+                    foreignField: "Area",
+                    as: "properties"
+                }
+            },
+            {
+                $project: {
+                    Area: "$_id",
+                    Description: "$properties.Description", 
+                    Images: "$properties.Images", 
+                    properties: "$propertiesCount"
                 }
             }
         ]);
+        
       
         
         return res.status(constants.status_code.header.ok).send({
@@ -152,10 +169,36 @@ exports.getPropertiesByType = async (req, res) => {
             {
               $group: {
                 _id: "$area.Type",   // Group by the "Type" field of the "propertywithsubtypes" collection
-                properties: { $push: "$$ROOT" }   // Push entire documents into the "properties" array
+                properties: { $count: {} }    
               }
-            }
+            },
+            
           ])
+      
+        
+        return res.status(constants.status_code.header.ok).send({
+            statusCode: 200,
+            data: properties,
+            success: true
+        });
+    } catch (error) {
+        return res.status(constants.status_code.header.server_error).send({
+            statusCode: 500,
+            error: error.message,
+            success: false
+        });
+    }
+};
+exports.getPropertiesByBudget = async (req, res) => {
+    try {
+        const { buyType, budget, propertyType } = req.query;
+        const [minBudget, maxBudget] = budget.split('-').map(parseFloat);
+        const query = {
+            ProeprtyFor: buyType,
+            TotalPrice: { $gte: minBudget, $lte: maxBudget },
+            PropertyType: propertyType
+        };
+        const properties = await Properties.find(query).populate('PropertyType').populate('Facing');
       
         
         return res.status(constants.status_code.header.ok).send({
