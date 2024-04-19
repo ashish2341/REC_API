@@ -10,7 +10,8 @@ const developerRoutes = require('./developerRoute');
 const faqRoutes = require('./faqRoute');
 const testimonialRoutes = require('./testimonialRoute');
 const projectEnquiryRoutes = require('./projectEnquiryRoute');
-const projectRoutes = require('./projectRoute')
+const projectRoutes = require('./projectRoute');
+const blogRoutes = require('./blogRoute');
 
 
 
@@ -28,6 +29,7 @@ allRouters.use('/faq',faqRoutes);
 allRouters.use('/testimonial',testimonialRoutes);
 allRouters.use('/enquiry',projectEnquiryRoutes);
 allRouters.use('/project',projectRoutes);
+allRouters.use('/blog',blogRoutes);
 
 
 module.exports =  allRouters;
