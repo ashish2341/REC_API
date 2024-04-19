@@ -75,6 +75,7 @@ module.exports = {
         furnishedes:"furnishedes",
         builtAreaTypes:"builtareatypes",
         area:"areas",
-        areaUnits:"areaunits"
+        areaUnits:"areaunits",
+        blogTypes:"blogtypes"
     }
 }
