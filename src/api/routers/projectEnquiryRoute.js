@@ -9,7 +9,7 @@ const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
 const { addProjectEnquiry, getAllProjectEnquiry, getProjectEnquiryById, updateProjectEnquiry, deleteProjectEnquiry } = require('../controllers/projectEnquiryController');
 const projectEnquiryValidationSchema = require('../validators/projectEnquiryValidator');
 
-router.post('/addProjectEnquiry',auth,validate(projectEnquiryValidationSchema,'body'),addProjectEnquiry)
+router.post('/addProjectEnquiry',validate(projectEnquiryValidationSchema,'body'),addProjectEnquiry)
 router.get('/allProjectEnquiry',auth,validate(getRecordsSchema,'query'),getAllProjectEnquiry)
 router.get('/:id',auth,validate(idSchema,'params'),getProjectEnquiryById)
 router.patch('/updateProjectEnquiry/:id',validate(idSchema,'params'),auth,updateProjectEnquiry)
