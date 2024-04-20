@@ -5,13 +5,16 @@ const router = express.Router()
 const { validate } = require('../../helper/customValidation');
 const auth = require('../middleware/auth');
 const { addPropeties, getAllProperties, getPropertiesByDirections, getPopularProperties, 
-    getPropertiesByArea, getPropertiesByType, getPropertiesByBudget } = require('../controllers/propertiesController');
+    getPropertiesByArea, getPropertiesByType, getPropertiesByBudget, getPropertiesById, updateProperties, deleteProperties } = require('../controllers/propertiesController');
 const {propertySchema, directionSchema, budgetSchema} = require('../validators/propertiesValidators');
-const { getRecordsSchema } = require('../validators/commonValidator');
+const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
 
 
 router.post('/addProperty',auth,validate(propertySchema,'body'),addPropeties)
 router.get('/allProperties',auth,validate(getRecordsSchema,'query'),getAllProperties)
+router.get('/:id',auth,validate(idSchema,'params'),getPropertiesById)
+router.patch('/updateProperty/:id',validate(idSchema,'params'),auth,updateProperties)
+router.delete('/deleteProperty/:id',auth,validate(idSchema,'params'),deleteProperties)
 router.get('/propertyByDirections',auth,validate(directionSchema,"query"),getPropertiesByDirections)
 router.get('/popularProperty',getPopularProperties)
 router.get('/propertyByArea',getPropertiesByArea)

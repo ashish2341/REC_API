@@ -63,6 +63,66 @@ exports.getAllProperties = async (req, res) => {
     }
 };
 
+exports.getPropertiesById = async (req, res) => {
+    try {
+      const properties = await Properties.findById(req.params.id);
+      if (!properties) {
+        return res
+          .status(404)
+          .json({ error: "Properties not found", success: false });
+      }
+      return res
+        .status(constants.status_code.header.ok)
+        .send({ statusCode: 200, data: properties, success: true });
+    } catch (error) {
+      return res
+        .status(constants.status_code.header.server_error)
+        .send({ statusCode: 500, error: error.message, success: false });
+    }
+  };
+  
+  exports.updateProperties = async (req, res) => {
+    try {
+      const properties = await Properties.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+      });
+      if (!properties) {
+        return res
+          .status(404)
+          .json({ error: "Properties not found", success: false });
+      }
+      res
+        .status(constants.status_code.header.ok)
+        .send({ statusCode: 200, message: constants.curd.update, success: true });
+    } catch (error) {
+      return res
+        .status(constants.status_code.header.server_error)
+        .send({ statusCode: 500, error: error.message, success: false });
+    }
+  };
+  
+  exports.deleteProperties = async (req, res) => {
+    try {
+      const properties = await Properties.findByIdAndUpdate(req.params.id, {
+        IsDeleted: true,
+      });
+      if (!properties) {
+        return res
+          .status(404)
+          .json({ error: "Properties not found", success: false });
+      }
+      res
+        .status(constants.status_code.header.ok)
+        .send({ statusCode: 200, message: constants.curd.delete, success: true });
+    } catch (error) {
+      return res
+        .status(constants.status_code.header.server_error)
+        .send({ statusCode: 500, error: error.message, success: false });
+    }
+  };
+  
+   
+  
 exports.getPropertiesByDirections = async (req, res) => {
     try {
        
