@@ -2,7 +2,7 @@
 const { getDB } = require("../../db/db");
 const constants = require("../../helper/constants");
 const {dbCollectionName} = require("../../helper/constants");
-const { Soils, Facings,PropertyWithSubTypes, AreaUnits, Preferences, PropertyStatus, OwnershipTypes } = require("../../models/masterModel");
+const { Soils, Facings,PropertyWithSubTypes, AreaUnits, Preferences, PropertyStatus, OwnershipTypes, Area, Fecnings, Floorings, Furnishedes, BuiltAreaTypes } = require("../../models/masterModel");
 const Properties = require("../../models/propertiesModel");
  
 
@@ -59,7 +59,23 @@ exports.getAllProperties = async (req, res) => {
           }).populate({
             path: 'OwnershipType',
             model: OwnershipTypes,
-          })
+          }).populate({
+            path: 'Area',
+            model: Area,
+          }).populate({
+            path: 'Fecnings',
+            model: Fecnings,
+          }).populate({
+            path: 'Floorings',
+            model: Floorings,
+          }).populate({
+            path: 'Furnishedes',
+            model: Furnishedes,
+          }).populate({
+            path: 'BuiltAreaTypes',
+            model: BuiltAreaTypes,
+          }).populate("Aminity")
+          .populate("Features")
           .sort({ CreatedDate: -1 })
             .skip(skip)
             .limit(limit);
@@ -82,7 +98,45 @@ exports.getAllProperties = async (req, res) => {
 
 exports.getPropertiesById = async (req, res) => {
     try {
-      const properties = await Properties.findById(req.params.id);
+      const properties = await Properties.findById(req.params.id).populate({
+        path:"Facing",
+        model:Facings
+    }) .populate({
+        path: 'PropertyType',
+        model: PropertyWithSubTypes,
+      }) .populate({
+        path: 'AreaUnits',
+        model: AreaUnits,
+      }) .populate({
+        path: 'Soil',
+        model: Soils,
+      }) .populate({
+        path: 'Preferences',
+        model: Preferences,
+      }).populate({
+        path: 'PropertyStatus',
+        model: PropertyStatus,
+      }).populate({
+        path: 'OwnershipType',
+        model: OwnershipTypes,
+      }).populate({
+        path: 'Area',
+        model: Area,
+      }).populate({
+        path: 'Fecnings',
+        model: Fecnings,
+      }).populate({
+        path: 'Floorings',
+        model: Floorings,
+      }).populate({
+        path: 'Furnishedes',
+        model: Furnishedes,
+      }).populate({
+        path: 'BuiltAreaTypes',
+        model: BuiltAreaTypes,
+      }).populate("Aminity")
+      .populate("Features");
+      
       if (!properties) {
         return res
           .status(404)

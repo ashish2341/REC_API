@@ -2,7 +2,7 @@ const express = require('express')
 const authController = require('../controllers/authController')
 const router = express.Router()
 
-const { registerSchema ,loginSchema,sendOtpSchema,verifyOtpSchema, forgetSchema}  = require('../validators/authValidator');
+const { registerSchema ,loginSchema,sendOtpSchema,verifyOtpSchema, forgetSchema, imageSchema}  = require('../validators/authValidator');
 const { validate } = require('../../helper/customValidation');
  const {uploadSingleFile} = require('../../helper/imgUpload')
 
@@ -11,7 +11,7 @@ router.post('/forgetPassword',validate(forgetSchema,'body'),authController.forge
 router.post('/login',validate(loginSchema,'body'),authController.login)
 router.post('/sendOtp',validate(sendOtpSchema,'body'),authController.sendOtp)
 router.post('/verifyOtp',validate(verifyOtpSchema,'body'),authController.verifyOtp)
-router.post('/upload',uploadSingleFile.single('profilePic'),authController.uploadSingleImage)
+router.post('/upload',uploadSingleFile.single('profilePic'),validate(imageSchema,'body'),authController.uploadSingleImage)
 router.post('/uploadMultipleFiles',uploadSingleFile.array('mutipleFiles'),authController.uploadMultipleFile)
  
  
