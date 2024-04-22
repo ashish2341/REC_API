@@ -17,6 +17,7 @@ const propertySchema = Joi.object({
     Facing: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     Preferences: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     City: Joi.string(),
+    AreaUnits:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     Area:Joi.string().required(),
     State: Joi.string(),
     Country: Joi.string(),
