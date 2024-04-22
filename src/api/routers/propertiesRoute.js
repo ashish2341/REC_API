@@ -12,14 +12,15 @@ const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
 
 router.post('/addProperty',auth,validate(propertySchema,'body'),addPropeties)
 router.get('/allProperties',auth,validate(getRecordsSchema,'query'),getAllProperties)
-router.get('/property/:id',auth,validate(idSchema,'params'),getPropertiesById)
-router.patch('/updateProperty/:id',validate(idSchema,'params'),auth,updateProperties)
-router.delete('/deleteProperty/:id',auth,validate(idSchema,'params'),deleteProperties)
 router.get('/propertyByDirections',auth,validate(directionSchema,"query"),getPropertiesByDirections)
 router.get('/popularProperty',getPopularProperties)
 router.get('/propertyByArea',getPropertiesByArea)
 router.get('/propertyByType',getPropertiesByType)
 router.get('/propertyByBudget',auth,validate(budgetSchema,'query'),getPropertiesByBudget)
+router.get('/property/:id',auth,validate(idSchema,'params'),getPropertiesById)
+router.patch('/updateProperty/:id',validate(idSchema,'params'),auth,updateProperties)
+router.delete('/deleteProperty/:id',auth,validate(idSchema,'params'),deleteProperties)
+
 
  
 

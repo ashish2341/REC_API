@@ -2,7 +2,7 @@
 const { getDB } = require("../../db/db");
 const constants = require("../../helper/constants");
 const {dbCollectionName} = require("../../helper/constants");
-const { Soils, Facings,PropertyWithSubTypes } = require("../../models/masterModel");
+const { Soils, Facings,PropertyWithSubTypes, AreaUnits, Preferences, PropertyStatus, OwnershipTypes } = require("../../models/masterModel");
 const Properties = require("../../models/propertiesModel");
  
 
@@ -26,6 +26,7 @@ exports.getAllProperties = async (req, res) => {
         const search = req.query.search || '';
        
         const searchQuery = {
+            IsDeleted: false,
             $or: [
                 { Titile: { $regex: search, $options: 'i' } },
                 { Description: { $regex: search, $options: 'i' } }, 
@@ -43,7 +44,23 @@ exports.getAllProperties = async (req, res) => {
         }) .populate({
             path: 'PropertyType',
             model: PropertyWithSubTypes,
-          }).sort({ CreatedDate: -1 })
+          }) .populate({
+            path: 'AreaUnits',
+            model: AreaUnits,
+          }) .populate({
+            path: 'Soil',
+            model: Soils,
+          }) .populate({
+            path: 'Preferences',
+            model: Preferences,
+          }).populate({
+            path: 'PropertyStatus',
+            model: PropertyStatus,
+          }).populate({
+            path: 'OwnershipType',
+            model: OwnershipTypes,
+          })
+          .sort({ CreatedDate: -1 })
             .skip(skip)
             .limit(limit);
         return res.status(constants.status_code.header.ok).send({

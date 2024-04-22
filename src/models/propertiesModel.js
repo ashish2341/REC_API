@@ -31,6 +31,10 @@ const PropertySchema = new  mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:dbCollectionName.facings,
     }],
+    AreaUnits: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:dbCollectionName.areaUnits,
+    },
     Area:{type:String,required:true},
     City: String,
     State: String,
