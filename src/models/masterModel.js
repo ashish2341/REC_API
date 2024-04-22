@@ -9,4 +9,12 @@ const AreaUnits = mongoose.model(dbCollectionName.areaUnits,mongoose.Schema({}))
 const OwnershipTypes = mongoose.model(dbCollectionName.propertyOwnerShips,mongoose.Schema({}));
 const PropertyStatus = mongoose.model(dbCollectionName.propertyStatus,mongoose.Schema({}));
 const Preferences = mongoose.model(dbCollectionName.preferences,mongoose.Schema({}));
-module.exports = {Soils,Facings,PropertyWithSubTypes,AreaUnits,OwnershipTypes,Preferences,PropertyStatus}
+const Area = mongoose.model(dbCollectionName.area,mongoose.Schema({}));
+const Fecnings = mongoose.model(dbCollectionName.fencings,mongoose.Schema({}));
+const Floorings = mongoose.model(dbCollectionName.floorings,mongoose.Schema({}));
+const Furnishedes = mongoose.model(dbCollectionName.furnishedes,mongoose.Schema({}));
+const BuiltAreaTypes = mongoose.model(dbCollectionName.builtAreaTypes,mongoose.Schema({}));
+
+
+module.exports = {Soils,Facings,PropertyWithSubTypes,AreaUnits,OwnershipTypes,
+    Preferences,PropertyStatus,Area,Fecnings,Floorings,Furnishedes,BuiltAreaTypes}
