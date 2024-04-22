@@ -1,5 +1,4 @@
 
-const { preferences } = require("joi");
 const { getDB } = require("../../db/db");
 const constants = require("../../helper/constants");
 const {dbCollectionName} = require("../../helper/constants");
