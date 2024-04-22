@@ -191,28 +191,23 @@ exports.getPopularProperties = async (req, res) => {
 exports.getPropertiesByArea = async (req, res) => {
     try {
         const propertiesByCity = await Properties.aggregate([
-            {
-                $group: {
-                    _id: '$Area',
-                    propertiesCount: { $count: {} } 
-                }
-            },
-            {
-                $lookup: {
-                    from: "properties", // Assuming the collection name is "properties"
-                    localField: "_id",
-                    foreignField: "Area",
-                    as: "properties"
-                }
-            },
-            {
-                $project: {
-                    Area: "$_id",
-                    Description: "$properties.Description", 
-                    Images: "$properties.Images", 
-                    properties: "$propertiesCount"
-                }
+          {
+            $group: {
+                _id: '$Area',
+                propertiesCount: { $count: {} }
             }
+        },
+        {
+          $lookup: {
+            from: 'areas',
+            localField: '_id',
+            foreignField: 'Area',
+            as: 'areaInfo'
+        }
+        },
+        {
+            $unwind: '$areaInfo' // Unwind the array if needed
+        },  
         ]);
         
       
@@ -232,26 +227,38 @@ exports.getPropertiesByArea = async (req, res) => {
 };
 exports.getPropertiesByType = async (req, res) => {
     try {
-        let properties = await Properties.aggregate([
+        let properties = await Properties.aggregate(
+          [
             {
-              $lookup: {
-                from: "propertywithsubtypes",  // Name of the collection to join with
-                localField: "PropertyType",  // Field in the "properties" collection
-                foreignField: "_id",   // Field in the "propertywithsubtypes" collection
-                as: "area"   // Name for the joined field
-              }
+                $lookup: {
+                    from: "propertywithsubtypes",
+                    localField: "PropertyType",
+                    foreignField: "_id",
+                    as: "area"
+                }
             },
             {
-              $unwind: "$area"   // Unwind the array created by the lookup
+                $unwind: "$area"
             },
             {
-              $group: {
-                _id: "$area.Type",   // Group by the "Type" field of the "propertywithsubtypes" collection
-                properties: { $count: {} }    
-              }
+                $group: {
+                    _id: "$area.Type",
+                    PropCount: { $count: {} },
+                    PropImage: { $first: "$area.PropImage" }, // Extract PropImage from the first document in the group
+                    PropType: { $first: "$area.Type" } // Extract PropType from the first document in the group
+                }
             },
-            
-          ])
+            {
+                $project: {
+                    _id: 0, // Exclude _id field from the output
+                    PropType: 1,
+                    PropImage: 1,
+                    PropCount: 1
+                }
+            }
+        ]
+        
+        )
       
         
         return res.status(constants.status_code.header.ok).send({
