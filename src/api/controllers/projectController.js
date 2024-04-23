@@ -1,6 +1,6 @@
 const constants = require("../../helper/constants");
 const Project = require("../../models/projectModel");
-const {Facings,PropertyWithSubTypes } = require("../../models/masterModel");
+const {Facings,PropertyWithSubTypes, PropertyStatus, Area } = require("../../models/masterModel");
 
 exports.addProject = async (req, res) => {
   try {
@@ -37,7 +37,13 @@ exports.getAllProject = async (req, res) => {
     }) .populate({
         path: 'PropertyType',
         model: PropertyWithSubTypes,
-      }).sort({ CreatedDate: -1 });
+      }).populate({
+        path: 'Area',
+        model: Area})
+        .populate({
+          path: 'ProjectStatus',
+          model: PropertyStatus})
+      .sort({ CreatedDate: -1 });
 
     const totalPages = Math.ceil(totalCount / size);
 
@@ -64,7 +70,18 @@ exports.getAllProject = async (req, res) => {
 
 exports.getProjectById = async (req, res) => {
   try {
-    const project = await Project.findById(req.params.id);
+    const project = await Project.findById(req.params.id).populate({
+      path:"Facing",
+      model:Facings
+  }) .populate({
+      path: 'PropertyType',
+      model: PropertyWithSubTypes,
+    }).populate({
+      path: 'Area',
+      model: Area})
+      .populate({
+        path: 'ProjectStatus',
+        model: PropertyStatus});
     if (!project) {
       return res
         .status(404)

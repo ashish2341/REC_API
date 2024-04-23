@@ -13,6 +13,10 @@ const projectEnquirySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    MolileNumber: {
+        type:String,
+        required: true
+    },
     IsDeleted: {
         type: Boolean,
         default: false

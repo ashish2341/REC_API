@@ -8,6 +8,7 @@ const projectSchemaValidation = Joi.object({
     PropertyTypes: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     IsExclusive: Joi.boolean(),
     IsFeatured: Joi.boolean(),
+    IsEnabled: Joi.boolean(),
     IsNew: Joi.boolean(),
     Features: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     Amenities: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)), 

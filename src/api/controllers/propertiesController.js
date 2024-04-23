@@ -74,8 +74,7 @@ exports.getAllProperties = async (req, res) => {
           }).populate({
             path: 'BuiltAreaTypes',
             model: BuiltAreaTypes,
-          }).populate("Aminity")
-          .populate("Features")
+          })
           .sort({ CreatedDate: -1 })
             .skip(skip)
             .limit(limit);
@@ -134,8 +133,7 @@ exports.getPropertiesById = async (req, res) => {
       }).populate({
         path: 'BuiltAreaTypes',
         model: BuiltAreaTypes,
-      }).populate("Aminity")
-      .populate("Features");
+      })
       
       if (!properties) {
         return res
