@@ -36,10 +36,10 @@ const PropertySchema = new  mongoose.Schema({
         ref:dbCollectionName.areaUnits,
     },
     Area:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.area},
-    Fecnings:[{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.fencings}],
-    Floorings:[{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.floorings}],
-    Furnishedes:[{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.furnishedes}],
-    BuiltAreaTypes: [{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.builtAreaTypes}],
+    Fecnings:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.fencings},
+    Floorings:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.floorings},
+    Furnishedes:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.furnishedes},
+    BuiltAreaTypes: {type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.builtAreaTypes},
     City: String,
     State: String,
     Country: String,
@@ -64,10 +64,6 @@ const PropertySchema = new  mongoose.Schema({
     },
     Bedrooms: Number,
     Bathrooms: Number,
-    Fencing: String,
-    Flooring: String,
-    Furnished: String,
-    BuiltAreaType: String,
     LandArea: Number,
     CoveredArea: Number,
     CarpetArea: Number,
@@ -141,7 +137,29 @@ const PropertySchema = new  mongoose.Schema({
     }],
     DiscountPercentage: Number,
     DiscountForYears: Number,
-    Surveillance: [String]
+    Surveillance: [String],
+    FloorAndCounter: {
+        Dining: String,
+        MasterBedroom: String,
+        OtherBedroom: String,
+        Kitchen: String,
+        Toilets: String,
+        Balcony: String
+    },
+    Fitting: {
+        Electrical: String,
+        Toilets: String,
+        Kitchen: String,
+        Doors: String,
+        Windows: String,
+        Others: String
+    },
+    WallAndCeiling: {
+        Interior: String,
+        Exterior: String,
+        Kitchen: String,
+        Toilets: String
+    }
 });
 
 const Property = mongoose.model('Properties', PropertySchema);

@@ -12,10 +12,6 @@ const propertySchema = Joi.object({
     IsExclusive: Joi.boolean(),
     IsFeatured: Joi.boolean(),
     IsNew: Joi.boolean(),
-    Features: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
-    Aminities: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
-    Facing: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
-    Preferences: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     City: Joi.string(),
     AreaUnits:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     Area:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
@@ -34,10 +30,10 @@ const propertySchema = Joi.object({
     }),
     Bedrooms: Joi.number().integer().min(0).required(),
     Bathrooms: Joi.number().integer().min(0).required(),
-    Fencing: Joi.string(),
-    Flooring: Joi.string(),
-    Furnished: Joi.string(),
-    BuiltAreaType: Joi.string(),
+    Fencing: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    Flooring: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    Furnished: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    BuiltAreaType: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     LandArea: Joi.number().min(0),
     CoveredArea: Joi.number().min(0),
     CarpetArea: Joi.number().min(0),
@@ -92,6 +88,28 @@ const propertySchema = Joi.object({
         IsEnabled: Joi.boolean()
     })),
     IsSold: Joi.boolean(),
+    FloorAndCounter: {
+        Dining: { type: String },
+        MasterBedroom: { type: String },
+        OtherBedroom: { type: String },
+        Kitchen: { type: String },
+        Toilets: { type: String },
+        Balcony: { type: String }
+    },
+    Fitting: {
+        Electrical: { type: String },
+        Toilets: { type: String },
+        Kitchen: { type: String },
+        Doors: { type: String },
+        Windows: { type: String },
+        Others: { type: String }
+    },
+    WallAndCeiling: {
+        Interior: { type: String },
+        Exterior: { type: String },
+        Kitchen: { type: String },
+        Toilets: { type: String }
+    }
     // PurchaseRentBy: Joi.object().optional().when('ProeprtyFor', {
     //     is: 'Sale',
     //     then: Joi.object({

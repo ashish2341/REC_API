@@ -42,16 +42,11 @@ const projectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Aminity"
     }],
-    Facing: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Facing"
-    }],
+    Facing: [{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.facings}],
     City: {
         type: String
     },
-    Area:{
-        type:String
-    },
+    Area:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.area},
     State: {
         type: String
     },
@@ -103,7 +98,7 @@ const projectSchema = new mongoose.Schema({
     }],
     ProjectStatus: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "PropertyStatus"
+        ref: dbCollectionName.propertyStatus
     },
     Images: [{
         Name: String,
