@@ -84,6 +84,7 @@ const PropertySchema = new  mongoose.Schema({
     FloorsAllowed: Number,
     IsInterstedInJoinedVenture: Boolean,
     Balconies: Number,
+    Faq:[{Question:String,Answer:String}],
     ApprovedBy: [{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",

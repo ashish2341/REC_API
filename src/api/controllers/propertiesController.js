@@ -299,7 +299,8 @@ exports.getPropertiesByType = async (req, res) => {
                     _id: "$area.Type",
                     PropCount: { $count: {} },
                     PropImage: { $first: "$area.PropImage" }, // Extract PropImage from the first document in the group
-                    PropType: { $first: "$area.Type" } // Extract PropType from the first document in the group
+                    PropType: { $first: "$area.Type" },
+                    PropDesc: { $first: "$area.PropDescription" } 
                 }
             },
             {
@@ -307,7 +308,8 @@ exports.getPropertiesByType = async (req, res) => {
                     _id: 0, // Exclude _id field from the output
                     PropType: 1,
                     PropImage: 1,
-                    PropCount: 1
+                    PropCount: 1,
+                    PropDesc:1
                 }
             }
         ]
