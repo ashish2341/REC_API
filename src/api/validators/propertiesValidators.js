@@ -69,6 +69,10 @@ const propertySchema = Joi.object({
     DiscountForYears:Joi.number(),
     Surveillance:Joi.array().items(Joi.string()),
     PropertyStatus: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    Faq:Joi.array().items(Joi.object({
+    Question:Joi.string().required(),
+    Answer:Joi.string().required()
+    })),
     Images: Joi.array().items(Joi.object({
         Name: Joi.string().required(),
         Titile: Joi.string().required(),
