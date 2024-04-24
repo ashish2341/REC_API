@@ -5,6 +5,8 @@ const projectEnquiryValidationSchema = Joi.object({
     Email: Joi.string().email().required(),
     Message: Joi.string().required(),
     MolileNumber: Joi.string().required(),
+    EnquiryData:Joi.string().required(),
+    EnquiryType:Joi.string().valid('Project','Property','Astrology').required()
 });
 
 module.exports = projectEnquiryValidationSchema;

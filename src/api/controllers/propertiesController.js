@@ -1,9 +1,11 @@
 
+const { ObjectId } = require("mongodb");
 const { getDB } = require("../../db/db");
 const constants = require("../../helper/constants");
 const {dbCollectionName} = require("../../helper/constants");
 const { Soils, Facings,PropertyWithSubTypes, AreaUnits, Preferences, PropertyStatus, OwnershipTypes, Area, Fecnings, Floorings, Furnishedes, BuiltAreaTypes } = require("../../models/masterModel");
 const Properties = require("../../models/propertiesModel");
+const { formatNumber } = require("../../helper/utils");
  
 
 exports.addPropeties = async (req, res) => {
@@ -253,7 +255,7 @@ exports.getPropertiesByArea = async (req, res) => {
           $lookup: {
             from: 'areas',
             localField: '_id',
-            foreignField: 'Area',
+            foreignField: '_id',
             as: 'areaInfo'
         }
         },
@@ -282,34 +284,22 @@ exports.getPropertiesByType = async (req, res) => {
         let properties = await Properties.aggregate(
           [
             {
-                $lookup: {
-                    from: "propertywithsubtypes",
-                    localField: "PropertyType",
-                    foreignField: "_id",
-                    as: "area"
-                }
-            },
-            {
-                $unwind: "$area"
-            },
-            {
-                $group: {
-                    _id: "$area.Type",
-                    PropCount: { $count: {} },
-                    PropImage: { $first: "$area.PropImage" }, // Extract PropImage from the first document in the group
-                    PropType: { $first: "$area.Type" },
-                    PropDesc: { $first: "$area.PropDescription" } 
-                }
-            },
-            {
-                $project: {
-                    _id: 0, // Exclude _id field from the output
-                    PropType: 1,
-                    PropImage: 1,
-                    PropCount: 1,
-                    PropDesc:1
-                }
-            }
+              $group: {
+                  _id: '$PropertyType',
+                  propertiesCount: { $count: {} }
+              }
+          },
+          {
+            $lookup: {
+              from: 'propertywithsubtypes',
+              localField: '_id',
+              foreignField: '_id',
+              as: 'areaInfo'
+          }
+          },
+          {
+              $unwind: '$areaInfo' // Unwind the array if needed
+          },  
         ]
         
         )
@@ -330,15 +320,31 @@ exports.getPropertiesByType = async (req, res) => {
 };
 exports.getPropertiesByBudget = async (req, res) => {
     try {
-        const { buyType, budget, propertyType } = req.query;
-        const [minBudget, maxBudget] = budget.split('-').map(parseFloat);
-        const query = {
-            ProeprtyFor: buyType,
-            TotalPrice: { $gte: minBudget, $lte: maxBudget },
-            PropertyType: propertyType
-        };
-        const properties = await Properties.find(query).populate('PropertyType').populate('Facing');
+      const { buyType, budget, propertyType, bhkType, facing, areaType } = req.query;
+      const [minBudget, maxBudget] = budget ? budget.split('-').map(parseFloat) : [];
+      const queryObj = {};
+      if(minBudget && maxBudget){
+        queryObj.TotalPrice = { $gte: minBudget, $lte: maxBudget }
+      }
+      const queryParams = [
+          { key: 'ProeprtyFor', value: buyType },
+          { key: 'PropertyType', value: propertyType },
+          { key: 'BhkType', value: bhkType },
+          { key: 'Area', value: areaType }
+      ];
       
+      for (const param of queryParams) {
+          if (param.value) {
+              queryObj[param.key] = param.value;
+          }
+      }
+      
+      if (facing?.length > 0) {
+          queryObj.Facing = { $all: facing.split(',') };
+      }
+      
+        const properties = await Properties.find(queryObj).populate('PropertyType').populate('Facing').populate('Area');
+        
         
         return res.status(constants.status_code.header.ok).send({
             statusCode: 200,
