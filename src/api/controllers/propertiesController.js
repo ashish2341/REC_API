@@ -74,7 +74,7 @@ exports.getAllProperties = async (req, res) => {
             path: 'Furnished',
             model: Furnishedes,
           }).populate({
-            path: 'BuiltAreaTyp',
+            path: 'BuiltAreaType',
             model: BuiltAreaTypes,
           })
           .populate({

@@ -49,7 +49,10 @@ const propertySchema = Joi.object({
     IsInterstedInJoinedVenture: Joi.boolean(),
     Balconies: Joi.number().integer().min(0),
     ApprovedBy: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+    Features: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+    Aminities: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     Facing: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+    Preferences: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     ReraNumber: Joi.string(),
     Soil:  Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     IsLoanable: Joi.boolean(),
@@ -90,28 +93,28 @@ const propertySchema = Joi.object({
         IsEnabled: Joi.boolean()
     })),
     IsSold: Joi.boolean(),
-    FloorAndCounter: {
-        Dining: { type: String },
-        MasterBedroom: { type: String },
-        OtherBedroom: { type: String },
-        Kitchen: { type: String },
-        Toilets: { type: String },
-        Balcony: { type: String }
-    },
-    Fitting: {
-        Electrical: { type: String },
-        Toilets: { type: String },
-        Kitchen: { type: String },
-        Doors: { type: String },
-        Windows: { type: String },
-        Others: { type: String }
-    },
-    WallAndCeiling: {
-        Interior: { type: String },
-        Exterior: { type: String },
-        Kitchen: { type: String },
-        Toilets: { type: String }
-    }
+    FloorAndCounter: Joi.object({
+        Dining: Joi.string(),
+        MasterBedroom: Joi.string(),
+        OtherBedroom: Joi.string(),
+        Kitchen: Joi.string(),
+        Toilets: Joi.string(),
+        Balcony: Joi.string()
+    }),
+    Fitting: Joi.object({
+        Electrical: Joi.string(),
+        Toilets: Joi.string(),
+        Kitchen: Joi.string(),
+        Doors: Joi.string(),
+        Windows: Joi.string(),
+        Others: Joi.string()
+    }),
+    WallAndCeiling: Joi.object({
+        Interior: Joi.string(),
+        Exterior: Joi.string(),
+        Kitchen: Joi.string(),
+        Toilets: Joi.string()
+    })
     // PurchaseRentBy: Joi.object().optional().when('ProeprtyFor', {
     //     is: 'Sale',
     //     then: Joi.object({

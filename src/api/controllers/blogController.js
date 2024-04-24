@@ -33,6 +33,10 @@ exports.getAllBlog = async (req, res) => {
     const totalPages = Math.ceil(totalCount / size);
 
     const records = await Blog.find(searchQuery)
+    .populate({
+      path: 'BlogType',
+      model: blogTypes,
+    })
       .sort({ CreatedDate: -1 })
       .skip((pageNumber - 1) * size)
       .limit(size)

@@ -40,7 +40,7 @@ const PropertySchema = new  mongoose.Schema({
     Fencing:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.fencings},
     Flooring:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.floorings},
     Furnished:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.furnishedes},
-    BuiltAreaTyp: {type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.builtAreaTypes},
+    BuiltAreaType: {type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.builtAreaTypes},
     City: String,
     State: String,
     Country: String,
