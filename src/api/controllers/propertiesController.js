@@ -3,7 +3,7 @@ const { ObjectId } = require("mongodb");
 const { getDB } = require("../../db/db");
 const constants = require("../../helper/constants");
 const {dbCollectionName} = require("../../helper/constants");
-const { Soils, Facings,PropertyWithSubTypes, AreaUnits, Preferences, PropertyStatus, OwnershipTypes, Area, Fecnings, Floorings, Furnishedes, BuiltAreaTypes } = require("../../models/masterModel");
+const { Soils, Facings,PropertyWithSubTypes, AreaUnits, Preferences, PropertyStatus, OwnershipTypes, Area, Fecnings, Floorings, Furnishedes, BuiltAreaTypes, BhkType } = require("../../models/masterModel");
 const Properties = require("../../models/propertiesModel");
 const { formatNumber } = require("../../helper/utils");
  
@@ -65,17 +65,21 @@ exports.getAllProperties = async (req, res) => {
             path: 'Area',
             model: Area,
           }).populate({
-            path: 'Fecnings',
+            path: 'Fencing',
             model: Fecnings,
           }).populate({
-            path: 'Floorings',
+            path: 'Flooring',
             model: Floorings,
           }).populate({
-            path: 'Furnishedes',
+            path: 'Furnished',
             model: Furnishedes,
           }).populate({
-            path: 'BuiltAreaTypes',
+            path: 'BuiltAreaTyp',
             model: BuiltAreaTypes,
+          })
+          .populate({
+            path: 'BhkType',
+            model: BhkType,
           })
           .sort({ CreatedDate: -1 })
             .skip(skip)
@@ -124,17 +128,21 @@ exports.getPropertiesById = async (req, res) => {
         path: 'Area',
         model: Area,
       }).populate({
-        path: 'Fecnings',
+        path: 'Fencing',
         model: Fecnings,
       }).populate({
-        path: 'Floorings',
+        path: 'Flooring',
         model: Floorings,
       }).populate({
-        path: 'Furnishedes',
+        path: 'Furnished',
         model: Furnishedes,
       }).populate({
-        path: 'BuiltAreaTypes',
+        path: 'BuiltAreaTyp',
         model: BuiltAreaTypes,
+      })
+      .populate({
+        path: 'BhkType',
+        model: BhkType,
       })
       
       if (!properties) {

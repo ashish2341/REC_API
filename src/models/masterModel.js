@@ -14,7 +14,7 @@ const Fecnings = mongoose.model(dbCollectionName.fencings,mongoose.Schema({}));
 const Floorings = mongoose.model(dbCollectionName.floorings,mongoose.Schema({}));
 const Furnishedes = mongoose.model(dbCollectionName.furnishedes,mongoose.Schema({}));
 const BuiltAreaTypes = mongoose.model(dbCollectionName.builtAreaTypes,mongoose.Schema({}));
-
+const BhkType = mongoose.model(dbCollectionName.bhkTypes,mongoose.Schema({}));
 
 module.exports = {Soils,Facings,PropertyWithSubTypes,AreaUnits,OwnershipTypes,
-    Preferences,PropertyStatus,Area,Fecnings,Floorings,Furnishedes,BuiltAreaTypes}
+    Preferences,PropertyStatus,Area,Fecnings,Floorings,Furnishedes,BuiltAreaTypes,BhkType}
