@@ -35,6 +35,7 @@ const PropertySchema = new  mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:dbCollectionName.areaUnits,
     },
+    BhkType:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.bhkTypes},
     Area:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.area},
     Fecnings:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.fencings},
     Floorings:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.floorings},

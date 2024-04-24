@@ -77,6 +77,7 @@ module.exports = {
         area:"areas",
         areaUnits:"areaunits",
         blogTypes:"blogtypes",
-        banks:"banks"
+        banks:"banks",
+        bhkTypes:"bhktypes"
     }
 }

@@ -21,5 +21,6 @@ router.get('/builtAreaTypes',auth,getMasterDBRecords(dbCollectionName.builtAreaT
 router.get('/areas',auth,getMasterDBRecords(dbCollectionName.area))
 router.get('/areaunits',auth,getMasterDBRecords(dbCollectionName.areaUnits))
 router.get('/banks',auth,getMasterDBRecords(dbCollectionName.banks))
+router.get('/bhkType',auth,getMasterDBRecords(dbCollectionName.bhkTypes))
 
 module.exports = router

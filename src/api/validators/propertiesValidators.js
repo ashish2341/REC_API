@@ -44,6 +44,7 @@ const propertySchema = Joi.object({
     IsNegotiable: Joi.boolean(),
     PosessionStatus: Joi.string(),
     PosessionDate: Joi.date(),
+    BhkType:Joi.string().required(),
     FloorNumber: Joi.number().integer().min(0),
     TotalFloors: Joi.number().integer().min(0),
     IsSingleProperty: Joi.boolean(),
@@ -141,8 +142,11 @@ const directionSchema = Joi.object({
     direction:Joi.string().required()
 })
 const budgetSchema = Joi.object({
-    budget:Joi.string().required(),
-    propertyType:Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
-    buyType:Joi.string().valid('Rent', 'Sale', 'Lease').required()
+    budget:Joi.string(),
+    propertyType:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    buyType:Joi.string().valid('Rent', 'Sale', 'Lease'),
+    bhkType:Joi.string(),
+   facing:Joi.string(),
+   areaType:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
 })
 module.exports ={ propertySchema,directionSchema,budgetSchema};
