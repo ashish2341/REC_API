@@ -11,7 +11,7 @@ const { addTestimonial, getAllTestimonial, getTestimonialById, updateTestimonial
 
 router.post('/addTestimonial',auth,validate(testimonialValidationSchema,'body'),addTestimonial)
 router.get('/allTestimonial',auth,validate(getRecordsSchema,'query'),getAllTestimonial)
-router.get('/:id',auth,validate(idSchema,'params'),getTestimonialById)
+router.get('/testimonial/:id',auth,validate(idSchema,'params'),getTestimonialById)
 router.patch('/updateTestimonial/:id',validate(idSchema,'params'),auth,updateTestimonial)
 router.delete('/deleteTestimonial/:id',auth,validate(idSchema,'params'),deleteTestimonial)
 
