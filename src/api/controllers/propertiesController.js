@@ -324,6 +324,82 @@ exports.getPropertiesByBudget = async (req, res) => {
   }
 };
 
+exports.getPropertiesByAreaOrPropertyType = async (req, res) => {
+  try {
+      
+      
+      const areaId = req.query.Area;
+      const propertyTypeId = req.query.PropertyType;
+      const searchQuery = {
+          IsDeleted: false,
+          
+      };
+
+      // Check if areaId is provided, then add it to the search query
+      if (areaId) {
+          searchQuery.Area = areaId;
+      }else if(propertyTypeId) {
+        searchQuery.PropertyType = propertyTypeId;
+    }
+
+      const count = await Properties.countDocuments(searchQuery);
+     
+      const properties = await Properties.find(searchQuery).populate({
+          path:"Facing",
+          model:Facings
+      }) .populate({
+          path: 'PropertyType',
+          model: PropertyWithSubTypes,
+        }) .populate({
+          path: 'AreaUnits',
+          model: AreaUnits,
+        }) .populate({
+          path: 'Soil',
+          model: Soils,
+        }) .populate({
+          path: 'Preferences',
+          model: Preferences,
+        }).populate({
+          path: 'PropertyStatus',
+          model: PropertyStatus,
+        }).populate({
+          path: 'OwnershipType',
+          model: OwnershipTypes,
+        }).populate({
+          path: 'Area',
+          model: Area,
+        }).populate({
+          path: 'Fencing',
+          model: Fecnings,
+        }).populate({
+          path: 'Flooring',
+          model: Floorings,
+        }).populate({
+          path: 'Furnished',
+          model: Furnishedes,
+        }).populate({
+          path: 'BuiltAreaType',
+          model: BuiltAreaTypes,
+        })
+        .populate({
+          path: 'BhkType',
+          model: BhkType,
+        })
+        
+      return res.status(constants.status_code.header.ok).send({
+          statusCode: 200,
+          data: properties,
+          totalCount: count,
+          success: true
+      });
+  } catch (error) {
+      return res.status(constants.status_code.header.server_error).send({
+          statusCode: 500,
+          error: error.message,
+          success: false
+      });
+  }
+};
 
 
 

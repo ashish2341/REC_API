@@ -5,7 +5,7 @@ const router = express.Router()
 const { validate } = require('../../helper/customValidation');
 const auth = require('../middleware/auth');
 const { addPropeties, getAllProperties, getPropertiesByDirections, getPopularProperties, 
-    getPropertiesByArea, getPropertiesByType, getPropertiesByBudget, getPropertiesById, updateProperties, deleteProperties } = require('../controllers/propertiesController');
+    getPropertiesByArea, getPropertiesByType, getPropertiesByBudget, getPropertiesById, updateProperties, deleteProperties, getPropertiesWithArea, getPropertiesByAreaOrPropertyType } = require('../controllers/propertiesController');
 const {propertySchema, directionSchema, budgetSchema} = require('../validators/propertiesValidators');
 const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
 
@@ -15,6 +15,7 @@ router.get('/allProperties',auth,validate(getRecordsSchema,'query'),getAllProper
 router.get('/propertyByDirections',auth,validate(directionSchema,"query"),getPropertiesByDirections)
 router.get('/popularProperty',getPopularProperties)
 router.get('/propertyByArea',getPropertiesByArea)
+router.get('/getPropertiesByAreaOrPropertyType',getPropertiesByAreaOrPropertyType)
 router.get('/propertyByType',getPropertiesByType)
 router.get('/propertyByBudget',auth,validate(budgetSchema,'query'),getPropertiesByBudget)
 router.get('/property/:id',auth,validate(idSchema,'params'),getPropertiesById)
