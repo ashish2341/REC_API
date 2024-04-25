@@ -11,7 +11,7 @@ const projectEnquiryValidationSchema = require('../validators/projectEnquiryVali
 
 router.post('/addProjectEnquiry',validate(projectEnquiryValidationSchema,'body'),addProjectEnquiry)
 router.get('/allProjectEnquiry',auth,validate(getRecordsSchema,'query'),getAllProjectEnquiry)
-router.get('/:id',auth,validate(idSchema,'params'),getProjectEnquiryById)
+router.get('/projectEnquiry/:id',auth,validate(idSchema,'params'),getProjectEnquiryById)
 router.patch('/updateProjectEnquiry/:id',validate(idSchema,'params'),auth,updateProjectEnquiry)
 router.delete('/deleteProjectEnquiry/:id',auth,validate(idSchema,'params'),deleteProjectEnquiry)
 

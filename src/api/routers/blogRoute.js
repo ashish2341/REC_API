@@ -10,7 +10,7 @@ const { addBlog, getAllBlog, getBlogById, updateBlog, deleteBlog } = require('..
 
 router.post('/addBlog',auth,validate(blogSchema,'body'),addBlog)
 router.get('/allBlog',auth,validate(getRecordsSchema,'query'),getAllBlog)
-router.get('/:id',auth,validate(idSchema,'params'),getBlogById)
+router.get('/blog/:id',auth,validate(idSchema,'params'),getBlogById)
 router.patch('/updateBlog/:id',validate(idSchema,'params'),auth,updateBlog)
 router.delete('/deleteBlog/:id',auth,validate(idSchema,'params'),deleteBlog)
 

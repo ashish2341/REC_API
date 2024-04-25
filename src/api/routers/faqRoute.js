@@ -11,7 +11,7 @@ const { addFAQ, getAllFAQ, getFAQById, updateFAQ, deleteFAQ } = require('../cont
 
 router.post('/addFAQ',auth,validate(faqValidationSchema,'body'),addFAQ)
 router.get('/allFAQ',getAllFAQ)
-router.get('/:id',auth,validate(idSchema,'params'),getFAQById)
+router.get('/faq/:id',auth,validate(idSchema,'params'),getFAQById)
 router.patch('/updateFAQ/:id',validate(idSchema,'params'),auth,updateFAQ)
 router.delete('/deleteFAQ/:id',auth,validate(idSchema,'params'),deleteFAQ)
 
