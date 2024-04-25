@@ -94,7 +94,10 @@ const PropertySchema = new  mongoose.Schema({
     IsLoanable: Boolean,
     IsAlreadyLoaned: Boolean,
     LoanDetails: {
-        ByBank: String,
+        ByBank: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: dbCollectionName.banks
+        },
         LoanSince: Date,
         LoanTill: Date
     },
