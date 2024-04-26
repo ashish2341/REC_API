@@ -37,7 +37,7 @@ const loginSchema = Joi.object().keys({
        
       });
       const imageSchema = Joi.object({
-        profilePic: Joi.string().required(),
+        profilePic: Joi.string(),
        
       });
       const verifyOtpSchema = Joi.object({

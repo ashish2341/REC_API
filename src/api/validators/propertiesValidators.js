@@ -33,7 +33,7 @@ const propertySchema = Joi.object({
     LandArea: Joi.number().min(0),
     CoveredArea: Joi.number().min(0),
     CarpetArea: Joi.number().min(0),
-    TotalPrice: Joi.number().min(0).required(),
+    TotalPrice: Joi.string().required(),
     DiscountPercentage: Joi.number().min(0).required(),
     PerUnitPrice: Joi.number().min(0),
     IsDisplayPrice: Joi.boolean(),
@@ -71,8 +71,8 @@ const propertySchema = Joi.object({
     Answer:Joi.string().required()
     })),
     Images: Joi.array().items(Joi.object({
-        Name: Joi.string().required(),
-        Titile: Joi.string().required(),
+        Name: Joi.string(),
+        Titile: Joi.string(),
         URL: Joi.string().required(),
         Type: Joi.string(),
     })).required(),
