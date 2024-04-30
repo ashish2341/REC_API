@@ -401,9 +401,40 @@ exports.getPropertiesByAreaOrPropertyType = async (req, res) => {
   }
 };
 
+exports.getSimilarProperties = async (req, res) => {
+  try {
+    const property = await Properties.findById(req.params.id)
 
+    if (!property) {
+        return res.status(404).json({ message: 'Property not found' });
+    }
+    const TotalPrice = property.TotalPrice;
+    const priceRange = TotalPrice.split('-').map(val => parseInt(val));
 
-
-
-
-
+    // Calculate the average price and adjust by 20-30
+    const minPrice = priceRange[0] - 30;
+    const maxPrice = priceRange[1] + 30;
+ console.log(minPrice,maxPrice)
+    // Find properties with average prices within the adjusted range
+    const similarProperties = await Properties.find({
+      // Convert the price range to a regex pattern for flexible matching
+      // totalPrice: { $regex: `^[${minPrice}-${maxPrice}]` }
+      TotalPrice: { $gte: minPrice, $lte: maxPrice },
+    });
+  //  console.log(similarProperties)
+    const count = await similarProperties.length;
+    // console.log(count)
+    return res.status(constants.status_code.header.ok).send({
+      statusCode: 200,
+      data: similarProperties,
+      count: count,
+      success: true
+    });
+  } catch (error) {
+    return res.status(constants.status_code.header.server_error).send({
+      statusCode: 500,
+      error: error.message,
+      success: false
+    });
+  }
+};

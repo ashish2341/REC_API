@@ -5,7 +5,7 @@ const router = express.Router()
 const { validate } = require('../../helper/customValidation');
 const auth = require('../middleware/auth');
 const { addPropeties, getAllProperties, getPropertiesByDirections, getPopularProperties, 
-    getPropertiesByArea, getPropertiesByType, getPropertiesByBudget, getPropertiesById, updateProperties, deleteProperties, getPropertiesWithArea, getPropertiesByAreaOrPropertyType } = require('../controllers/propertiesController');
+    getPropertiesByArea, getPropertiesByType, getPropertiesByBudget, getPropertiesById, updateProperties, deleteProperties, getPropertiesWithArea, getPropertiesByAreaOrPropertyType, getSimilarProperties } = require('../controllers/propertiesController');
 const {propertySchema, directionSchema, budgetSchema} = require('../validators/propertiesValidators');
 const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
 
@@ -21,6 +21,8 @@ router.get('/propertyByBudget',auth,validate(budgetSchema,'query'),getProperties
 router.get('/property/:id',auth,validate(idSchema,'params'),getPropertiesById)
 router.patch('/updateProperty/:id',validate(idSchema,'params'),auth,updateProperties)
 router.delete('/deleteProperty/:id',auth,validate(idSchema,'params'),deleteProperties)
+router.get('/similarProperty/:id',getSimilarProperties)
+
 
 
  
