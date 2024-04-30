@@ -325,8 +325,25 @@ exports.getPropertiesByBudget = async (req, res) => {
       queryObj.Facing = { $all: facing.split(',') };
     }
 
-    const properties = await Properties.find(queryObj).populate('PropertyType').populate('Facing').populate('Area');
-
+    const properties = await Properties.find(queryObj)
+    .populate([
+      { path: "Facing", model: Facings },
+      { path: "PropertyType", model: PropertyWithSubTypes },
+      { path: "AreaUnits", model: AreaUnits },
+      { path: "Soil", model: Soils },
+      { path: "Preferences", model: Preferences },
+      { path: "PropertyStatus", model: PropertyStatus },
+      { path: "OwnershipType", model: OwnershipTypes },
+      { path: "Area", model: Area },
+      { path: "Fencing", model: Fecnings },
+      { path: "Flooring", model: Floorings },
+      { path: "Furnished", model: Furnishedes },
+      { path: "BuiltAreaType", model: BuiltAreaTypes },
+      { path: "BhkType", model: BhkType },
+      { path: "Features", model: Features },
+      { path: "Aminities", model: Aminity },
+      { path: "LoanDetails.ByBank", model: Banks }
+    ]);
 
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
