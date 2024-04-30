@@ -304,7 +304,7 @@ exports.getPropertiesByBudget = async (req, res) => {
   try {
     const { buyType, budget, propertyType, bhkType, facing, areaType } = req.query;
     const [minBudget, maxBudget] = budget ? budget.split('-').map(parseFloat) : [];
-    const queryObj = {};
+    const queryObj = {IsDeleted: false};
     if (minBudget && maxBudget) {
       queryObj.TotalPrice = { $gte: minBudget, $lte: maxBudget }
     }
