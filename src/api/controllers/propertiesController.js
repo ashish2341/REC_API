@@ -420,6 +420,8 @@ exports.getSimilarProperties = async (req, res) => {
       // Convert the price range to a regex pattern for flexible matching
       // totalPrice: { $regex: `^[${minPrice}-${maxPrice}]` }
       TotalPrice: { $gte: minPrice, $lte: maxPrice },
+      Area:property.Area,
+      _id: { $ne: property._id }
     });
   //  console.log(similarProperties)
     const count = await similarProperties.length;
