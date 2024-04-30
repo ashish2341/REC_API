@@ -5,7 +5,7 @@ const constants = require("../../helper/constants");
 const { dbCollectionName } = require("../../helper/constants");
 const { Soils, Facings, PropertyWithSubTypes, AreaUnits, Preferences, PropertyStatus, OwnershipTypes, Area, Fecnings, Floorings, Furnishedes, BuiltAreaTypes, BhkType, Banks } = require("../../models/masterModel");
 const Properties = require("../../models/propertiesModel");
-const { formatNumber } = require("../../helper/utils");
+const { formatNumber, getDirection } = require("../../helper/utils");
 const Features = require("../../models/featuresModel");
 const Aminity = require("../../models/aminityModel");
 
@@ -448,6 +448,56 @@ exports.getSimilarProperties = async (req, res) => {
       statusCode: 200,
       data: similarProperties,
       count: count,
+      success: true
+    });
+  } catch (error) {
+    return res.status(constants.status_code.header.server_error).send({
+      statusCode: 500,
+      error: error.message,
+      success: false
+    });
+  }
+};
+
+exports.getPropertiesByDob = async (req, res) => {
+  try {
+
+    const direction = getDirection(req.params.dob);
+      console.log('dir',direction)
+    let faceQuery = { Facing: { $regex: direction, $options: 'i' } }
+    const db = getDB()
+    let faceRecords = await db.collection(dbCollectionName.facings).findOne(faceQuery)
+
+    if (!faceRecords) {
+      return res.status(404).send({ status: false, error: "Data not found" })
+    }
+    const query = {
+      Facing: faceRecords._id,
+      IsDeleted:false
+    };
+
+    const properties = await Properties.find(query)
+    .populate([
+      { path: "Facing", model: Facings },
+      { path: "PropertyType", model: PropertyWithSubTypes },
+      { path: "AreaUnits", model: AreaUnits },
+      { path: "Soil", model: Soils },
+      { path: "Preferences", model: Preferences },
+      { path: "PropertyStatus", model: PropertyStatus },
+      { path: "OwnershipType", model: OwnershipTypes },
+      { path: "Area", model: Area },
+      { path: "Fencing", model: Fecnings },
+      { path: "Flooring", model: Floorings },
+      { path: "Furnished", model: Furnishedes },
+      { path: "BuiltAreaType", model: BuiltAreaTypes },
+      { path: "BhkType", model: BhkType },
+      { path: "Features", model: Features },
+      { path: "Aminities", model: Aminity },
+      { path: "LoanDetails.ByBank", model: Banks }
+    ]);;
+    return res.status(constants.status_code.header.ok).send({
+      statusCode: 200,
+      data: properties,
       success: true
     });
   } catch (error) {
