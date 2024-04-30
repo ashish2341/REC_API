@@ -58,7 +58,7 @@ const propertySchema = Joi.object({
     IsLoanable: Joi.boolean(),
     IsAlreadyLoaned: Joi.boolean(),
     LoanDetails: Joi.object({
-        ByBank: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+        ByBank: Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
         LoanSince: Joi.date(),
         LoanTill: Joi.date()
     }),

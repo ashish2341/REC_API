@@ -64,7 +64,7 @@ module.exports = {
     dbCollectionName:{
         facings:'facings',
         propertyOwnerShips:"propertyownerships",
-        propertyStatus:"propertystatus",
+        propertyStatus:"propertystatuses",
         preferences:"preferences",
         soils:"soils",
         propertyWithSubTypes:"propertywithsubtypes",
