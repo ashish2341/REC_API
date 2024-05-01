@@ -1,5 +1,6 @@
 const constants = require("../../helper/constants");
 const Blog = require("../../models/blogModel");
+const { BlogType } = require("../../models/masterModel");
 
 exports.addBlog = async (req, res) => {
   try {
@@ -32,10 +33,9 @@ exports.getAllBlog = async (req, res) => {
     const totalCount = await Blog.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalCount / size);
 
-    const records = await Blog.find(searchQuery)
-    .populate({
+    const records = await Blog.find(searchQuery).populate({
       path: 'BlogType',
-      model: blogTypes,
+      model: BlogType,
     })
       .sort({ CreatedDate: -1 })
       .skip((pageNumber - 1) * size)
