@@ -4,6 +4,8 @@ const router = express.Router()
 
 const { validate } = require('../../helper/customValidation');
 const auth = require('../middleware/auth');
+const role = require('../middleware/role');
+
 const { addPropeties, getAllProperties, getPropertiesByDirections, getPopularProperties, 
     getPropertiesByArea, getPropertiesByType, getPropertiesByBudget, getPropertiesById, updateProperties, deleteProperties, getPropertiesWithArea, getPropertiesByAreaOrPropertyType, getSimilarProperties, 
     getPropertiesByDob} = require('../controllers/propertiesController');
@@ -12,7 +14,7 @@ const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
 
 
 router.post('/addProperty',auth,validate(propertySchema,'body'),addPropeties)
-router.get('/allProperties',validate(getRecordsSchema,'query'),getAllProperties)
+router.get('/allProperties',validate(getRecordsSchema,'query'),role,getAllProperties)
 router.get('/propertyByDirections',validate(directionSchema,"query"),getPropertiesByDirections)
 router.get('/popularProperty',getPopularProperties)
 router.get('/propertyByArea',getPropertiesByArea)
