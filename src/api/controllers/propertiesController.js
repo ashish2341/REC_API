@@ -34,7 +34,7 @@ exports.getAllProperties = async (req, res) => {
       $or: [
         { Titile: { $regex: search, $options: 'i' } },
         { Description: { $regex: search, $options: 'i' } },
-        { Area: { $regex: search, $options: 'i' } },
+        // { Area: { $regex: search, $options: 'i' } },
       ]
     };
 
