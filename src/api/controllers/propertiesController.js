@@ -3,7 +3,7 @@ const { ObjectId } = require("mongodb");
 const { getDB } = require("../../db/db");
 const constants = require("../../helper/constants");
 const { dbCollectionName } = require("../../helper/constants");
-const { Soils, Facings, PropertyWithSubTypes, AreaUnits, Preferences, PropertyStatus, OwnershipTypes, Area, Fecnings, Floorings, Furnishedes, BuiltAreaTypes, BhkType, Banks } = require("../../models/masterModel");
+const { Soils, Facings, PropertyWithSubTypes, AreaUnits, Preferences, PropertyStatus, OwnershipTypes, Area, Fecnings, Floorings, Furnishedes, BuiltAreaTypes, BhkType, Banks, PossessionStatus } = require("../../models/masterModel");
 const Properties = require("../../models/propertiesModel");
 const { formatNumber, getDirection } = require("../../helper/utils");
 const Features = require("../../models/featuresModel");
@@ -34,6 +34,7 @@ exports.getAllProperties = async (req, res) => {
       $or: [
         { Titile: { $regex: search, $options: 'i' } },
         { Description: { $regex: search, $options: 'i' } },
+        { Area: { $regex: search, $options: 'i' } },
       ]
     };
 
@@ -58,7 +59,8 @@ exports.getAllProperties = async (req, res) => {
       { path: "BhkType", model: BhkType },
       { path: "Features", model: Features },
       { path: "Aminities", model: Aminity },
-      { path: "LoanDetails.ByBank", model: Banks }
+      { path: "LoanDetails.ByBank", model: Banks },
+      { path: "PosessionStatus", model: PossessionStatus }
     ]).sort({ CreatedDate: -1 })
       .skip(skip)
       .limit(limit);
@@ -98,7 +100,8 @@ exports.getPropertiesById = async (req, res) => {
         { path: "BhkType", model: BhkType },
         { path: "Features", model: Features },
         { path: "Aminities", model: Aminity },
-        { path: "LoanDetails.ByBank", model: Banks }
+        { path: "LoanDetails.ByBank", model: Banks },
+        { path: "PosessionStatus", model: PossessionStatus }
       ]);
 
     if (!properties) {
@@ -191,7 +194,8 @@ exports.getPropertiesByDirections = async (req, res) => {
       { path: "BhkType", model: BhkType },
       { path: "Features", model: Features },
       { path: "Aminities", model: Aminity },
-      { path: "LoanDetails.ByBank", model: Banks }
+      { path: "LoanDetails.ByBank", model: Banks },
+      { path: "PosessionStatus", model: PossessionStatus }
     ]);;
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
@@ -342,7 +346,8 @@ exports.getPropertiesByBudget = async (req, res) => {
       { path: "BhkType", model: BhkType },
       { path: "Features", model: Features },
       { path: "Aminities", model: Aminity },
-      { path: "LoanDetails.ByBank", model: Banks }
+      { path: "LoanDetails.ByBank", model: Banks },
+      { path: "PosessionStatus", model: PossessionStatus }
     ]);
 
     return res.status(constants.status_code.header.ok).send({
@@ -419,6 +424,10 @@ exports.getPropertiesByAreaOrPropertyType = async (req, res) => {
         .populate({
           path: 'BhkType',
           model: BhkType,
+        })
+        .populate({
+          path: 'PosessionStatus',
+          model: PossessionStatus,
         })
         
       return res.status(constants.status_code.header.ok).send({

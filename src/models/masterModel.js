@@ -17,5 +17,6 @@ const BuiltAreaTypes = mongoose.model(dbCollectionName.builtAreaTypes,mongoose.S
 const BhkType = mongoose.model(dbCollectionName.bhkTypes,mongoose.Schema({}));
 const Banks = mongoose.model(dbCollectionName.banks,mongoose.Schema({}));
 const BlogType = mongoose.model(dbCollectionName.blogTypes,mongoose.Schema({}));
+const PossessionStatus = mongoose.model(dbCollectionName.possessiones,mongoose.Schema({}));
 module.exports = {Soils,Facings,PropertyWithSubTypes,AreaUnits,OwnershipTypes,
-    Preferences,PropertyStatus,Area,Fecnings,Floorings,Furnishedes,BuiltAreaTypes,BhkType,Banks,BlogType}
+    Preferences,PropertyStatus,Area,Fecnings,Floorings,Furnishedes,BuiltAreaTypes,BhkType,Banks,BlogType,PossessionStatus}

@@ -72,7 +72,10 @@ const PropertySchema = new  mongoose.Schema({
     PerUnitPrice: Number,
     IsDisplayPrice: Boolean,
     IsNegotiable: Boolean,
-    PosessionStatus: String,
+    PosessionStatus: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: dbCollectionName.possessiones
+    },
     PosessionDate: Date,
     FloorNumber: Number,
     TotalFloors: Number,
@@ -109,6 +112,7 @@ const PropertySchema = new  mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: dbCollectionName.propertyStatus
     },
+    
     Images: [{
         Name: String,
         Titile: String,

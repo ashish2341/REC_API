@@ -7,7 +7,7 @@ const auth = require('../middleware/auth');
 const { addPropeties, getAllProperties, getPropertiesByDirections, getPopularProperties, 
     getPropertiesByArea, getPropertiesByType, getPropertiesByBudget, getPropertiesById, updateProperties, deleteProperties, getPropertiesWithArea, getPropertiesByAreaOrPropertyType, getSimilarProperties, 
     getPropertiesByDob} = require('../controllers/propertiesController');
-const {propertySchema, directionSchema, budgetSchema, zodiacSchema} = require('../validators/propertiesValidators');
+const {propertySchema, directionSchema, budgetSchema, zodiacSchema, propertyUpdateSchema} = require('../validators/propertiesValidators');
 const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
 
 
@@ -20,7 +20,7 @@ router.get('/getPropertiesByAreaOrPropertyType',getPropertiesByAreaOrPropertyTyp
 router.get('/propertyByType',getPropertiesByType)
 router.get('/propertyByBudget',validate(budgetSchema,'query'),getPropertiesByBudget)
 router.get('/property/:id',validate(idSchema,'params'),getPropertiesById)
-router.patch('/updateProperty/:id',validate(idSchema,'params'),auth,updateProperties)
+router.patch('/updateProperty/:id',validate(propertyUpdateSchema,'body'),auth,updateProperties)
 router.delete('/deleteProperty/:id',auth,validate(idSchema,'params'),deleteProperties)
 router.get('/similarProperty/:id',getSimilarProperties)
 router.get('/zodiac/:dob',validate(zodiacSchema,'params'),getPropertiesByDob)
