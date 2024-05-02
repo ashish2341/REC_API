@@ -280,12 +280,14 @@ const directionSchema = Joi.object({
     direction:Joi.string().required()
 })
 const budgetSchema = Joi.object({
-    budget:Joi.string(),
-    propertyType:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    buyType:Joi.string().valid('Rent', 'Sale', 'Lease'),
-    bhkType:Joi.string(),
-   facing:Joi.string(),
-   areaType:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    budget:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+    propertyType:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+    buyType:Joi.array().items(Joi.string()),
+    bhkType:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+   facing:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+   areaType:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+   propertyStatus:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+   posessionStatus:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
 })
 const zodiacSchema = Joi.object({
     dob: Joi.string().required().pattern(/^\d{4}-\d{2}-\d{2}$/).message('Date formate should be YYYY-MM-DD'),
