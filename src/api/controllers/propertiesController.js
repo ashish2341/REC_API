@@ -479,8 +479,7 @@ exports.getSimilarProperties = async (req, res) => {
 exports.getPropertiesByDob = async (req, res) => {
   try {
 
-    const direction = getDirection(req.params.dob);
-      console.log('dir',direction)
+    const {direction,rashi} = getDirection(req.params.dob);
     let faceQuery = { Facing: { $regex: direction, $options: 'i' } }
     const db = getDB()
     let faceRecords = await db.collection(dbCollectionName.facings).findOne(faceQuery)
@@ -488,33 +487,16 @@ exports.getPropertiesByDob = async (req, res) => {
     if (!faceRecords) {
       return res.status(404).send({ status: false, error: "Data not found" })
     }
-    const query = {
-      Facing: faceRecords._id,
-      IsDeleted:false
+    const result = {
+      Facing: faceRecords,
+      rashi
+     
     };
 
-    const properties = await Properties.find(query)
-    .populate([
-      { path: "Facing", model: Facings },
-      { path: "PropertyType", model: PropertyWithSubTypes },
-      { path: "AreaUnits", model: AreaUnits },
-      { path: "Soil", model: Soils },
-      { path: "Preferences", model: Preferences },
-      { path: "PropertyStatus", model: PropertyStatus },
-      { path: "OwnershipType", model: OwnershipTypes },
-      { path: "Area", model: Area },
-      { path: "Fencing", model: Fecnings },
-      { path: "Flooring", model: Floorings },
-      { path: "Furnished", model: Furnishedes },
-      { path: "BuiltAreaType", model: BuiltAreaTypes },
-      { path: "BhkType", model: BhkType },
-      { path: "Features", model: Features },
-      { path: "Aminities", model: Aminity },
-      { path: "LoanDetails.ByBank", model: Banks }
-    ]);;
+   
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
-      data: properties,
+      data: result,
       success: true
     });
   } catch (error) {
