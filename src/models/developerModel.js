@@ -6,6 +6,9 @@ const developerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    SocialMediaProfileLinks: [{Name: String,
+        URL:String
+    }],
     Mobile: Number,
     EmailId: String,
     WhatsApp: Number,

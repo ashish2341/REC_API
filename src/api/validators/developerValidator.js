@@ -2,6 +2,9 @@ const Joi = require('joi');
 
 const AddDeveloperSchema = Joi.object({
     Name: Joi.string().required(),
+    SocialMediaProfileLinks: Joi.array().items(
+        Joi.object({ Name: Joi.string(), URL: Joi.string() })
+      ),
     Logo: Joi.string().allow(''),
     Area:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     Mobile: Joi.number().integer().min(1000000000).max(9999999999).required().messages({
@@ -53,6 +56,9 @@ const AddDeveloperSchema = Joi.object({
 });
 const UpdateDeveloperSchema = Joi.object({
     Name: Joi.string(),
+    SocialMediaProfileLinks: Joi.array().items(
+        Joi.object({ Name: Joi.string(), URL: Joi.string() })
+      ),
     Logo: Joi.string().allow(''),
     Area:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     Mobile: Joi.number().integer().min(1000000000).max(9999999999).messages({
