@@ -33,7 +33,11 @@ const propertySchema = Joi.object({
     LandArea: Joi.number().min(0),
     CoveredArea: Joi.number().min(0),
     CarpetArea: Joi.number().min(0),
-    TotalPrice: Joi.string().required(),
+    TotalPrice: Joi.object({
+        DisplayValue: Joi.string(),
+        MinValue: Joi.number(),
+        MaxValue: Joi.number()
+    }),
     DiscountPercentage: Joi.number().min(0).required(),
     PerUnitPrice: Joi.number().min(0),
     IsDisplayPrice: Joi.boolean(),
@@ -171,7 +175,11 @@ const propertyUpdateSchema = Joi.object({
     LandArea: Joi.number().min(0),
     CoveredArea: Joi.number().min(0),
     CarpetArea: Joi.number().min(0),
-    TotalPrice: Joi.string(),
+    TotalPrice: Joi.object({
+        DisplayValue: Joi.string(),
+        MinValue: Joi.number(),
+        MaxValue: Joi.number()
+    }),
     DiscountPercentage: Joi.number().min(0),
     PerUnitPrice: Joi.number().min(0),
     IsDisplayPrice: Joi.boolean(),
@@ -280,7 +288,7 @@ const directionSchema = Joi.object({
     direction:Joi.string().required()
 })
 const budgetSchema = Joi.object({
-    budget:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+    budget: Joi.array().length(2).items(Joi.number()),
     propertyType:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     buyType:Joi.array().items(Joi.string()),
     bhkType:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),

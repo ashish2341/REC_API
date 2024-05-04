@@ -8,6 +8,7 @@ const Properties = require("../../models/propertiesModel");
 const { formatNumber, getDirection } = require("../../helper/utils");
 const Features = require("../../models/featuresModel");
 const Aminity = require("../../models/aminityModel");
+const { budgetSchema } = require("../validators/propertiesValidators");
 const propertyPopulateField = [
   { path: "Facing", model: Facings },
   { path: "PropertyType", model: PropertyWithSubTypes },
@@ -273,9 +274,7 @@ exports.getPropertiesByBudget = async (req, res) => {
     const { buyType, budget, propertyType, bhkType, facing, areaType,propertyStatus,posessionStatus } = req.body;
     
     const queryObj = {IsDeleted: false};
-   
-    
-
+ 
     if (buyType?.length>0)  queryObj.ProeprtyFor = { $in: buyType };
     if (propertyType?.length>0)  queryObj.PropertyType = { $in: propertyType };
     if (bhkType?.length>0) queryObj.BhkType = { $in: bhkType };
@@ -284,11 +283,20 @@ exports.getPropertiesByBudget = async (req, res) => {
     if (propertyStatus?.length>0) queryObj.PropertyStatus = { $in: propertyStatus };
     if (posessionStatus?.length>0) queryObj.PosessionStatus = { $in: posessionStatus };
 
+    if (budget?.length > 0) {
+      const minValue = Math.min(...budget);
+      const maxValue = Math.max(...budget);
+
+      queryObj['TotalPrice.MinValue'] = {$gte:minValue},
+      queryObj['TotalPrice.MaxValue'] = {$lte:maxValue}
+    };
+
     const properties = await Properties.find(queryObj)
     .populate(propertyPopulateField);
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
       data: properties,
+      count:properties.length,
       success: true
     });
   } catch (error) {
@@ -343,27 +351,22 @@ exports.getSimilarProperties = async (req, res) => {
     if (!property) {
         return res.status(404).json({ message: 'Property not found' });
     }
-    const TotalPrice = property.TotalPrice;
-    const priceRange = TotalPrice.split('-').map(val => parseInt(val));
-
-    // Calculate the average price and adjust by 20-30
-    const minPrice = priceRange[0] - 30;
-    const maxPrice = priceRange[1] + 30;
- console.log(minPrice,maxPrice)
-    // Find properties with average prices within the adjusted range
-    const similarProperties = await Properties.find({
-      // Convert the price range to a regex pattern for flexible matching
-      // totalPrice: { $regex: `^[${minPrice}-${maxPrice}]` }
-      TotalPrice: { $gte: minPrice, $lte: maxPrice },
-      Area:property.Area,
-      _id: { $ne: property._id }
+   
+    const minPrice = property?.TotalPrice?.MinValue -300000  ;
+    const maxPrice = property?.TotalPrice?.MaxValue + 300000 ;
+ 
+    const properties = await Properties.find({
+      'TotalPrice.MinValue': { $gte: minPrice},
+      'TotalPrice.MaxValue': { $lte: maxPrice},
+      Area: property.Area, 
+        _id: { $ne: property._id }
     });
-  //  console.log(similarProperties)
-    const count =  similarProperties.length;
-    // console.log(count)
+  
+    const count =  properties.length;
+   
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
-      data: similarProperties,
+      data: properties,
       count: count,
       success: true
     });
