@@ -148,6 +148,7 @@ const propertyUpdateSchema = Joi.object({
     Highlight: Joi.string(),
     ProeprtyFor: Joi.string().valid('Rent', 'Sale', 'Lease'),
     ProjectId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    Builder: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
     PropertyType:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     IsDeleted: Joi.boolean(),
     IsEnabled: Joi.boolean(),

@@ -8,7 +8,7 @@ const Properties = require("../../models/propertiesModel");
 const { formatNumber, getDirection } = require("../../helper/utils");
 const Features = require("../../models/featuresModel");
 const Aminity = require("../../models/aminityModel");
-const { budgetSchema } = require("../validators/propertiesValidators");
+const Developer = require("../../models/developerModel");
 const propertyPopulateField = [
   { path: "Facing", model: Facings },
   { path: "PropertyType", model: PropertyWithSubTypes },
@@ -26,7 +26,8 @@ const propertyPopulateField = [
   { path: "Features", model: Features },
   { path: "Aminities", model: Aminity },
   { path: "LoanDetails.ByBank", model: Banks },
-  { path: "PosessionStatus", model: PossessionStatus }
+  { path: "PosessionStatus", model: PossessionStatus },
+  {path:"Builder",model:Developer}
 ]
 
 exports.addPropeties = async (req, res) => {
