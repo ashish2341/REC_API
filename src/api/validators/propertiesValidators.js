@@ -291,11 +291,14 @@ const budgetSchema = Joi.object({
     budget: Joi.array().length(2).items(Joi.number()),
     propertyType:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
     buyType:Joi.array().items(Joi.string()),
+    bathroom:Joi.array().items(Joi.number()),
+    landArea:Joi.array().items(Joi.number()),
     bhkType:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
    facing:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
    areaType:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
    propertyStatus:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
    posessionStatus:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
+   feature:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)), 
 })
 const zodiacSchema = Joi.object({
     dob: Joi.string().required().pattern(/^\d{4}-\d{2}-\d{2}$/).message('Date formate should be YYYY-MM-DD'),

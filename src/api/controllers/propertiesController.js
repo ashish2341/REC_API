@@ -271,7 +271,7 @@ exports.getPropertiesByType = async (req, res) => {
 };
 exports.getPropertiesByBudget = async (req, res) => {
   try {
-    const { buyType, budget, propertyType, bhkType, facing, areaType,propertyStatus,posessionStatus } = req.body;
+    const { buyType, budget, propertyType, bhkType, facing, areaType,propertyStatus,posessionStatus,feature,bathroom,landArea } = req.body;
     
     const queryObj = {IsDeleted: false};
  
@@ -282,7 +282,10 @@ exports.getPropertiesByBudget = async (req, res) => {
     if (areaType?.length>0) queryObj.Area = { $in: areaType };
     if (propertyStatus?.length>0) queryObj.PropertyStatus = { $in: propertyStatus };
     if (posessionStatus?.length>0) queryObj.PosessionStatus = { $in: posessionStatus };
-
+    if (bathroom?.length>0) queryObj.Bathrooms = { $in: bathroom };
+    if (landArea?.length>0) queryObj.LandArea = { $in: landArea };
+    if (feature?.length>0) queryObj.Features = { $in: feature };
+ 
     if (budget?.length > 0) {
       const minValue = Math.min(...budget);
       const maxValue = Math.max(...budget);

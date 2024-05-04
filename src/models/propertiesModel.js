@@ -21,7 +21,7 @@ const PropertySchema = new  mongoose.Schema({
     IsNew: Boolean,
     Features:[{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Features",
+        ref:"features",
     }],
     Aminities: [{
         type:mongoose.Schema.Types.ObjectId,
