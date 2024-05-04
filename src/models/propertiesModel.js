@@ -69,7 +69,11 @@ const PropertySchema = new  mongoose.Schema({
     LandArea: Number,
     CoveredArea: Number,
     CarpetArea: Number,
-    TotalPrice: String,
+    TotalPrice: {
+        DisplayValue: String,
+        MinValue:Number,
+        MaxValue:Number
+    },
     PerUnitPrice: Number,
     IsDisplayPrice: Boolean,
     IsNegotiable: Boolean,
