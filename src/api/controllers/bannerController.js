@@ -1,68 +1,56 @@
 const constants = require("../../helper/constants");
-const Feature = require("../../models/featuresModel");
+const Banner = require("../../models/bannerModel");
 
-exports.addFeature = async (req, res) => {
+exports.addBanner = async (req, res) => {
   try {
     req.body.CreatedBy = req.user._id;
     req.body.UpdatedBy = req.user._id;
-    const feature = await Feature.create(req.body);
+    const banner = await Banner.create(req.body);
     return res
       .status(constants.status_code.header.ok)
-      .send({ statusCode: 201, message: constants.curd.add, success: true });
+      .send({ message: constants.curd.add, success: true });
   } catch (error) {
     return res
       .status(constants.status_code.header.server_error)
-      .send({ statusCode: 500, error: error.message, success: false });
+      .send({ error: error.message, success: false });
   }
 };
 
-exports.getAllFeature = async (req, res) => {
+exports.getAllBanner = async (req, res) => {
   try {
-    const { page, pageSize } = req.query;
-    const pageNumber = parseInt(page) || 1;
-    const size = parseInt(pageSize) || 10;
-    const search = req.query.search || '';
-       
+   
     const searchQuery = {
       IsDeleted: false,
-        $or: [
-            { Feature: { $regex: search, $options: 'i' } }, 
-        ]
+       
     };
-    const totalCount = await Feature.countDocuments(searchQuery);
-    const totalPages = Math.ceil(totalCount / size);
 
-    const records = await Feature.find(searchQuery)
-      .sort({ CreatedDate: -1 })
-      .skip((pageNumber - 1) * size)
-      .limit(size);
+    const records = await Banner.find(searchQuery)
+      ;
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
       data: records,
       success: true,
-      totalCount: totalCount,
       count: records.length,
-      pageNumber: pageNumber,
-      totalPages: totalPages,
+      
     });
   } catch (error) {
-    return res
+    res
       .status(constants.status_code.header.server_error)
       .send({ statusCode: 500, error: error.message, success: false });
   }
 };
 
-exports.getFeatureById = async (req, res) => {
+exports.getBannerById = async (req, res) => {
   try {
-    const feature = await Feature.findById(req.params.id);
-    if (!feature) {
+    const banner = await Banner.findById(req.params.id);
+    if (!banner) {
       return res
         .status(404)
-        .json({ error: "Feature not found", success: false });
+        .json({ error: "Banner not found", success: false });
     }
     return res
       .status(constants.status_code.header.ok)
-      .send({ statusCode: 200, data: feature, success: true });
+      .send({ statusCode: 200, data: banner, success: true });
   } catch (error) {
     return res
       .status(constants.status_code.header.server_error)
@@ -70,17 +58,17 @@ exports.getFeatureById = async (req, res) => {
   }
 };
 
-exports.updateFeature = async (req, res) => {
+exports.updateBanner = async (req, res) => {
   try {
-    const feature = await Feature.findByIdAndUpdate(req.params.id, req.body, {
+    const banner = await Banner.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!feature) {
+    if (!banner) {
       return res
         .status(404)
-        .json({ error: "Feature not found", success: false });
+        .json({ error: "Banner not found", success: false });
     }
-    return res
+    res
       .status(constants.status_code.header.ok)
       .send({ statusCode: 200, message: constants.curd.update, success: true });
   } catch (error) {
@@ -90,17 +78,17 @@ exports.updateFeature = async (req, res) => {
   }
 };
 
-exports.deleteFeature = async (req, res) => {
+exports.deleteBanner = async (req, res) => {
   try {
-    const feature = await Feature.findByIdAndUpdate(req.params.id, {
+    const banner = await Banner.findByIdAndUpdate(req.params.id, {
       IsDeleted: true,
     });
-    if (!feature) {
+    if (!banner) {
       return res
         .status(404)
-        .json({ error: "Feature not found", success: false });
+        .json({ error: "Banner not found", success: false });
     }
-    return res
+    res
       .status(constants.status_code.header.ok)
       .send({ statusCode: 200, message: constants.curd.delete, success: true });
   } catch (error) {

@@ -64,7 +64,7 @@ module.exports = {
     dbCollectionName:{
         facings:'facings',
         propertyOwnerShips:"propertyownerships",
-        propertyStatus:"propertystatus",
+        propertyStatus:"propertystatuses",
         preferences:"preferences",
         soils:"soils",
         propertyWithSubTypes:"propertywithsubtypes",
@@ -75,6 +75,10 @@ module.exports = {
         furnishedes:"furnishedes",
         builtAreaTypes:"builtareatypes",
         area:"areas",
-        areaUnits:"areaunits"
+        areaUnits:"areaunits",
+        blogTypes:"blogtypes",
+        banks:"banks",
+        bhkTypes:"bhktypes",
+        possessiones:"possessiones"
     }
 }

@@ -31,7 +31,17 @@ const PropertySchema = new  mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:dbCollectionName.facings,
     }],
-    Area:{type:String,required:true},
+    AreaUnits: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:dbCollectionName.areaUnits,
+    },
+    Builder:{type:mongoose.Schema.Types.ObjectId,ref:'Developer'},
+    BhkType:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.bhkTypes},
+    Area:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.area},
+    Fencing:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.fencings},
+    Flooring:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.floorings},
+    Furnished:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.furnishedes},
+    BuiltAreaType: {type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.builtAreaTypes},
     City: String,
     State: String,
     Country: String,
@@ -56,18 +66,21 @@ const PropertySchema = new  mongoose.Schema({
     },
     Bedrooms: Number,
     Bathrooms: Number,
-    Fencing: String,
-    Flooring: String,
-    Furnished: String,
-    BuiltAreaType: String,
     LandArea: Number,
     CoveredArea: Number,
     CarpetArea: Number,
-    TotalPrice: Number,
+    TotalPrice: {
+        DisplayValue: String,
+        MinValue:Number,
+        MaxValue:Number
+    },
     PerUnitPrice: Number,
     IsDisplayPrice: Boolean,
     IsNegotiable: Boolean,
-    PosessionStatus: String,
+    PosessionStatus: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: dbCollectionName.possessiones
+    },
     PosessionDate: Date,
     FloorNumber: Number,
     TotalFloors: Number,
@@ -76,6 +89,7 @@ const PropertySchema = new  mongoose.Schema({
     FloorsAllowed: Number,
     IsInterstedInJoinedVenture: Boolean,
     Balconies: Number,
+    Faq:[{Question:String,Answer:String}],
     ApprovedBy: [{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
@@ -88,7 +102,10 @@ const PropertySchema = new  mongoose.Schema({
     IsLoanable: Boolean,
     IsAlreadyLoaned: Boolean,
     LoanDetails: {
-        ByBank: String,
+        ByBank: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: dbCollectionName.banks
+        }],
         LoanSince: Date,
         LoanTill: Date
     },
@@ -100,6 +117,7 @@ const PropertySchema = new  mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: dbCollectionName.propertyStatus
     },
+    
     Images: [{
         Name: String,
         Titile: String,
@@ -133,7 +151,30 @@ const PropertySchema = new  mongoose.Schema({
     }],
     DiscountPercentage: Number,
     DiscountForYears: Number,
-    Surveillance: [String]
+    Surveillance: [String],
+    FloorAndCounter: {
+        Dining: String,
+        MasterBedroom: String,
+        OtherBedroom: String,
+        Kitchen: String,
+        Toilets: String,
+        Balcony: String
+    },
+    Fitting: {
+        Electrical: String,
+        Toilets: String,
+        Kitchen: String,
+        Doors: String,
+        Windows: String,
+        Others: String
+    },
+    Brochure:String,
+    WallAndCeiling: {
+        Interior: String,
+        Exterior: String,
+        Kitchen: String,
+        Toilets: String
+    }
 });
 
 const Property = mongoose.model('Properties', PropertySchema);

@@ -9,7 +9,10 @@ const propertiesRoutes = require('./propertiesRoute');
 const developerRoutes = require('./developerRoute');
 const faqRoutes = require('./faqRoute');
 const testimonialRoutes = require('./testimonialRoute');
-const projectEnquiryRoutes = require('./projectEnquiryRoute')
+const projectEnquiryRoutes = require('./projectEnquiryRoute');
+const projectRoutes = require('./projectRoute');
+const blogRoutes = require('./blogRoute');
+const bannerRoutes =require('./bannerRoute')
 
 
 
@@ -26,6 +29,9 @@ allRouters.use('/developer',developerRoutes);
 allRouters.use('/faq',faqRoutes);
 allRouters.use('/testimonial',testimonialRoutes);
 allRouters.use('/enquiry',projectEnquiryRoutes);
+allRouters.use('/project',projectRoutes);
+allRouters.use('/blog',blogRoutes);
+allRouters.use('/banner',bannerRoutes);
 
 
 module.exports =  allRouters;

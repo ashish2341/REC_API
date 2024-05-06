@@ -13,6 +13,14 @@ const projectEnquirySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    EnquiryData:{
+        type:Date
+    },
+    EnquiryType:String,
+    MolileNumber: {
+        type:String,
+        required: true
+    },
     IsDeleted: {
         type: Boolean,
         default: false

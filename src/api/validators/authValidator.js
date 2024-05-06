@@ -36,6 +36,10 @@ const loginSchema = Joi.object().keys({
         Mobile: Joi.string().pattern(/^[0-9]{10}$/).required().error(new Error('Mobile number is required and should be 10 digits')),
        
       });
+      const imageSchema = Joi.object({
+        profilePic: Joi.string(),
+       
+      });
       const verifyOtpSchema = Joi.object({
         Mobile: Joi.string().pattern(/^[0-9]{10}$/).required().error(new Error('Mobile number is required and should be 10 digits')),
        Otp:Joi.string().length(6).required()
@@ -51,5 +55,6 @@ module.exports = {
     roleSchema,
     verifyOtpSchema,
     sendOtpSchema,
-    forgetSchema
+    forgetSchema,
+    imageSchema
 };

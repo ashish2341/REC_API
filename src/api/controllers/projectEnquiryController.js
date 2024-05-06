@@ -25,6 +25,8 @@ exports.getAllProjectEnquiry = async (req, res) => {
         IsDeleted: false,
         $or: [
             { Name: { $regex: search, $options: 'i' } }, 
+            { Email: { $regex: search, $options: 'i' } }, 
+            { Message: { $regex: search, $options: 'i' } }, 
         ]
     };
 
