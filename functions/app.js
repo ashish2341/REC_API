@@ -9,5 +9,5 @@ router.get("/", (req, res) => {
     res.send("App is running..");
 });
 
-app.use("/.netlify/functions/app", router);
+app.use("/recapi", router);
 module.exports.handler = serverless(app);
