@@ -168,6 +168,7 @@ const PropertySchema = new  mongoose.Schema({
         Windows: String,
         Others: String
     },
+    Brochure:String,
     WallAndCeiling: {
         Interior: String,
         Exterior: String,
