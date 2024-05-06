@@ -9,5 +9,5 @@ router.get("/", (req, res) => {
     res.send("App is running..");
 });
 
-app.use("/recapi", router);
+app.use("/", router);
 module.exports.handler = serverless(app);
