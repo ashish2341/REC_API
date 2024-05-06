@@ -48,6 +48,7 @@ exports.getAllDeveloper = async (req, res) => {
           PropertiesLength: { $size: "$propertiesInfo" }
         }
       },
+      { $sort: { CreatedDate: -1 } },
       { $skip: (pageNumber - 1) * size },
       { $limit: size },
       {

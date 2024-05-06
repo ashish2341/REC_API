@@ -113,6 +113,7 @@ const propertySchema = Joi.object({
         Windows: Joi.string(),
         Others: Joi.string()
     }),
+    Brochure:Joi.string(),
     WallAndCeiling: Joi.object({
         Interior: Joi.string(),
         Exterior: Joi.string(),
@@ -256,6 +257,7 @@ const propertyUpdateSchema = Joi.object({
         Windows: Joi.string(),
         Others: Joi.string()
     }),
+    Brochure:Joi.string(),
     WallAndCeiling: Joi.object({
         Interior: Joi.string(),
         Exterior: Joi.string(),
