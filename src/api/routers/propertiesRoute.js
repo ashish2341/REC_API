@@ -11,10 +11,11 @@ const { addPropeties, getAllProperties, getPropertiesByDirections, getPopularPro
     getPropertiesByDob} = require('../controllers/propertiesController');
 const {propertySchema, directionSchema, budgetSchema, zodiacSchema} = require('../validators/propertiesValidators');
 const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
+const { roleSchema } = require('../validators/authValidator');
 
 
 router.post('/addProperty',auth,validate(propertySchema,'body'),addPropeties)
-router.get('/allProperties',validate(getRecordsSchema,'query'),role,getAllProperties)
+router.get('/allProperties',validate(getRecordsSchema,'query'),role,validate(roleSchema,'body'),getAllProperties)
 router.get('/propertyByDirections',validate(directionSchema,"query"),getPropertiesByDirections)
 router.get('/popularProperty',getPopularProperties)
 router.get('/propertyByArea',getPropertiesByArea)

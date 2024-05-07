@@ -15,11 +15,11 @@ const jwt =require ('jsonwebtoken')
           return res.status(401).json({ error: 'Access denied' });
         }
     const decoded = jwt.verify(token, config.JWT_KEY);
-    // console.log(decoded._id)
+    
     const login = await Login.findById( decoded._id ).populate("UserId");
     const user = await User.findById(login.UserId._id).populate("Roles");
    
-    const allowedRoles = ["Buyer", "Developer", "Agent", "Client"];
+    const allowedRoles = req.body.Role
     const hasRole = user.Roles.some(role => allowedRoles.includes(role.Role));
         
         if (!hasRole) {
