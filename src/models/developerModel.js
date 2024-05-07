@@ -6,9 +6,12 @@ const developerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    SocialMediaProfileLinks: [{Name: String,
-        URL:String
-    }],
+    SocialMediaProfileLinks: {
+        Twitter: String,
+        Facebook:String,
+        Linkdin:String,
+        Instagram :String
+    },
     Mobile: Number,
     EmailId: String,
     WhatsApp: Number,
@@ -56,7 +59,6 @@ const developerSchema = new mongoose.Schema({
         ref: 'User'
     },
     VerificationDate: Date,
-    SocialMediaProfileLinks: [String],
     BranchOffices: [{
         Phone: Number,
         Mobile: Number,
