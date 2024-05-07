@@ -10,7 +10,7 @@ const AddBannerSchema = require('../validators/bannerValidator');
 const { addBanner, getAllBanner, getBannerById, updateBanner, deleteBanner } = require('../controllers/bannerController');
 
 router.post('/addBanner',auth,validate(AddBannerSchema,'body'),addBanner)
-router.get('/allBanner',auth,getAllBanner)
+router.get('/allBanner',getAllBanner)
 router.get('/banner/:id',auth,validate(idSchema,'params'),getBannerById)
 router.patch('/updateBanner/:id',validate(idSchema,'params'),auth,updateBanner)
 router.delete('/deleteBanner/:id',auth,validate(idSchema,'params'),deleteBanner)
