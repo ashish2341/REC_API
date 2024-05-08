@@ -59,7 +59,7 @@ exports.getAllDeveloper = async (req, res) => {
     ];
     
     const records = await Developer.aggregate(aggregationPipeline);
-    
+    await Developer.populate(records, { path: 'Area' });
     let totalCount = 0;
     if (records.length > 0) {
       const totalCountPipeline = [{ $match: matchQuery }, { $count: "total" }];
@@ -104,6 +104,7 @@ exports.getDeveloperById = async (req, res) => {
 
    
     const [developer] = await Developer.aggregate(aggregationPipeline);
+    await Developer.populate(developer, { path: 'Area' });
 
     if (!developer) {
       return res.status(404).json({ message: 'Developer not found' });
