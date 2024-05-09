@@ -272,14 +272,19 @@ exports.getPropertiesByType = async (req, res) => {
 };
 exports.getPropertiesByBudget = async (req, res) => {
   try {
-    const { buyType, budget, propertyType, bhkType, facing, areaType,propertyStatus,posessionStatus,feature,bathroom,landArea,search } = req.body;
+    const { 
+      isFeatured,
+      buyType, 
+      budget, 
+      propertyType, 
+      bhkType, facing, areaType,propertyStatus,posessionStatus,feature,bathroom,landArea,search } = req.body;
     
     const queryObj = {IsDeleted: false, $or: [
       { Titile: { $regex: search || '', $options: 'i' } },
       { Description: { $regex: search || '', $options: 'i' } },
        
     ]};
- 
+    if(isFeatured)queryObj.IsFeatured= true;
     if (buyType?.length>0)  queryObj.ProeprtyFor = { $in: buyType };
     
     if (propertyType?.length>0)  queryObj.PropertyType = { $in: propertyType };
