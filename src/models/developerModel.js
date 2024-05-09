@@ -9,7 +9,7 @@ const developerSchema = new mongoose.Schema({
     SocialMediaProfileLinks: {
         Twitter: String,
         Facebook:String,
-        Linkdin:String,
+        LinkedIn:String,
         Instagram :String
     },
     Mobile: Number,
