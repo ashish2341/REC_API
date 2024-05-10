@@ -30,6 +30,7 @@ const propertySchema = Joi.object({
     Flooring: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     Furnished: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     BuiltAreaType: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    Builder: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     LandArea: Joi.number().min(0),
     CoveredArea: Joi.number().min(0),
     CarpetArea: Joi.number().min(0),
@@ -149,7 +150,7 @@ const propertyUpdateSchema = Joi.object({
     Highlight: Joi.string(),
     ProeprtyFor: Joi.string().valid('Rent', 'Sale', 'Lease'),
     ProjectId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    Builder: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
+    Builder: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     PropertyType:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     IsDeleted: Joi.boolean(),
     IsEnabled: Joi.boolean(),
@@ -307,4 +308,6 @@ const zodiacSchema = Joi.object({
     dob: Joi.string().required().pattern(/^\d{4}-\d{2}-\d{2}$/).message('Date formate should be YYYY-MM-DD'),
    
   });
+
 module.exports ={ propertySchema,directionSchema,budgetSchema,zodiacSchema,propertyUpdateSchema};
+

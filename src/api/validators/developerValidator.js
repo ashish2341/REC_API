@@ -2,9 +2,12 @@ const Joi = require('joi');
 
 const AddDeveloperSchema = Joi.object({
     Name: Joi.string().required(),
-    SocialMediaProfileLinks: Joi.array().items(
-        Joi.object({ Name: Joi.string(), URL: Joi.string() })
-      ),
+    SocialMediaProfileLinks: Joi.object({
+        Twitter: Joi.string().allow(''),
+        Facebook: Joi.string().allow(''),
+        LinkedIn: Joi.string().allow(''),
+        Instagram: Joi.string().allow('')
+    }),
     Logo: Joi.string().allow(''),
     Area:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     Mobile: Joi.number().integer().min(1000000000).max(9999999999).required().messages({
@@ -30,7 +33,6 @@ const AddDeveloperSchema = Joi.object({
         Description: Joi.string(),  
     })),
     DetailNote: Joi.string().allow(''),
-    SocialMediaProfileLinks: Joi.array().items(Joi.string()),
     BranchOffices: Joi.array().items(Joi.object({
         Phone: Joi.string(),
         Mobile: Joi.string(),
@@ -56,9 +58,12 @@ const AddDeveloperSchema = Joi.object({
 });
 const UpdateDeveloperSchema = Joi.object({
     Name: Joi.string(),
-    SocialMediaProfileLinks: Joi.array().items(
-        Joi.object({ Name: Joi.string(), URL: Joi.string() })
-      ),
+    SocialMediaProfileLinks: Joi.object({
+        Twitter: Joi.string().allow(''),
+        Facebook: Joi.string().allow(''),
+        LinkedIn: Joi.string().allow(''),
+        Instagram: Joi.string().allow('')
+    }),
     Logo: Joi.string().allow(''),
     Area:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     Mobile: Joi.number().integer().min(1000000000).max(9999999999).messages({
@@ -84,7 +89,6 @@ const UpdateDeveloperSchema = Joi.object({
         Description: Joi.string(),  
     })),
     DetailNote: Joi.string().allow(''),
-    SocialMediaProfileLinks: Joi.array().items(Joi.string()),
     BranchOffices: Joi.array().items(Joi.object({
         Phone: Joi.string(),
         Mobile: Joi.string(),

@@ -10,7 +10,7 @@ const { AddDeveloperSchema, UpdateDeveloperSchema } = require('../validators/dev
 const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
 
 router.post('/addDeveloper',auth,validate(AddDeveloperSchema,'body'),addDeveloper)
-router.get('/allDeveloper',auth,validate(getRecordsSchema,'query'),getAllDeveloper)
+router.get('/allDeveloper',validate(getRecordsSchema,'query'),getAllDeveloper)
 router.get('/developer/:id',auth,validate(idSchema,'params'),getDeveloperById)
 router.patch('/updateDeveloper/:id',auth,validate(UpdateDeveloperSchema,'body'),updateDeveloper)
 router.delete('/deleteDeveloper/:id',auth,validate(idSchema,'params'),deleteDeveloper)

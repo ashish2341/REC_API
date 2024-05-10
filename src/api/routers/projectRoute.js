@@ -10,7 +10,7 @@ const { addProject, getAllProject, getProjectById, updateProject, deleteProject 
 const projectSchemaValidation = require('../validators/projectValidation');
 
 router.post('/addProject',auth,validate(projectSchemaValidation,'body'),addProject)
-router.get('/allProject',auth,validate(getRecordsSchema,'query'),getAllProject)
+router.get('/allProject',validate(getRecordsSchema,'query'),getAllProject)
 router.get('/project/:id',auth,validate(idSchema,'params'),getProjectById)
 router.patch('/updateProject/:id',validate(idSchema,'params'),auth,updateProject)
 router.delete('/deleteProject/:id',auth,validate(idSchema,'params'),deleteProject)
