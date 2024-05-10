@@ -2,9 +2,8 @@ const express = require('express')
  
 const router = express.Router()
 
-const { validate } = require('../../helper/customValidation');
+const { validate} = require('../../helper/customValidation');
 const auth = require('../middleware/auth');
-const role = require('../middleware/role');
 
 const { addPropeties, getAllProperties, getPropertiesByDirections, getPopularProperties, 
     getPropertiesByArea, getPropertiesByType, getPropertiesByBudget, getPropertiesById, updateProperties, deleteProperties, getPropertiesWithArea, getPropertiesByAreaOrPropertyType, getSimilarProperties, 
@@ -12,10 +11,11 @@ const { addPropeties, getAllProperties, getPropertiesByDirections, getPopularPro
 const {propertySchema, directionSchema, budgetSchema, zodiacSchema} = require('../validators/propertiesValidators');
 const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
 const { roleSchema } = require('../validators/authValidator');
+const validateRole = require('../middleware/role');
 
 
 router.post('/addProperty',auth,validate(propertySchema,'body'),addPropeties)
-router.get('/allProperties',validate(getRecordsSchema,'query'),role,validate(roleSchema,'body'),getAllProperties)
+router.get('/allProperties',validate(getRecordsSchema,'query'),validateRole(['Admin','Buyer']),getAllProperties)
 router.get('/propertyByDirections',validate(directionSchema,"query"),getPropertiesByDirections)
 router.get('/popularProperty',getPopularProperties)
 router.get('/propertyByArea',getPropertiesByArea)
