@@ -1,11 +1,24 @@
 const mongoose = require('mongoose');
+const { dbCollectionName } = require('../helper/constants');
 
 const developerSchema = new mongoose.Schema({
     Name: {
         type: String,
         required: true
     },
+    SocialMediaProfileLinks: {
+        Twitter: String,
+        Facebook:String,
+        LinkedIn:String,
+        Instagram :String
+    },
+    Mobile: Number,
+    EmailId: String,
+    WhatsApp: Number,
+    Area:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.area},
+    Description:String,
     Logo: String,
+    EstablishDate:Date,
     CreatedDate: {
         type: Date,
         default: Date.now
@@ -46,13 +59,11 @@ const developerSchema = new mongoose.Schema({
         ref: 'User'
     },
     VerificationDate: Date,
-    DetailNote: String,
-    SocialMediaProfileLinks: [String],
     BranchOffices: [{
-        Phone: String,
-        Mobile: String,
+        Phone: Number,
+        Mobile: Number,
         EmailId: String,
-        WhatsApp: String,
+        WhatsApp: Number,
         IsEnabled: {
             type: Boolean,
             default: true
@@ -68,9 +79,9 @@ const developerSchema = new mongoose.Schema({
         PinCode: String,
         ContactPerson: [{
             Name: String,
-            Mobile: String,
+            Mobile: Number,
             EmailId: String,
-            Phone: String,
+            Phone: Number,
             IsDeleted: {
                 type: Boolean,
                 default: false

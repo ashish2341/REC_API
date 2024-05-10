@@ -3,12 +3,32 @@ const { ObjectId } = require("mongodb");
 const { getDB } = require("../../db/db");
 const constants = require("../../helper/constants");
 const { dbCollectionName } = require("../../helper/constants");
-const { Soils, Facings, PropertyWithSubTypes, AreaUnits, Preferences, PropertyStatus, OwnershipTypes, Area, Fecnings, Floorings, Furnishedes, BuiltAreaTypes, BhkType, Banks } = require("../../models/masterModel");
+const { Soils, Facings, PropertyWithSubTypes, AreaUnits, Preferences, PropertyStatus, OwnershipTypes, Area, Fecnings, Floorings, Furnishedes, BuiltAreaTypes, BhkType, Banks, PossessionStatus } = require("../../models/masterModel");
 const Properties = require("../../models/propertiesModel");
 const { formatNumber, getDirection } = require("../../helper/utils");
 const Features = require("../../models/featuresModel");
 const Aminity = require("../../models/aminityModel");
-
+const Developer = require("../../models/developerModel");
+const propertyPopulateField = [
+  { path: "Facing", model: Facings },
+  { path: "PropertyType", model: PropertyWithSubTypes },
+  { path: "AreaUnits", model: AreaUnits },
+  { path: "Soil", model: Soils },
+  { path: "Preferences", model: Preferences },
+  { path: "PropertyStatus", model: PropertyStatus },
+  { path: "OwnershipType", model: OwnershipTypes },
+  { path: "Area", model: Area },
+  { path: "Fencing", model: Fecnings },
+  { path: "Flooring", model: Floorings },
+  { path: "Furnished", model: Furnishedes },
+  { path: "BuiltAreaType", model: BuiltAreaTypes },
+  { path: "BhkType", model: BhkType },
+  { path: "Features", model: Features },
+  { path: "Aminities", model: Aminity },
+  { path: "LoanDetails.ByBank", model: Banks },
+  { path: "PosessionStatus", model: PossessionStatus },
+  {path:"Builder",model:Developer}
+]
 
 exports.addPropeties = async (req, res) => {
   try {
@@ -34,6 +54,7 @@ exports.getAllProperties = async (req, res) => {
       $or: [
         { Titile: { $regex: search, $options: 'i' } },
         { Description: { $regex: search, $options: 'i' } },
+        // { Area: { $regex: search, $options: 'i' } },
       ]
     };
 
@@ -42,24 +63,7 @@ exports.getAllProperties = async (req, res) => {
     const totalPages = Math.ceil(count / limit);
     const currentPage = Math.min(Math.max(page, 1), totalPages);
     const skip = (currentPage - 1) * limit;
-    const properties = await Properties.find(searchQuery).populate([
-      { path: "Facing", model: Facings },
-      { path: "PropertyType", model: PropertyWithSubTypes },
-      { path: "AreaUnits", model: AreaUnits },
-      { path: "Soil", model: Soils },
-      { path: "Preferences", model: Preferences },
-      { path: "PropertyStatus", model: PropertyStatus },
-      { path: "OwnershipType", model: OwnershipTypes },
-      { path: "Area", model: Area },
-      { path: "Fencing", model: Fecnings },
-      { path: "Flooring", model: Floorings },
-      { path: "Furnished", model: Furnishedes },
-      { path: "BuiltAreaType", model: BuiltAreaTypes },
-      { path: "BhkType", model: BhkType },
-      { path: "Features", model: Features },
-      { path: "Aminities", model: Aminity },
-      { path: "LoanDetails.ByBank", model: Banks }
-    ]).sort({ CreatedDate: -1 })
+    const properties = await Properties.find(searchQuery).populate(propertyPopulateField).sort({ CreatedDate: -1 })
       .skip(skip)
       .limit(limit);
     return res.status(constants.status_code.header.ok).send({
@@ -82,24 +86,7 @@ exports.getAllProperties = async (req, res) => {
 exports.getPropertiesById = async (req, res) => {
   try {
     const properties = await Properties.findById(req.params.id)
-      .populate([
-        { path: "Facing", model: Facings },
-        { path: "PropertyType", model: PropertyWithSubTypes },
-        { path: "AreaUnits", model: AreaUnits },
-        { path: "Soil", model: Soils },
-        { path: "Preferences", model: Preferences },
-        { path: "PropertyStatus", model: PropertyStatus },
-        { path: "OwnershipType", model: OwnershipTypes },
-        { path: "Area", model: Area },
-        { path: "Fencing", model: Fecnings },
-        { path: "Flooring", model: Floorings },
-        { path: "Furnished", model: Furnishedes },
-        { path: "BuiltAreaType", model: BuiltAreaTypes },
-        { path: "BhkType", model: BhkType },
-        { path: "Features", model: Features },
-        { path: "Aminities", model: Aminity },
-        { path: "LoanDetails.ByBank", model: Banks }
-      ]);
+      .populate(propertyPopulateField);
 
     if (!properties) {
       return res
@@ -175,24 +162,7 @@ exports.getPropertiesByDirections = async (req, res) => {
     };
 
     const properties = await Properties.find(query)
-    .populate([
-      { path: "Facing", model: Facings },
-      { path: "PropertyType", model: PropertyWithSubTypes },
-      { path: "AreaUnits", model: AreaUnits },
-      { path: "Soil", model: Soils },
-      { path: "Preferences", model: Preferences },
-      { path: "PropertyStatus", model: PropertyStatus },
-      { path: "OwnershipType", model: OwnershipTypes },
-      { path: "Area", model: Area },
-      { path: "Fencing", model: Fecnings },
-      { path: "Flooring", model: Floorings },
-      { path: "Furnished", model: Furnishedes },
-      { path: "BuiltAreaType", model: BuiltAreaTypes },
-      { path: "BhkType", model: BhkType },
-      { path: "Features", model: Features },
-      { path: "Aminities", model: Aminity },
-      { path: "LoanDetails.ByBank", model: Banks }
-    ]);;
+    .populate(propertyPopulateField);;
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
       data: properties,
@@ -302,52 +272,45 @@ exports.getPropertiesByType = async (req, res) => {
 };
 exports.getPropertiesByBudget = async (req, res) => {
   try {
-    const { buyType, budget, propertyType, bhkType, facing, areaType } = req.query;
-    const [minBudget, maxBudget] = budget ? budget.split('-').map(parseFloat) : [];
-    const queryObj = {IsDeleted: false};
-    if (minBudget && maxBudget) {
-      queryObj.TotalPrice = { $gte: minBudget, $lte: maxBudget }
-    }
-    const queryParams = [
-      { key: 'ProeprtyFor', value: buyType },
-      { key: 'PropertyType', value: propertyType },
-      { key: 'BhkType', value: bhkType },
-      { key: 'Area', value: areaType }
-    ];
+    const { 
+      isFeatured,
+      buyType, 
+      budget, 
+      propertyType, 
+      bhkType, facing, areaType,propertyStatus,posessionStatus,feature,bathroom,landArea,search } = req.body;
+    
+    const queryObj = {IsDeleted: false, $or: [
+      { Titile: { $regex: search || '', $options: 'i' } },
+      { Description: { $regex: search || '', $options: 'i' } },
+       
+    ]};
+    if(isFeatured)queryObj.IsFeatured= true;
+    if (buyType?.length>0)  queryObj.ProeprtyFor = { $in: buyType };
+    
+    if (propertyType?.length>0)  queryObj.PropertyType = { $in: propertyType };
+    if (bhkType?.length>0) queryObj.BhkType = { $in: bhkType };
+    if (facing?.length>0) queryObj.Facing = { $in: facing };
+    if (areaType?.length>0) queryObj.Area = { $in: areaType };
+    if (propertyStatus?.length>0) queryObj.PropertyStatus = { $in: propertyStatus };
+    if (posessionStatus?.length>0) queryObj.PosessionStatus = { $in: posessionStatus };
+    if (bathroom?.length>0) queryObj.Bathrooms = { $in: bathroom };
+    if (landArea?.length>0) queryObj.LandArea = { $in: landArea };
+    if (feature?.length>0) queryObj.Features = { $in: feature };
+ 
+    if (budget?.length > 0) {
+      const minValue = Math.min(...budget);
+      const maxValue = Math.max(...budget);
 
-    for (const param of queryParams) {
-      if (param.value) {
-        queryObj[param.key] = param.value;
-      }
-    }
-
-    if (facing?.length > 0) {
-      queryObj.Facing = { $all: facing.split(',') };
-    }
+      queryObj['TotalPrice.MinValue'] = {$gte:minValue},
+      queryObj['TotalPrice.MaxValue'] = {$lte:maxValue}
+    };
 
     const properties = await Properties.find(queryObj)
-    .populate([
-      { path: "Facing", model: Facings },
-      { path: "PropertyType", model: PropertyWithSubTypes },
-      { path: "AreaUnits", model: AreaUnits },
-      { path: "Soil", model: Soils },
-      { path: "Preferences", model: Preferences },
-      { path: "PropertyStatus", model: PropertyStatus },
-      { path: "OwnershipType", model: OwnershipTypes },
-      { path: "Area", model: Area },
-      { path: "Fencing", model: Fecnings },
-      { path: "Flooring", model: Floorings },
-      { path: "Furnished", model: Furnishedes },
-      { path: "BuiltAreaType", model: BuiltAreaTypes },
-      { path: "BhkType", model: BhkType },
-      { path: "Features", model: Features },
-      { path: "Aminities", model: Aminity },
-      { path: "LoanDetails.ByBank", model: Banks }
-    ]);
-
+    .populate(propertyPopulateField);
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
       data: properties,
+      count:properties.length,
       success: true
     });
   } catch (error) {
@@ -379,48 +342,7 @@ exports.getPropertiesByAreaOrPropertyType = async (req, res) => {
 
       const count = await Properties.countDocuments(searchQuery);
      
-      const properties = await Properties.find(searchQuery).populate({
-          path:"Facing",
-          model:Facings
-      }) .populate({
-          path: 'PropertyType',
-          model: PropertyWithSubTypes,
-        }) .populate({
-          path: 'AreaUnits',
-          model: AreaUnits,
-        }) .populate({
-          path: 'Soil',
-          model: Soils,
-        }) .populate({
-          path: 'Preferences',
-          model: Preferences,
-        }).populate({
-          path: 'PropertyStatus',
-          model: PropertyStatus,
-        }).populate({
-          path: 'OwnershipType',
-          model: OwnershipTypes,
-        }).populate({
-          path: 'Area',
-          model: Area,
-        }).populate({
-          path: 'Fencing',
-          model: Fecnings,
-        }).populate({
-          path: 'Flooring',
-          model: Floorings,
-        }).populate({
-          path: 'Furnished',
-          model: Furnishedes,
-        }).populate({
-          path: 'BuiltAreaType',
-          model: BuiltAreaTypes,
-        })
-        .populate({
-          path: 'BhkType',
-          model: BhkType,
-        })
-        
+      const properties = await Properties.find(searchQuery).populate(propertyPopulateField)
       return res.status(constants.status_code.header.ok).send({
           statusCode: 200,
           data: properties,
@@ -443,27 +365,22 @@ exports.getSimilarProperties = async (req, res) => {
     if (!property) {
         return res.status(404).json({ message: 'Property not found' });
     }
-    const TotalPrice = property.TotalPrice;
-    const priceRange = TotalPrice.split('-').map(val => parseInt(val));
-
-    // Calculate the average price and adjust by 20-30
-    const minPrice = priceRange[0] - 30;
-    const maxPrice = priceRange[1] + 30;
- console.log(minPrice,maxPrice)
-    // Find properties with average prices within the adjusted range
-    const similarProperties = await Properties.find({
-      // Convert the price range to a regex pattern for flexible matching
-      // totalPrice: { $regex: `^[${minPrice}-${maxPrice}]` }
-      TotalPrice: { $gte: minPrice, $lte: maxPrice },
-      Area:property.Area,
-      _id: { $ne: property._id }
+   
+    const minPrice = property?.TotalPrice?.MinValue -300000  ;
+    const maxPrice = property?.TotalPrice?.MaxValue + 300000 ;
+ 
+    const properties = await Properties.find({
+      'TotalPrice.MinValue': { $gte: minPrice},
+      'TotalPrice.MaxValue': { $lte: maxPrice},
+      Area: property.Area, 
+        _id: { $ne: property._id }
     });
-  //  console.log(similarProperties)
-    const count = await similarProperties.length;
-    // console.log(count)
+  
+    const count =  properties.length;
+   
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
-      data: similarProperties,
+      data: properties,
       count: count,
       success: true
     });
@@ -479,8 +396,7 @@ exports.getSimilarProperties = async (req, res) => {
 exports.getPropertiesByDob = async (req, res) => {
   try {
 
-    const direction = getDirection(req.params.dob);
-      console.log('dir',direction)
+    const {direction,rashi} = getDirection(req.params.dob);
     let faceQuery = { Facing: { $regex: direction, $options: 'i' } }
     const db = getDB()
     let faceRecords = await db.collection(dbCollectionName.facings).findOne(faceQuery)
@@ -488,33 +404,16 @@ exports.getPropertiesByDob = async (req, res) => {
     if (!faceRecords) {
       return res.status(404).send({ status: false, error: "Data not found" })
     }
-    const query = {
-      Facing: faceRecords._id,
-      IsDeleted:false
+    const result = {
+      Facing: faceRecords,
+      rashi
+     
     };
 
-    const properties = await Properties.find(query)
-    .populate([
-      { path: "Facing", model: Facings },
-      { path: "PropertyType", model: PropertyWithSubTypes },
-      { path: "AreaUnits", model: AreaUnits },
-      { path: "Soil", model: Soils },
-      { path: "Preferences", model: Preferences },
-      { path: "PropertyStatus", model: PropertyStatus },
-      { path: "OwnershipType", model: OwnershipTypes },
-      { path: "Area", model: Area },
-      { path: "Fencing", model: Fecnings },
-      { path: "Flooring", model: Floorings },
-      { path: "Furnished", model: Furnishedes },
-      { path: "BuiltAreaType", model: BuiltAreaTypes },
-      { path: "BhkType", model: BhkType },
-      { path: "Features", model: Features },
-      { path: "Aminities", model: Aminity },
-      { path: "LoanDetails.ByBank", model: Banks }
-    ]);;
+   
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
-      data: properties,
+      data: result,
       success: true
     });
   } catch (error) {

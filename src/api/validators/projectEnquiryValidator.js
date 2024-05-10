@@ -6,7 +6,13 @@ const projectEnquiryValidationSchema = Joi.object({
     Message: Joi.string().required(),
     MolileNumber: Joi.string().required(),
     EnquiryData:Joi.string().required(),
-    EnquiryType:Joi.string().valid('Project','Property','Astrology').required()
+    EnquiryType:Joi.string().valid('Project','Property','Astrology','ContactUs').required()
 });
+const getEnquirySchema = Joi.object({
+    page: Joi.number().integer().min(1).required(),
+    pageSize: Joi.number().integer().min(1).required(),
+    search: Joi.string().allow(''),
+    filter:Joi.string().valid('Project','Property','Astrology','ContactUs'),
+  });
 
-module.exports = projectEnquiryValidationSchema;
+module.exports = {projectEnquiryValidationSchema,getEnquirySchema};

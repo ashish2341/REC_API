@@ -35,6 +35,7 @@ const PropertySchema = new  mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:dbCollectionName.areaUnits,
     },
+    Builder:{type:mongoose.Schema.Types.ObjectId,ref:'Developer'},
     BhkType:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.bhkTypes},
     Area:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.area},
     Fencing:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.fencings},
@@ -68,11 +69,18 @@ const PropertySchema = new  mongoose.Schema({
     LandArea: Number,
     CoveredArea: Number,
     CarpetArea: Number,
-    TotalPrice: String,
+    TotalPrice: {
+        DisplayValue: String,
+        MinValue:Number,
+        MaxValue:Number
+    },
     PerUnitPrice: Number,
     IsDisplayPrice: Boolean,
     IsNegotiable: Boolean,
-    PosessionStatus: String,
+    PosessionStatus: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: dbCollectionName.possessiones
+    },
     PosessionDate: Date,
     FloorNumber: Number,
     TotalFloors: Number,
@@ -109,6 +117,7 @@ const PropertySchema = new  mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: dbCollectionName.propertyStatus
     },
+    
     Images: [{
         Name: String,
         Titile: String,
@@ -159,6 +168,7 @@ const PropertySchema = new  mongoose.Schema({
         Windows: String,
         Others: String
     },
+    Brochure:String,
     WallAndCeiling: {
         Interior: String,
         Exterior: String,

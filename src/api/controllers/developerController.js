@@ -1,10 +1,13 @@
+const { ObjectId } = require("mongodb");
 const constants = require("../../helper/constants");
 const Developer = require("../../models/developerModel");
 
 exports.addDeveloper = async (req, res) => {
   try {
-    req.body.CreatedBy = req.user._id;
-    req.body.UpdatedBy = req.user._id;
+    const userId = req.user._id
+    req.body.CreatedBy = userId;
+    req.body.UpdatedBy = userId;
+    req.body.UserId = userId
     const developer = await Developer.create(req.body);
     return res
       .status(constants.status_code.header.ok)
@@ -18,25 +21,54 @@ exports.addDeveloper = async (req, res) => {
 
 exports.getAllDeveloper = async (req, res) => {
   try {
-    const { page, pageSize } = req.query;
+    const { page, pageSize, search } = req.query;
     const pageNumber = parseInt(page) || 1;
     const size = parseInt(pageSize) || 10;
-    const search = req.query.search || '';
-       
-    const searchQuery = {
-      IsDeleted:false,
-        $or: [
-            { Name: { $regex: search, $options: 'i' } },
-        ]
+    
+    const matchQuery = {
+      IsDeleted: false,
+      $or: [
+        { Name: { $regex: search || '', $options: 'i' } },
+        { Description: { $regex: search || '', $options: 'i' } }
+      ]
     };
-
-    const totalCount = await Developer.countDocuments(searchQuery);
+    
+    const aggregationPipeline = [
+      { $match: matchQuery },
+      {
+        $lookup: {
+          from: 'properties',
+          localField: '_id',
+          foreignField: 'Builder',
+          as: 'propertiesInfo'
+        }
+      },
+      {
+        $addFields: {
+          PropertiesLength: { $size: "$propertiesInfo" }
+        }
+      },
+      { $sort: { CreatedDate: -1 } },
+      { $skip: (pageNumber - 1) * size },
+      { $limit: size },
+      {
+        $project: {
+          propertiesInfo: 0 
+        }
+      }
+    ];
+    
+    const records = await Developer.aggregate(aggregationPipeline);
+    await Developer.populate(records, { path: 'Area' });
+    let totalCount = 0;
+    if (records.length > 0) {
+      const totalCountPipeline = [{ $match: matchQuery }, { $count: "total" }];
+      const [{ total }] = await Developer.aggregate(totalCountPipeline);
+      totalCount = total || 0;
+    }
+    
     const totalPages = Math.ceil(totalCount / size);
-
-    const records = await Developer.find(searchQuery)
-      .sort({ CreatedDate: -1 })
-      .skip((pageNumber - 1) * size)
-      .limit(size);
+    
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
       data: records,
@@ -44,8 +76,10 @@ exports.getAllDeveloper = async (req, res) => {
       totalCount: totalCount,
       count: records.length,
       pageNumber: pageNumber,
-      totalPages: totalPages,
+      totalPages: totalPages
     });
+    
+
   } catch (error) {
     res
       .status(constants.status_code.header.server_error)
@@ -55,15 +89,32 @@ exports.getAllDeveloper = async (req, res) => {
 
 exports.getDeveloperById = async (req, res) => {
   try {
-    const developer = await Developer.findById(req.params.id);
+    const { id } = req.params;
+    const aggregationPipeline = [
+      { $match: { _id: new ObjectId(id) } },
+      {
+        $lookup: {
+          from: 'properties',
+          localField: '_id',
+          foreignField: 'Builder',
+          as: 'properties'
+        }
+      }
+    ];
+
+   
+    const [developer] = await Developer.aggregate(aggregationPipeline);
+    await Developer.populate(developer, { path: 'Area' });
+
     if (!developer) {
-      return res
-        .status(404)
-        .json({ error: "Developer not found", success: false });
+      return res.status(404).json({ message: 'Developer not found' });
     }
-    return res
-      .status(constants.status_code.header.ok)
-      .send({ statusCode: 200, data: developer, success: true });
+
+    return res.status(200).json({
+      statusCode: 200,
+      success: true,
+      data:developer
+    });
   } catch (error) {
     return res
       .status(constants.status_code.header.server_error)
@@ -73,6 +124,11 @@ exports.getDeveloperById = async (req, res) => {
 
 exports.updateDeveloper = async (req, res) => {
   try {
+    if(!req.params.id){
+      return res
+      .status(404)
+      .json({ error: "Id is required", success: false });
+    }
     const developer = await Developer.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });

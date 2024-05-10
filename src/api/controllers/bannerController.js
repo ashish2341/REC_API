@@ -1,12 +1,11 @@
 const constants = require("../../helper/constants");
-const Blog = require("../../models/blogModel");
-const { BlogType } = require("../../models/masterModel");
+const Banner = require("../../models/bannerModel");
 
-exports.addBlog = async (req, res) => {
+exports.addBanner = async (req, res) => {
   try {
     req.body.CreatedBy = req.user._id;
     req.body.UpdatedBy = req.user._id;
-    const blog = await Blog.create(req.body);
+    const banner = await Banner.create(req.body);
     return res
       .status(constants.status_code.header.ok)
       .send({ message: constants.curd.add, success: true });
@@ -17,38 +16,22 @@ exports.addBlog = async (req, res) => {
   }
 };
 
-exports.getAllBlog = async (req, res) => {
+exports.getAllBanner = async (req, res) => {
   try {
-    const { page, pageSize } = req.query;
-    const pageNumber = parseInt(page) || 1;
-    const size = parseInt(pageSize) || 10;
-    const search = req.query.search || '';
-       
+   
     const searchQuery = {
       IsDeleted: false,
-      Title: { $regex: search, $options: 'i' }
-        
+       
     };
 
-    const totalCount = await Blog.countDocuments(searchQuery);
-    const totalPages = Math.ceil(totalCount / size);
-
-    const records = await Blog.find(searchQuery).populate({
-      path: 'BlogType',
-      model: BlogType,
-    })
-      .sort({ CreatedDate: -1 })
-      .skip((pageNumber - 1) * size)
-      .limit(size)
+    const records = await Banner.find(searchQuery)
       ;
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
       data: records,
       success: true,
-      totalCount: totalCount,
       count: records.length,
-      pageNumber: pageNumber,
-      totalPages: totalPages,
+      
     });
   } catch (error) {
     res
@@ -57,17 +40,17 @@ exports.getAllBlog = async (req, res) => {
   }
 };
 
-exports.getBlogById = async (req, res) => {
+exports.getBannerById = async (req, res) => {
   try {
-    const blog = await Blog.findById(req.params.id);
-    if (!blog) {
+    const banner = await Banner.findById(req.params.id);
+    if (!banner) {
       return res
         .status(404)
-        .json({ error: "Blog not found", success: false });
+        .json({ error: "Banner not found", success: false });
     }
     return res
       .status(constants.status_code.header.ok)
-      .send({ statusCode: 200, data: blog, success: true });
+      .send({ statusCode: 200, data: banner, success: true });
   } catch (error) {
     return res
       .status(constants.status_code.header.server_error)
@@ -75,15 +58,15 @@ exports.getBlogById = async (req, res) => {
   }
 };
 
-exports.updateBlog = async (req, res) => {
+exports.updateBanner = async (req, res) => {
   try {
-    const blog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
+    const banner = await Banner.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!blog) {
+    if (!banner) {
       return res
         .status(404)
-        .json({ error: "Blog not found", success: false });
+        .json({ error: "Banner not found", success: false });
     }
     res
       .status(constants.status_code.header.ok)
@@ -95,15 +78,15 @@ exports.updateBlog = async (req, res) => {
   }
 };
 
-exports.deleteBlog = async (req, res) => {
+exports.deleteBanner = async (req, res) => {
   try {
-    const blog = await Blog.findByIdAndUpdate(req.params.id, {
+    const banner = await Banner.findByIdAndUpdate(req.params.id, {
       IsDeleted: true,
     });
-    if (!blog) {
+    if (!banner) {
       return res
         .status(404)
-        .json({ error: "Blog not found", success: false });
+        .json({ error: "Banner not found", success: false });
     }
     res
       .status(constants.status_code.header.ok)
