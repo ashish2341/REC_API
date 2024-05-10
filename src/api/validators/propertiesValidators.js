@@ -308,4 +308,6 @@ const zodiacSchema = Joi.object({
     dob: Joi.string().required().pattern(/^\d{4}-\d{2}-\d{2}$/).message('Date formate should be YYYY-MM-DD'),
    
   });
+
 module.exports ={ propertySchema,directionSchema,budgetSchema,zodiacSchema,propertyUpdateSchema};
+
