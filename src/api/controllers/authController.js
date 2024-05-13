@@ -53,8 +53,8 @@ exports.login = async (req, res) => {
 
 exports.uploadSingleImage = async (req, res) => {
   try {
-
-    const imageUrl = `${req.protocol}://${req.hostname}:${PORT}/uploads/${req.file.filename}`;
+    const portPath = req.hostname === "localhost" ? `:${PORT}/uploads/${req.file.filename}`: `/uploads/${req.file.filename}`
+    const imageUrl = `${req.protocol}://${req.hostname}${portPath}`;
     res.status(200).send({ imageUrl, success: true });
   } catch (error) {
 
@@ -70,7 +70,8 @@ exports.uploadMultipleFile = async (req, res) => {
 
     const imageUrls = [];
     req.files.forEach(file => {
-      const imageUrl = `${req.protocol}://${req.hostname}:${PORT}/uploads/${file.filename}`;
+      const portPath = req.hostname === "localhost" ? `:${PORT}/uploads/${file.filename}`: `/uploads/${file.filename}`
+      const imageUrl = `${req.protocol}://${req.hostname}${portPath}`;
       imageUrls.push(imageUrl);
     });
 
