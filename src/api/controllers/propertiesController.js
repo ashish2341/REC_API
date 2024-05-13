@@ -48,6 +48,8 @@ exports.getAllProperties = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || '';
+    const sortBy = req.query.sortBy;
+    const sortOrder = parseInt(req.query.sortOrder) || -1;
 
     const searchQuery = {
       IsDeleted: false,
@@ -57,13 +59,19 @@ exports.getAllProperties = async (req, res) => {
         // { Area: { $regex: search, $options: 'i' } },
       ]
     };
-
+    let sortOptions = {};
+    if (sortBy === 'Titile' || sortBy === 'TotalPrice.MinValue' || sortBy === 'TotalPrice.MaxValue') {
+      sortOptions[sortBy] = sortOrder;
+    } else {
+      sortOptions['CreatedDate'] = -1;
+    }
 
     const count = await Properties.countDocuments(searchQuery);
     const totalPages = Math.ceil(count / limit);
     const currentPage = Math.min(Math.max(page, 1), totalPages);
     const skip = (currentPage - 1) * limit;
-    const properties = await Properties.find(searchQuery).populate(propertyPopulateField).sort({ CreatedDate: -1 })
+    const properties = await Properties.find(searchQuery).populate(propertyPopulateField)
+      .sort(sortOptions)
       .skip(skip)
       .limit(limit);
     return res.status(constants.status_code.header.ok).send({

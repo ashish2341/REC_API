@@ -291,6 +291,15 @@ const propertyUpdateSchema = Joi.object({
 const directionSchema = Joi.object({
     direction:Joi.string().required()
 })
+
+const getPropertySchema = Joi.object({
+    page: Joi.number().integer().min(1).required(),
+    pageSize: Joi.number().integer().min(1).required(),
+    search: Joi.string().allow(''),
+    sortBy:Joi.string().allow(''),
+    sortOrder:Joi.string().allow('')
+
+  });
 const budgetSchema = Joi.object({
     budget: Joi.array().length(2).items(Joi.number()),
     propertyType:Joi.array().items(Joi.string().pattern(/^[0-9a-fA-F]{24}$/)),
@@ -309,5 +318,5 @@ const zodiacSchema = Joi.object({
    
   });
 
-module.exports ={ propertySchema,directionSchema,budgetSchema,zodiacSchema,propertyUpdateSchema};
+module.exports ={ propertySchema,directionSchema,budgetSchema,zodiacSchema,propertyUpdateSchema,getPropertySchema};
 
