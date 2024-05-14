@@ -86,16 +86,14 @@ const propertySchema = Joi.object({
         Titile: Joi.string(),
         URL: Joi.string(),
         Type: Joi.string(),
-        IsDeleted: Joi.boolean(),
-        IsEnabled: Joi.boolean()
+        
     })),
     Videos: Joi.array().items(Joi.object({
         Name: Joi.string(),
         Titile: Joi.string(),
         URL: Joi.string(),
         Type: Joi.string(),
-        IsDeleted: Joi.boolean(),
-        IsEnabled: Joi.boolean()
+      
     })),
     IsSold: Joi.boolean(),
     FloorAndCounter: Joi.object({
@@ -230,16 +228,13 @@ const propertyUpdateSchema = Joi.object({
         Titile: Joi.string(),
         URL: Joi.string(),
         Type: Joi.string(),
-        IsDeleted: Joi.boolean(),
-        IsEnabled: Joi.boolean()
     })),
     Videos: Joi.array().items(Joi.object({
         Name: Joi.string(),
         Titile: Joi.string(),
         URL: Joi.string(),
         Type: Joi.string(),
-        IsDeleted: Joi.boolean(),
-        IsEnabled: Joi.boolean()
+      
     })),
     IsSold: Joi.boolean(),
     FloorAndCounter: Joi.object({

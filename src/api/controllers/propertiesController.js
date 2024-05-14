@@ -72,7 +72,7 @@ exports.getAllProperties = async (req, res) => {
     const skip = (currentPage - 1) * limit;
     const properties = await Properties.find(searchQuery).populate(propertyPopulateField)
       .sort(sortOptions)
-      .skip(skip)
+      .skip(skip<0 ? 1 : skip)
       .limit(limit);
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
@@ -404,7 +404,7 @@ exports.getSimilarProperties = async (req, res) => {
 exports.getPropertiesByDob = async (req, res) => {
   try {
 
-    const {direction,rashi} = getDirection(req.params.dob);
+    const {direction,sign} = getDirection(req.params.dob);
     let faceQuery = { Facing: { $regex: direction, $options: 'i' } }
     const db = getDB()
     let faceRecords = await db.collection(dbCollectionName.facings).findOne(faceQuery)
@@ -414,7 +414,7 @@ exports.getPropertiesByDob = async (req, res) => {
     }
     const result = {
       Facing: faceRecords,
-      rashi
+      sign
      
     };
 
@@ -424,6 +424,45 @@ exports.getPropertiesByDob = async (req, res) => {
       data: result,
       success: true
     });
+  } catch (error) {
+    return res.status(constants.status_code.header.server_error).send({
+      statusCode: 500,
+      error: error.message,
+      success: false
+    });
+  }
+};
+exports.getPropertiesForReview = async (req, res) => {
+  try {
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const searchQuery = {
+      IsDeleted: false,
+      IsEnabled:false
+    };
+    let sortOptions = {CreatedDate:-1};
+   
+
+    const count = await Properties.countDocuments(searchQuery);
+    const totalPages = Math.ceil(count / limit);
+    const currentPage = Math.min(Math.max(page, 1), totalPages);
+    const skip = (currentPage - 1) * limit ;
+    const properties = await Properties.find(searchQuery).populate(propertyPopulateField)
+      .sort(sortOptions)
+      .skip(skip<0 ? 1 : skip)
+      .limit(limit);
+    return res.status(constants.status_code.header.ok).send({
+      statusCode: 200,
+      data: properties,
+      currentPage: currentPage,
+      totalPages: totalPages,
+      totalCount: count,
+      success: true
+    });
+
+    
+     
   } catch (error) {
     return res.status(constants.status_code.header.server_error).send({
       statusCode: 500,

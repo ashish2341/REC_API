@@ -15,7 +15,7 @@ const PropertySchema = new  mongoose.Schema({
     },
     PropertyType: {type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.propertyWithSubTypes},
     IsDeleted: {type:Boolean,default:false},
-    IsEnabled: {type:Boolean,default:true},
+    IsEnabled: {type:Boolean,default:false},
     IsExclusive: Boolean,
     IsFeatured: Boolean,
     IsNew: Boolean,
@@ -123,24 +123,18 @@ const PropertySchema = new  mongoose.Schema({
         Titile: String,
         URL: String,
         Type: String,
-        IsDeleted: Boolean,
-        IsEnabled: Boolean
     }],
     Documents: [{
         Name: String,
         Titile: String,
         URL: String,
         Type: String,
-        IsDeleted: Boolean,
-        IsEnabled: Boolean
     }],
     Videos: [{
         Name: String,
         Titile: String,
         URL: String,
         Type: String,
-        IsDeleted: Boolean,
-        IsEnabled: Boolean
     }],
     IsSold: Boolean,
     // PurchaseRentBy:mongoose.Schema.Types.Mixed,
