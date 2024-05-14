@@ -44,8 +44,7 @@ const AddDeveloperSchema = Joi.object({
         WhatsApp: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
             'string.pattern.base': 'Whatsapp number must be a 10-digit number'
         }),
-        IsEnabled: Joi.boolean(),
-        IsDeleted: Joi.boolean(),
+    
         Area: Joi.string(),
         City: Joi.string(),
         State: Joi.string(),
@@ -112,8 +111,7 @@ const UpdateDeveloperSchema = Joi.object({
         WhatsApp: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
             'string.pattern.base': 'Whatsapp must be a 10-digit number'
         }),
-        IsEnabled: Joi.boolean(),
-        IsDeleted: Joi.boolean(),
+    
         Area: Joi.string(),
         City: Joi.string(),
         State: Joi.string(),
@@ -121,6 +119,7 @@ const UpdateDeveloperSchema = Joi.object({
         PinCode: Joi.string().pattern(/^[0-9]{6}$/).messages({
             'string.pattern.base': 'PinCode must be a 10-digit number'
         }),
+        _id: Joi.string(),
         ContactPerson: Joi.array().items(Joi.object({
             Name: Joi.string(),
             Mobile: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
@@ -130,7 +129,8 @@ const UpdateDeveloperSchema = Joi.object({
             Phone: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
                 'string.pattern.base': 'Phone number must be a 10-digit number'
             }),
-            Designation: Joi.string()
+            Designation: Joi.string(),
+            _id: Joi.string()
         }))
     })),
    
