@@ -7,7 +7,8 @@ const auth = require('../middleware/auth');
 
 const { addPropeties, getAllProperties, getPropertiesByDirections, getPopularProperties, 
     getPropertiesByArea, getPropertiesByType, getPropertiesByBudget, getPropertiesById, updateProperties, deleteProperties, getPropertiesWithArea, getPropertiesByAreaOrPropertyType, getSimilarProperties, 
-    getPropertiesByDob} = require('../controllers/propertiesController');
+    getPropertiesByDob,
+    getPropertiesForReview} = require('../controllers/propertiesController');
 const {propertySchema, directionSchema, budgetSchema, zodiacSchema, propertyUpdateSchema, getPropertySchema} = require('../validators/propertiesValidators');
 const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
 const { roleSchema } = require('../validators/authValidator');
@@ -27,6 +28,7 @@ router.patch('/updateProperty/:id',validate(propertyUpdateSchema,'body'),auth,up
 router.delete('/deleteProperty/:id',auth,validate(idSchema,'params'),deleteProperties)
 router.get('/similarProperty/:id',getSimilarProperties)
 router.get('/zodiac/:dob',validate(zodiacSchema,'params'),getPropertiesByDob)
+router.get('/reviewProperty',validate(getPropertySchema,'query'),getPropertiesForReview)
 
 
 
