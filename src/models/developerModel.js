@@ -61,8 +61,8 @@ const developerSchema = new mongoose.Schema({
     },
     VerificationDate: Date,
     BranchOffices: [{
-        Phone: Number,
-        Mobile: Number,
+        Phone: String,
+        Mobile: String,
         EmailId: String,
         WhatsApp: String,
         Area: String,

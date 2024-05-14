@@ -12,7 +12,8 @@ const testimonialRoutes = require('./testimonialRoute');
 const projectEnquiryRoutes = require('./projectEnquiryRoute');
 const projectRoutes = require('./projectRoute');
 const blogRoutes = require('./blogRoute');
-const bannerRoutes =require('./bannerRoute')
+const bannerRoutes =require('./bannerRoute');
+const userRoutes = require('./userRoute')
 
 
 
@@ -32,6 +33,7 @@ allRouters.use('/enquiry',projectEnquiryRoutes);
 allRouters.use('/project',projectRoutes);
 allRouters.use('/blog',blogRoutes);
 allRouters.use('/banner',bannerRoutes);
+allRouters.use('/user',userRoutes);
 
 
 module.exports =  allRouters;
