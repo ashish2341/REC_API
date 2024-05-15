@@ -7,6 +7,8 @@ const { sendOtpHandle, verifyOtpHandle } = require("../../helper/otp");
 const Role = require("../../models/roleModel");
 const Developer = require('../../models/developerModel')
 const { errorResponse } = require("../../helper/responseTransformer");
+const config = require('../../helper/config')
+const jwt =require ('jsonwebtoken')
 // Register an user
 exports.register = async (req, res) => {
   try {
@@ -40,7 +42,7 @@ exports.login = async (req, res) => {
     const { Mobile, Password } = req.body;
    
     const user = await Login.findOne({ Mobile });
-   console.log('user new ',user)
+    console.log('user new ',user)
     // Check if user exists and password matches
     if (!user || !(await bcrypt.compare(Password, user.Password))) {
       return res.status(401).json({ success:false, error: 'Invalid Mobile or Password' });
@@ -48,9 +50,18 @@ exports.login = async (req, res) => {
 
     // Generate token
     const token = await user.generateAuthToken();
-
+    const decoded = jwt.verify(token, config.JWT_KEY);
+        
+    const login = await Login.findById(decoded._id).populate("UserId");
+    const users = await User.findById(login.UserId._id).populate("Roles");
+        
+    const userRoles = users.Roles.map(role => role.Role);
     // Send token in response
-    res.status(constants.status_code.header.ok).send({ success:true, message: token });
+    res.status(constants.status_code.header.ok).send({ 
+      success:true, 
+      message: token,
+      role: userRoles
+     });
   } catch (error) {
 
     return res.status(constants.status_code.header.server_error).send({ success:false, error: error.message });
