@@ -59,12 +59,16 @@ exports.getAllProperties = async (req, res) => {
         // { Area: { $regex: search, $options: 'i' } },
       ]
     };
-    let sortOptions = {};
-    if (sortBy === 'Titile' || sortBy === 'TotalPrice.MinValue' || sortBy === 'TotalPrice.MaxValue') {
-      sortOptions[sortBy] = sortOrder;
-    } else {
-      sortOptions['CreatedDate'] = -1;
+    if(req.query.IsFeatured != undefined){
+      searchQuery.IsFeatured = req.query.IsFeatured
     }
+    if(req.query.IsExclusive != undefined){
+      searchQuery.IsExclusive = req.query.IsExclusive
+    }
+    let sortOptions = {};
+    if (sortBy === 'Titile' || sortBy === 'TotalPrice.MinValue' || sortBy === 'TotalPrice.MaxValue' || sortBy === 'CreatedDate') {
+      sortOptions[sortBy] = sortOrder;
+    } 
 
     const count = await Properties.countDocuments(searchQuery);
     const totalPages = Math.ceil(count / limit);

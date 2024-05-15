@@ -292,7 +292,10 @@ const getPropertySchema = Joi.object({
     pageSize: Joi.number().integer().min(1).required(),
     search: Joi.string().allow(''),
     sortBy:Joi.string().allow(''),
-    sortOrder:Joi.string().allow('')
+    sortOrder:Joi.string().allow(''),
+    IsFeatured :Joi.boolean().allow(''),
+    IsExclusive: Joi.boolean().allow(''),
+
 
   });
 const budgetSchema = Joi.object({
