@@ -13,7 +13,8 @@ const projectEnquiryRoutes = require('./projectEnquiryRoute');
 const projectRoutes = require('./projectRoute');
 const blogRoutes = require('./blogRoute');
 const bannerRoutes =require('./bannerRoute');
-const userRoutes = require('./userRoute')
+const userRoutes = require('./userRoute');
+const zodiacRoute = require("./zodiacRoute")
 
 
 
@@ -34,6 +35,7 @@ allRouters.use('/project',projectRoutes);
 allRouters.use('/blog',blogRoutes);
 allRouters.use('/banner',bannerRoutes);
 allRouters.use('/user',userRoutes);
+allRouters.use('/zodiac',zodiacRoute);
 
 
 module.exports =  allRouters;
