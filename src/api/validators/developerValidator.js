@@ -2,6 +2,7 @@ const Joi = require('joi');
 
 const AddDeveloperSchema = Joi.object({
     Name: Joi.string().required(),
+    Password: Joi.string().required(),
     SocialMediaProfileLinks: Joi.object({
         Twitter: Joi.string().allow(''),
         Facebook: Joi.string().allow(''),
