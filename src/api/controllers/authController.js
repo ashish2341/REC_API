@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const { PORT } = require("../../helper/config");
 const { sendOtpHandle, verifyOtpHandle } = require("../../helper/otp");
 const Role = require("../../models/roleModel");
+const Developer = require('../../models/developerModel')
 const { errorResponse } = require("../../helper/responseTransformer");
 // Register an user
 exports.register = async (req, res) => {
@@ -23,6 +24,11 @@ exports.register = async (req, res) => {
         UserId: user._id
     });
     await login.save();
+    // save builder profile
+    if(role=='Developer'){
+         const developerObj = new Developer({Name:req.body.FirstName,UserId:user._id})
+         await developerObj.save()
+    }
     return res.status(constants.status_code.header.ok).send({ message: constants.auth.register_success,success:true});
   } catch (error) {
     return res.status(constants.status_code.header.server_error).send({ error: errorResponse(error),success:false });

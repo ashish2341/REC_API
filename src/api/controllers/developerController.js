@@ -1,13 +1,30 @@
 const { ObjectId } = require("mongodb");
 const constants = require("../../helper/constants");
 const Developer = require("../../models/developerModel");
+const Role = require("../../models/roleModel");
+const User = require("../../models/userModel");
+const Login = require("../../models/loginModel");
 
 exports.addDeveloper = async (req, res) => {
   try {
+    const {Password,Name,Mobile,EmailId} = req.body
+    const roleId = await Role.findOne({Role:'Developer'})
+    if(!roleId){
+     return res.status(constants.status_code.header.ok).send({ statusCode: 200, error: "Role is not exist in DB",success:false });
+    }
+   const user = new User({FirstName:Name,Mobile,EmailId,Roles:[roleId._id]});
+   await user.save();
+     const login = new Login({
+       Mobile,
+       Password,
+       UserId: user._id
+   });
+   await login.save();
+
     const userId = req.user._id
     req.body.CreatedBy = userId;
     req.body.UpdatedBy = userId;
-    req.body.UserId = userId
+    req.body.UserId = user._id
     const developer = await Developer.create(req.body);
     return res
       .status(constants.status_code.header.ok)
