@@ -1,5 +1,9 @@
 const constants = require("../../helper/constants");
 const User = require("../../models/userModel");
+const bcrypt = require('bcryptjs');
+const Login = require("../../models/loginModel");
+const jwt =require ('jsonwebtoken');
+const config = require('../../helper/config')
 
 
 exports.getAllUser = async (req, res) => {
@@ -78,7 +82,40 @@ exports.updateUser = async (req, res) => {
       .send({ statusCode: 500, error: error.message, success: false });
   }
 };
+exports.updatePassword = async (req, res) => {
+  const { OldPassword, NewPassword } = req.body;
+  try {
+    const userData = await User.findById(req.params.id);
+    if (!userData) {
+      return res.status(404).json({ error: "User not found", success: false });
+    }
 
+        const decoded = jwt.verify(req.token, config.JWT_KEY);
+        
+        const login = await Login.findById(decoded._id);
+  
+    const isMatch = await bcrypt.compare(OldPassword, login.Password);
+    if (!isMatch) {
+      return res.status(400).json({ error: "Old password does not match", success: false });
+    }
+
+    login.Password = NewPassword;
+
+    await login.save();
+
+    res.status(constants.status_code.header.ok).send({
+      statusCode: 200,
+      message: constants.curd.update,
+      success: true,
+    });
+  } catch (error) {
+    return res.status(constants.status_code.header.server_error).send({
+      statusCode: 500,
+      error: error.message,
+      success: false,
+    });
+  }
+};
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, {
