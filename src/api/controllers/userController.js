@@ -85,18 +85,12 @@ exports.updateUser = async (req, res) => {
 exports.updatePassword = async (req, res) => {
   const { OldPassword, NewPassword } = req.body;
   try {
-    const u = await User.findById(req.params.id);
-    if (!u) {
+    const userData = await User.findById(req.params.id);
+    if (!userData) {
       return res.status(404).json({ error: "User not found", success: false });
     }
-   
-    const token = req.header('Authorization').replace('Bearer ', ''); 
-        
-        if (!token) {
-            return res.status(401).json({ error: 'Access denied' });
-        }
 
-        const decoded = jwt.verify(token, config.JWT_KEY);
+        const decoded = jwt.verify(req.token, config.JWT_KEY);
         
         const login = await Login.findById(decoded._id);
   
