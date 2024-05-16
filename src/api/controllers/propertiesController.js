@@ -48,8 +48,6 @@ exports.getAllProperties = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || '';
-    const sortBy = req.query.sortBy;
-    const sortOrder = parseInt(req.query.sortOrder) || -1;
 
     const searchQuery = {
       IsDeleted: false,
@@ -59,23 +57,13 @@ exports.getAllProperties = async (req, res) => {
         // { Area: { $regex: search, $options: 'i' } },
       ]
     };
-    if(req.query.IsFeatured != undefined){
-      searchQuery.IsFeatured = req.query.IsFeatured
-    }
-    if(req.query.IsExclusive != undefined){
-      searchQuery.IsExclusive = req.query.IsExclusive
-    }
-    let sortOptions = {};
-    if (sortBy === 'Titile' || sortBy === 'TotalPrice.MinValue' || sortBy === 'TotalPrice.MaxValue' || sortBy === 'CreatedDate') {
-      sortOptions[sortBy] = sortOrder;
-    } 
+    
 
     const count = await Properties.countDocuments(searchQuery);
     const totalPages = Math.ceil(count / limit);
     const currentPage = Math.min(Math.max(page, 1), totalPages);
     const skip = (currentPage - 1) * limit;
     const properties = await Properties.find(searchQuery).populate(propertyPopulateField)
-      .sort(sortOptions)
       .skip(skip<0 ? 1 : skip)
       .limit(limit);
     return res.status(constants.status_code.header.ok).send({
@@ -316,8 +304,21 @@ exports.getPropertiesByBudget = async (req, res) => {
       queryObj['TotalPrice.MinValue'] = {$gte:minValue},
       queryObj['TotalPrice.MaxValue'] = {$lte:maxValue}
     };
+    const sortBy = req.query.sortBy;
+    const sortOrder = parseInt(req.query.sortOrder) || -1;
 
+    if(req.query.IsFeatured != undefined){
+      queryObj.IsFeatured = req.query.IsFeatured
+    }
+    if(req.query.IsExclusive != undefined){
+      queryObj.IsExclusive = req.query.IsExclusive
+    }
+    let sortOptions = {};
+    if (sortBy === 'Titile' || sortBy === 'TotalPrice.MinValue' || sortBy === 'TotalPrice.MaxValue' || sortBy === 'CreatedDate') {
+      sortOptions[sortBy] = sortOrder;
+    } 
     const properties = await Properties.find(queryObj)
+    .sort(sortOptions)
     .populate(propertyPopulateField);
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,

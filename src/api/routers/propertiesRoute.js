@@ -16,13 +16,13 @@ const validateRole = require('../middleware/role');
 
 
 router.post('/addProperty',auth,validate(propertySchema,'body'),addPropeties)
-router.get('/allProperties',validate(getPropertySchema,'query'),validateRole(['Admin','Buyer']),getAllProperties)
+router.get('/allProperties',validate(getRecordsSchema,'query'),validateRole(['Admin','Buyer']),getAllProperties)
 router.get('/propertyByDirections',validate(directionSchema,"query"),getPropertiesByDirections)
 router.get('/popularProperty',getPopularProperties)
 router.get('/propertyByArea',getPropertiesByArea)
 router.get('/getPropertiesByAreaOrPropertyType',getPropertiesByAreaOrPropertyType)
 router.get('/propertyByType',getPropertiesByType)
-router.post('/propertyByBudget',validate(budgetSchema,'post'),getPropertiesByBudget)
+router.post('/propertyByBudget',validate(budgetSchema,'post'),validate(getPropertySchema,'query'),getPropertiesByBudget)
 router.get('/property/:id',validate(idSchema,'params'),getPropertiesById)
 router.patch('/updateProperty/:id',validate(propertyUpdateSchema,'body'),auth,updateProperties)
 router.delete('/deleteProperty/:id',auth,validate(idSchema,'params'),deleteProperties)

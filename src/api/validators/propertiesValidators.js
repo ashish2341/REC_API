@@ -288,9 +288,6 @@ const directionSchema = Joi.object({
 })
 
 const getPropertySchema = Joi.object({
-    page: Joi.number().integer().min(1).required(),
-    pageSize: Joi.number().integer().min(1).required(),
-    search: Joi.string().allow(''),
     sortBy:Joi.string().allow(''),
     sortOrder:Joi.string().allow(''),
     IsFeatured :Joi.boolean().allow(''),
