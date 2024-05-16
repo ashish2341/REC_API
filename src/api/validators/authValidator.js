@@ -13,7 +13,7 @@ const registerSchema =  Joi.object().keys({
         State: Joi.string().optional(),
         Country: Joi.string().optional(),
         PinCode: Joi.string().optional(),
-        Role: Joi.string().valid("Admin","Developer","Client","Agent").required(), // Assuming RoleId is a string
+        Role: Joi.string().valid("Buyer","Developer","Client","Agent").required(), // Assuming RoleId is a string
         IsEnabled: Joi.boolean().default(true),
         IsDeleted: Joi.boolean().default(false),
         ProfilePhoto: Joi.string().optional(),
