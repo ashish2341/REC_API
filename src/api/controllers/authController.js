@@ -60,6 +60,8 @@ exports.login = async (req, res) => {
     res.status(constants.status_code.header.ok).send({ 
       success:true, 
       message: token,
+      userId: login.UserId._id,
+      firstName: login.UserId.FirstName,
       role: userRoles
      });
   } catch (error) {
