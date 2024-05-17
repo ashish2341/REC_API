@@ -1,4 +1,5 @@
 const constants = require("../../helper/constants");
+const Developer = require("../../models/developerModel");
 const ProjectEnquiry = require("../../models/projectEnquiryModel");
 
 exports.addProjectEnquiry = async (req, res) => {
@@ -115,3 +116,47 @@ exports.deleteProjectEnquiry = async (req, res) => {
 };
 
  
+exports.getEnquiryByDeveloperId = async (req, res) => {
+  try {
+   const builder = await Developer.findOne({UserId:req.user._id});
+   if (!builder) {
+    return res
+      .status(404)
+      .json({ error: "Builder not found", success: false });
+  }
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+console.log("builderId",builder._id)
+    const searchQuery = {
+      DeveloperId: builder._id,
+      IsDeleted: false,
+    };
+    let sortOptions = { CreatedDate: -1 };
+
+    const count = await ProjectEnquiry.countDocuments(searchQuery);
+    const totalPages = Math.ceil(count / limit);
+    const currentPage = Math.min(Math.max(page, 1), totalPages);
+    const skip = (currentPage - 1) * limit;
+
+    const enquiries = await ProjectEnquiry.find(searchQuery)
+      .sort(sortOptions)
+      .skip(skip<0 ? 1 : skip)
+      .limit(limit);
+    return res.status(constants.status_code.header.ok).send({
+      statusCode: 200,
+      data: enquiries,
+      currentPage: currentPage,
+      totalPages: totalPages,
+      totalCount: count,
+      success: true
+    });
+
+  } catch (error) {
+    return res.status(constants.status_code.header.server_error).send({
+      statusCode: 500,
+      error: error.message,
+      success: false
+    });
+  }
+};

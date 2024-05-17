@@ -41,27 +41,23 @@ exports.login = async (req, res) => {
   try {
     const { Mobile, Password } = req.body;
    
-    const user = await Login.findOne({ Mobile });
+    const user = await Login.findOne({ Mobile }).populate("UserId");
     console.log('user new ',user)
     // Check if user exists and password matches
     if (!user || !(await bcrypt.compare(Password, user.Password))) {
       return res.status(401).json({ success:false, error: 'Invalid Mobile or Password' });
     }
 
-    // Generate token
-    const token = await user.generateAuthToken();
-    const decoded = jwt.verify(token, config.JWT_KEY);
+    const signUpData = await User.findById(user.UserId._id).populate("Roles");
         
-    const login = await Login.findById(decoded._id).populate("UserId");
-    const users = await User.findById(login.UserId._id).populate("Roles");
-        
-    const userRoles = users.Roles.map(role => role.Role);
+    const userRoles = signUpData.Roles.map(role => role.Role);
+    const token = jwt.sign({ _id: signUpData._id, roles:userRoles }, config.JWT_KEY)
     // Send token in response
     res.status(constants.status_code.header.ok).send({ 
       success:true, 
       message: token,
-      userId: login.UserId._id,
-      firstName: login.UserId.FirstName,
+      userId: signUpData._id,
+      firstName: signUpData.FirstName,
       role: userRoles
      });
   } catch (error) {
