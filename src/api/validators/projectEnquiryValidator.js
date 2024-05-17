@@ -17,10 +17,5 @@ const getEnquirySchema = Joi.object({
     filter:Joi.string().valid('Project','Property','Astrology','ContactUs'),
   });
 
-  const getEnquiryByDeveloperSchema = Joi.object({
-    DeveloperId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    page: Joi.number().integer().min(1).required(),
-    pageSize: Joi.number().integer().min(1).required(),
-  });
 
-module.exports = {projectEnquiryValidationSchema,getEnquirySchema,getEnquiryByDeveloperSchema};
+module.exports = {projectEnquiryValidationSchema,getEnquirySchema};

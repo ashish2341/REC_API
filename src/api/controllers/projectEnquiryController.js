@@ -1,4 +1,5 @@
 const constants = require("../../helper/constants");
+const Developer = require("../../models/developerModel");
 const ProjectEnquiry = require("../../models/projectEnquiryModel");
 
 exports.addProjectEnquiry = async (req, res) => {
@@ -117,20 +118,18 @@ exports.deleteProjectEnquiry = async (req, res) => {
  
 exports.getEnquiryByDeveloperId = async (req, res) => {
   try {
-    const developerId = req.query.DeveloperId;
-    if (!developerId) {
-      return res.status(400).send({
-        statusCode: 400,
-        error: 'DeveloperId parameter is required',
-        success: false
-      });
-    }
-    
+   const builder = await Developer.findOne({UserId:req.user._id});
+   if (!builder) {
+    return res
+      .status(404)
+      .json({ error: "Builder not found", success: false });
+  }
+
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-
+console.log("builderId",builder._id)
     const searchQuery = {
-      DeveloperId: developerId,
+      DeveloperId: builder._id,
       IsDeleted: false,
     };
     let sortOptions = { CreatedDate: -1 };

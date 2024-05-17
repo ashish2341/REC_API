@@ -14,7 +14,7 @@ router.get('/allProjectEnquiry',validate(getEnquirySchema,'query'),getAllProject
 router.get('/projectEnquiry/:id',auth,validate(idSchema,'params'),getProjectEnquiryById)
 router.patch('/updateProjectEnquiry/:id',validate(idSchema,'params'),auth,updateProjectEnquiry)
 router.delete('/deleteProjectEnquiry/:id',auth,validate(idSchema,'params'),deleteProjectEnquiry)
-router.get('/enquiryGetByDeveloperId',validate(getEnquiryByDeveloperSchema,'query'),auth,getEnquiryByDeveloperId)
+router.get('/enquiryGetByDeveloperId',auth,getEnquiryByDeveloperId)
  
 
 module.exports = router
