@@ -476,3 +476,51 @@ exports.getPropertiesForReview = async (req, res) => {
     });
   }
 };
+
+exports.getPropertiesByUserId = async (req, res) => {
+  try {
+    const userId = req.query.UserId;
+    if (!userId) {
+      return res.status(400).send({
+        statusCode: 400,
+        error: 'UserId parameter is required',
+        success: false
+      });
+    }
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const searchQuery = {
+      CreatedBy: userId,
+      IsDeleted: false,
+    };
+    let sortOptions = { CreatedDate: -1 };
+
+    const count = await Properties.countDocuments(searchQuery);
+    const totalPages = Math.ceil(count / limit);
+    const currentPage = Math.min(Math.max(page, 1), totalPages);
+    const skip = (currentPage - 1) * limit;
+
+    const properties = await Properties.find(searchQuery)
+      .populate(propertyPopulateField)
+      .sort(sortOptions)
+      .skip(skip<0 ? 1 : skip)
+      .limit(limit);
+    return res.status(constants.status_code.header.ok).send({
+      statusCode: 200,
+      data: properties,
+      currentPage: currentPage,
+      totalPages: totalPages,
+      totalCount: count,
+      success: true
+    });
+
+  } catch (error) {
+    return res.status(constants.status_code.header.server_error).send({
+      statusCode: 500,
+      error: error.message,
+      success: false
+    });
+  }
+};

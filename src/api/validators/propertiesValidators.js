@@ -312,6 +312,10 @@ const zodiacSchema = Joi.object({
     dob: Joi.string().required().pattern(/^\d{4}-\d{2}-\d{2}$/).message('Date formate should be YYYY-MM-DD'),
    
   });
+  const userPropertySchema = Joi.object({
+    UserId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+   
+  });
 
-module.exports ={ propertySchema,directionSchema,budgetSchema,zodiacSchema,propertyUpdateSchema,getPropertySchema};
+module.exports ={ propertySchema,directionSchema,budgetSchema,zodiacSchema,propertyUpdateSchema,getPropertySchema,userPropertySchema};
 
