@@ -21,6 +21,14 @@ const projectEnquirySchema = new mongoose.Schema({
         type:String,
         required: true
     },
+    PropertyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Properties' 
+    },
+    DeveloperId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Developer' 
+    },
     IsDeleted: {
         type: Boolean,
         default: false

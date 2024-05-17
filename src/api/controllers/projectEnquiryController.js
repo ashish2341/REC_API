@@ -115,3 +115,49 @@ exports.deleteProjectEnquiry = async (req, res) => {
 };
 
  
+exports.getEnquiryByDeveloperId = async (req, res) => {
+  try {
+    const developerId = req.query.DeveloperId;
+    if (!developerId) {
+      return res.status(400).send({
+        statusCode: 400,
+        error: 'DeveloperId parameter is required',
+        success: false
+      });
+    }
+    
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const searchQuery = {
+      DeveloperId: developerId,
+      IsDeleted: false,
+    };
+    let sortOptions = { CreatedDate: -1 };
+
+    const count = await ProjectEnquiry.countDocuments(searchQuery);
+    const totalPages = Math.ceil(count / limit);
+    const currentPage = Math.min(Math.max(page, 1), totalPages);
+    const skip = (currentPage - 1) * limit;
+
+    const enquiries = await ProjectEnquiry.find(searchQuery)
+      .sort(sortOptions)
+      .skip(skip<0 ? 1 : skip)
+      .limit(limit);
+    return res.status(constants.status_code.header.ok).send({
+      statusCode: 200,
+      data: enquiries,
+      currentPage: currentPage,
+      totalPages: totalPages,
+      totalCount: count,
+      success: true
+    });
+
+  } catch (error) {
+    return res.status(constants.status_code.header.server_error).send({
+      statusCode: 500,
+      error: error.message,
+      success: false
+    });
+  }
+};
