@@ -30,7 +30,7 @@ router.delete('/deleteProperty/:id',auth,validate(idSchema,'params'),deletePrope
 router.get('/similarProperty/:id',getSimilarProperties)
 router.get('/zodiac/:dob',validate(zodiacSchema,'params'),getPropertiesByDob)
 router.get('/reviewProperty',validate(getPropertySchema,'query'),getPropertiesForReview)
-router.get('/propertyByUserId',validate(userPropertySchema,'params'),getPropertiesByUserId)
+router.get('/propertyByUserId',auth,validate(getRecordsSchema,'query'),getPropertiesByUserId)
 
 
  

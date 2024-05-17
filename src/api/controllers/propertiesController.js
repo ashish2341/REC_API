@@ -479,15 +479,8 @@ exports.getPropertiesForReview = async (req, res) => {
 
 exports.getPropertiesByUserId = async (req, res) => {
   try {
-    const userId = req.query.UserId;
-    if (!userId) {
-      return res.status(400).send({
-        statusCode: 400,
-        error: 'UserId parameter is required',
-        success: false
-      });
-    }
-
+    const userId = req.user._id;
+    
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
