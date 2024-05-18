@@ -36,6 +36,10 @@ exports.addPropeties = async (req, res) => {
   try {
     req.body.CreatedBy = req.user._id
     req.body.UpdatedBy = req.user._id
+    if(req.user.roles?.includes('Developer')){
+      const builderObj = await Developer.findOne({UserId:req.user._id})
+      req.body.Builder = builderObj?._id
+    }
     await Properties.create(req.body);
     return res.status(constants.status_code.header.ok).send({ statusCode: 201, message: constants.curd.add, success: true });
   } catch (error) {
