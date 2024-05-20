@@ -138,6 +138,21 @@ exports.getDeveloperById = async (req, res) => {
       .send({ statusCode: 500, error: error.message, success: false });
   }
 };
+exports.getDeveloperByUserId = async (req, res) => {
+  try {
+     
+   const developer  = await Developer.findOne({UserId:req.user._id})
+    return res.status(200).json({
+      statusCode: 200,
+      success: true,
+      data:developer
+    });
+  } catch (error) {
+    return res
+      .status(constants.status_code.header.server_error)
+      .send({ statusCode: 500, error: error.message, success: false });
+  }
+};
 
 exports.updateDeveloper = async (req, res) => {
   try {
