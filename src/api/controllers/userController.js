@@ -135,5 +135,22 @@ exports.deleteUser = async (req, res) => {
       .send({ statusCode: 500, error: error.message, success: false });
   }
 };
-
+exports.getUserEnquiry = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+    if (!user) {
+      return res
+        .status(404)
+        .json({ error: "User not found", success: false });
+    }
+    
+    return res
+      .status(constants.status_code.header.ok)
+      .send({ statusCode: 200, IsEnquiryVisiable: user.IsEnquiryVisiable, success: true });
+  } catch (error) {
+    return res
+      .status(constants.status_code.header.server_error)
+      .send({ statusCode: 500, error: error.message, success: false });
+  }
+};
  
