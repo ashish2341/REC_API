@@ -160,3 +160,46 @@ console.log("builderId",builder._id)
     });
   }
 };
+
+exports.getUserEnquiry = async (req, res) => {
+try{
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const searchQuery = {
+      IsDeleted: false,
+    };
+    let sortOptions = { CreatedDate: -1 };
+
+    const count = await Developer.countDocuments(searchQuery);
+    const totalPages = Math.ceil(count / limit);
+    const currentPage = Math.min(Math.max(page, 1), totalPages);
+    const skip = (currentPage - 1) * limit;
+
+    const enquiries = await Developer.find(searchQuery)
+      .sort(sortOptions)
+      .skip(skip<0 ? 1 : skip)
+      .limit(limit);
+
+   const response = enquiries.map(enquiry => ({
+        name: enquiry.Name,
+        id: enquiry._id,
+        logo: enquiry.Logo,
+        isEnquiry: enquiry.IsEnquiry
+      }));
+    return res.status(constants.status_code.header.ok).send({
+      statusCode: 200,
+      data: response,
+      currentPage: currentPage,
+      totalPages: totalPages,
+      totalCount: count,
+      success: true
+    });
+
+  } catch (error) {
+    return res.status(constants.status_code.header.server_error).send({
+      statusCode: 500,
+      error: error.message,
+      success: false
+    });
+  }
+};

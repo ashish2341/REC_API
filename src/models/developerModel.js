@@ -36,6 +36,10 @@ const developerSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    IsEnquiry: {
+        type: Boolean,
+        default: false
+    },
     Images: [String],
     Documents: [{
         Type: String,
