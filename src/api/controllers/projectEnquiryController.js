@@ -118,6 +118,7 @@ exports.deleteProjectEnquiry = async (req, res) => {
  
 exports.getEnquiryByDeveloperId = async (req, res) => {
   try {
+    console.log(req.user._id)
    const builder = await Developer.findOne({UserId:req.user._id});
    if (!builder) {
     return res
@@ -129,8 +130,11 @@ exports.getEnquiryByDeveloperId = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
 console.log("builderId",builder._id)
     const searchQuery = {
-      DeveloperId: builder._id,
       IsDeleted: false,
+      $or: [
+        {DeveloperId: builder._id,},
+        { AllowedUser: { $in: [req.user._id] } },
+      ]
     };
     let sortOptions = { CreatedDate: -1 };
 

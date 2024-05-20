@@ -5,6 +5,7 @@ const projectEnquirySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    AllowedUser:[String],
     Email: {
         type: String,
         required: true

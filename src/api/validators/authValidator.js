@@ -36,6 +36,7 @@ const registerSchema =  Joi.object().keys({
       Role: Joi.string().valid("Buyer","Developer","Client","Agent"), // Assuming RoleId is a string
       IsEnabled: Joi.boolean().default(true),
       IsDeleted: Joi.boolean().default(false),
+      IsEnquiryVisiable:Joi.boolean(),
       ProfilePhoto: Joi.string().optional(),
       EmailId: Joi.string().email(),
   })

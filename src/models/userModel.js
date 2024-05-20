@@ -47,6 +47,10 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    IsEnquiryVisiable: {
+        type: Boolean,
+        default: false
+    },
     CreatedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
