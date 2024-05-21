@@ -15,7 +15,8 @@ const projectEnquirySchema = new mongoose.Schema({
         required: true
     },
     EnquiryDate:{
-        type:Date
+        type:Date,
+        default:Date.now()
     },
     EnquiryType:String,
     MolileNumber: {

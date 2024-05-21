@@ -136,7 +136,6 @@ exports.deleteProjectEnquiry = async (req, res) => {
  
 exports.getEnquiryByDeveloperId = async (req, res) => {
   try {
-    console.log(req.user._id)
    const builder = await Developer.findOne({UserId:req.user._id});
    if (!builder) {
     return res
@@ -146,7 +145,6 @@ exports.getEnquiryByDeveloperId = async (req, res) => {
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-console.log("builderId",builder._id)
     const searchQuery = {
       IsDeleted: false,
       $or: [
@@ -154,7 +152,7 @@ console.log("builderId",builder._id)
         { AllowedUser: { $in: [req.user._id] } },
       ]
     };
-    let sortOptions = { CreatedDate: -1 };
+    let sortOptions = { EnquiryDate: -1 };
 
     const count = await ProjectEnquiry.countDocuments(searchQuery);
     const totalPages = Math.ceil(count / limit);
@@ -165,16 +163,12 @@ console.log("builderId",builder._id)
       .sort(sortOptions)
       .skip(skip<0 ? 1 : skip)
       .limit(limit);
-      const finalEnquiry = enquiries?.map( enq => {
-        if(!enq?.DeveloperId){
-          return {...enq,IsVisiable:true}
-        }else{
-        enq
-        }
-        })
+    
+     
+      
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
-      data: finalEnquiry,
+      data: enquiries,
       currentPage: currentPage,
       totalPages: totalPages,
       totalCount: count,
