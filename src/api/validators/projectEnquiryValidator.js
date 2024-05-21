@@ -8,7 +8,7 @@ const projectEnquiryValidationSchema = Joi.object({
     MolileNumber: Joi.string().required(),
     PropertyId: Joi.string(),
     DeveloperId: Joi.string(),
-    EnquiryData:Joi.string().required(),
+    EnquiryDate:Joi.date().required(),
     EnquiryType:Joi.string().valid('Project','Property','Astrology','ContactUs').required()
 });
 const getEnquirySchema = Joi.object({
