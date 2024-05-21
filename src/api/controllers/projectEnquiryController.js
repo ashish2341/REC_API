@@ -1,13 +1,30 @@
 const constants = require("../../helper/constants");
 const Developer = require("../../models/developerModel");
 const ProjectEnquiry = require("../../models/projectEnquiryModel");
+const User = require("../../models/userModel");
 
 exports.addProjectEnquiry = async (req, res) => {
   try {
+    const { DeveloperId } = req.body;
+    if (DeveloperId) {
+      const developer = await Developer.findById(DeveloperId);
+      const user = await User.findById(developer?.UserId);
+     console.log(user)
+      const projectEnquiry = await ProjectEnquiry.create({
+        ...req.body,
+        IsVisiable:user.IsEnquiryVisiable
+      });
+      return res
+      .status(constants.status_code.header.ok)
+      .send({ message: constants.curd.add, success: true });
+      
+      
+    }else{
     const projectEnquiry = await ProjectEnquiry.create(req.body);
     return res
       .status(constants.status_code.header.ok)
       .send({ message: constants.curd.add, success: true });
+    }
   } catch (error) {
     return res
       .status(constants.status_code.header.server_error)
@@ -148,9 +165,16 @@ console.log("builderId",builder._id)
       .sort(sortOptions)
       .skip(skip<0 ? 1 : skip)
       .limit(limit);
+      const finalEnquiry = enquiries?.map( enq => {
+        if(!enq?.DeveloperId){
+          return {...enq,IsVisiable:true}
+        }else{
+        enq
+        }
+        })
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
-      data: enquiries,
+      data: finalEnquiry,
       currentPage: currentPage,
       totalPages: totalPages,
       totalCount: count,

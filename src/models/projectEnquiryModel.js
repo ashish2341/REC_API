@@ -30,6 +30,10 @@ const projectEnquirySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Developer' 
     },
+    IsVisiable:{
+        type: Boolean,
+        default: false
+    },
     IsDeleted: {
         type: Boolean,
         default: false
