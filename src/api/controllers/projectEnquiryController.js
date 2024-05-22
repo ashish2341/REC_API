@@ -152,14 +152,14 @@ exports.getEnquiryByDeveloperId = async (req, res) => {
         { AllowedUser: { $in: [req.user._id] } },
       ]
     };
-    let sortOptions = { EnquiryDate: -1 };
+    let sortOptions = { CreatedDate: -1 };
 
     const count = await ProjectEnquiry.countDocuments(searchQuery);
     const totalPages = Math.ceil(count / limit);
     const currentPage = Math.min(Math.max(page, 1), totalPages);
     const skip = (currentPage - 1) * limit;
 
-    const enquiries = await ProjectEnquiry.find(searchQuery)
+    const enquiries = await ProjectEnquiry.find(searchQuery).populate({path:"PropertyId",select:"_id Titile"})
       .sort(sortOptions)
       .skip(skip<0 ? 1 : skip)
       .limit(limit);

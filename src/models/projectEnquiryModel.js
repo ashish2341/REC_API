@@ -15,9 +15,7 @@ const projectEnquirySchema = new mongoose.Schema({
         required: true
     },
     EnquiryDate:{
-        type:Date,
-        default:Date.now()
-    },
+        type:Date },
     EnquiryType:String,
     MolileNumber: {
         type:String,
@@ -43,6 +41,10 @@ const projectEnquirySchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    CreatedDate:{
+        type:Date,
+        default:Date.now()
+    }
 });
 
 const ProjectEnquiry = mongoose.model('ProjectEnquiry', projectEnquirySchema);
