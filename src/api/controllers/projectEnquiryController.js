@@ -12,7 +12,7 @@ exports.addProjectEnquiry = async (req, res) => {
      console.log(user)
       const projectEnquiry = await ProjectEnquiry.create({
         ...req.body,
-        IsVisiable:user.IsEnquiryVisiable
+        IsVisiable:user?.IsEnquiryVisiable
       });
       return res
       .status(constants.status_code.header.ok)
