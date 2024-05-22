@@ -35,7 +35,7 @@ exports.addProjectEnquiry = async (req, res) => {
 exports.getAllProjectEnquiry = async (req, res) => {
   
   try {
-    const { page, pageSize,filter } = req.query;
+    const { page, pageSize,filter, startDate,endDate} = req.query;
     const pageNumber = parseInt(page) || 1;
     const size = parseInt(pageSize) || 10;
     const search = req.query.search || '';
@@ -51,6 +51,12 @@ exports.getAllProjectEnquiry = async (req, res) => {
 
     if (filter) {
       searchQuery.EnquiryType = filter;
+  }
+  if (startDate && endDate) {
+    searchQuery.EnquiryDate = {
+      $gte: new Date(startDate),
+      $lte: new Date(endDate)
+    };
   }
     const totalCount = await ProjectEnquiry.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalCount / size);
