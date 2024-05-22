@@ -4,6 +4,7 @@ const Developer = require("../../models/developerModel");
 const Role = require("../../models/roleModel");
 const User = require("../../models/userModel");
 const Login = require("../../models/loginModel");
+const Property = require("../../models/propertiesModel");
 
 exports.addDeveloper = async (req, res) => {
   try {
@@ -189,6 +190,7 @@ exports.deleteDeveloper = async (req, res) => {
         .status(404)
         .json({ error: "Developer not found", success: false });
     }
+    const property = await Property.updateMany({ Builder: req.params.id }, { IsDeleted: true });
     res
       .status(constants.status_code.header.ok)
       .send({ statusCode: 200, message: constants.curd.delete, success: true });

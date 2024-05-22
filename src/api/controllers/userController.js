@@ -3,7 +3,10 @@ const User = require("../../models/userModel");
 const bcrypt = require('bcryptjs');
 const Login = require("../../models/loginModel");
 const jwt =require ('jsonwebtoken');
-const config = require('../../helper/config')
+const config = require('../../helper/config');
+const Developer = require("../../models/developerModel");
+const Role = require("../../models/roleModel");
+const Property = require("../../models/propertiesModel");
 
 
 exports.getAllUser = async (req, res) => {
@@ -118,14 +121,19 @@ exports.updatePassword = async (req, res) => {
 };
 exports.deleteUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, {
-      IsDeleted: true,
-    });
+    const user = await User.findById(req.params.id)
     if (!user) {
       return res
         .status(404)
         .json({ error: "User not found", success: false });
     }
+    if (req.user.roles.includes('Developer')) {
+      const developers = await Developer.find({ UserId: req.params.id });
+      await Developer.updateMany({ UserId: req.params.id }, { IsDeleted: true });
+      await Property.updateMany({ Builder: { $in: developers.map(dev => dev._id) } }, { IsDeleted: true });
+    }
+    user.IsDeleted = true;
+    await user.save();
     res
       .status(constants.status_code.header.ok)
       .send({ statusCode: 200, message: constants.curd.delete, success: true });
