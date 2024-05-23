@@ -57,6 +57,7 @@ exports.getAllProperties = async (req, res) => {
 
     const searchQuery = {
       IsDeleted: false,
+      IsEnabled: true,
       $or: [
         { Titile: { $regex: search, $options: 'i' } },
         { Description: { $regex: search, $options: 'i' } },

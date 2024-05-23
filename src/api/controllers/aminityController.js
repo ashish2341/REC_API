@@ -25,6 +25,7 @@ exports.getAllAminity = async (req, res) => {
        
     const searchQuery = {
       IsDeleted: false,
+      IsEnabled: true,
         $or: [
             { Aminity: { $regex: search, $options: 'i' } }, 
         ]

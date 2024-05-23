@@ -42,6 +42,7 @@ exports.getAllProjectEnquiry = async (req, res) => {
        
     const searchQuery = {
         IsDeleted: false,
+        IsEnabled: true,
         $or: [
             { Name: { $regex: search, $options: 'i' } }, 
             { Email: { $regex: search, $options: 'i' } }, 
@@ -62,6 +63,7 @@ exports.getAllProjectEnquiry = async (req, res) => {
     const totalPages = Math.ceil(totalCount / size);
 
     const records = await ProjectEnquiry.find(searchQuery)
+      .populate('PropertyId')
       .sort({ EnquiryDate: -1 })
       .skip((pageNumber - 1) * size)
       .limit(size);
