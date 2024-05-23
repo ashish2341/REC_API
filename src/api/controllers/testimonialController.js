@@ -24,6 +24,7 @@ exports.getAllTestimonial = async (req, res) => {
        
     const searchQuery = {
       IsDeleted: false,
+      IsEnabled: true,
         $or: [
             { MemberName: { $regex: search, $options: 'i' } }, 
         ]

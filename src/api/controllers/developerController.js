@@ -45,6 +45,7 @@ exports.getAllDeveloper = async (req, res) => {
     
     const matchQuery = {
       IsDeleted: false,
+      IsEnabled: true,
       $or: [
         { Name: { $regex: search || '', $options: 'i' } },
         { Description: { $regex: search || '', $options: 'i' } }
@@ -190,6 +191,9 @@ exports.deleteDeveloper = async (req, res) => {
         .status(404)
         .json({ error: "Developer not found", success: false });
     }
+    const user = await User.findByIdAndUpdate(developer.UserId, {
+      IsDeleted: true,
+    })
     const property = await Property.updateMany({ Builder: req.params.id }, { IsDeleted: true });
     res
       .status(constants.status_code.header.ok)

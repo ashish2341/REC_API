@@ -121,16 +121,17 @@ exports.updatePassword = async (req, res) => {
 };
 exports.deleteUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id)
+    const user = await User.findById(req.params.id).populate('Roles')
     if (!user) {
       return res
         .status(404)
         .json({ error: "User not found", success: false });
     }
-    if (req.user.roles.includes('Developer')) {
-      const developers = await Developer.find({ UserId: req.params.id });
+    const roleNames = user.Roles.map(role => role.Role)
+    if (roleNames.includes('Developer')) {
+      const developers = await Developer.findOne({ UserId: req.params.id });
       await Developer.updateMany({ UserId: req.params.id }, { IsDeleted: true });
-      await Property.updateMany({ Builder: { $in: developers.map(dev => dev._id) } }, { IsDeleted: true });
+      await Property.updateMany({ Builder: developers._id  }, { IsDeleted: true });
     }
     user.IsDeleted = true;
     await user.save();
