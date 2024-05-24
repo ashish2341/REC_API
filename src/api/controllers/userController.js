@@ -23,15 +23,21 @@ exports.getAllUser = async (req, res) => {
             ]
         };
     
-        const totalCount = await User.countDocuments(searchQuery);
-        const totalPages = Math.ceil(totalCount / size);
-    
-        const records = await User.find(searchQuery)
+        const users = await User.find(searchQuery)
           .populate('Roles')
           .sort({ CreatedDate: -1 })
           .skip((pageNumber - 1) * size)
           .limit(size)
           ;
+          const records = users.filter(user => {
+            const roles = user.Roles.map(role => role.Role);
+            return !roles.includes('Admin');
+          //  return !(roles.length === 1 && roles.includes('Admin'))
+          })
+
+        const totalCount = await User.countDocuments(searchQuery);
+        const totalPages = Math.ceil(totalCount / size);
+
         return res.status(constants.status_code.header.ok).send({
           statusCode: 200,
           data: records,
