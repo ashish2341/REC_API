@@ -41,6 +41,10 @@ const projectEnquirySchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    IsActive: {
+        type: Boolean,
+        default: false
+    },
     CreatedDate:{
         type:Date,
         default:Date.now()
