@@ -5,7 +5,8 @@ const projectEnquirySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    AllowedUser:[String],
+    AllowedUser:[{UserId:String,Status:Boolean}],
+    IsActionTaken:Boolean,  
     Email: {
         type: String,
         required: true

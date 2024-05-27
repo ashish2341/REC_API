@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const projectEnquiryValidationSchema = Joi.object({
     Name: Joi.string().required(),
-    AllowedUser:Joi.array().items(Joi.string()),
+    AllowedUser:Joi.array().items(Joi.object({UserId:Joi.string(),Status:Joi.boolean()})),
     Email: Joi.string().email(),
     Message: Joi.string().required(),
     MolileNumber: Joi.string().required(),

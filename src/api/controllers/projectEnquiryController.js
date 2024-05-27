@@ -103,22 +103,36 @@ exports.getProjectEnquiryById = async (req, res) => {
 
 exports.updateProjectEnquiry = async (req, res) => {
   try {
-    const projectEnquiry = await ProjectEnquiry.findByIdAndUpdate(req.params.id, req.body, {
+    const payload = {...req.body}
+    if(req.body.AllowedUser?.length>0){
+      const userStatusMap = new Map();
+      const users = await User.find({ _id: { $in: req.body.AllowedUser } }, { _id: 1, Status: 1 });
+      users.forEach(user => {
+          userStatusMap.set(user._id.toString(), user.Status);
+      });
+     
+  
+      
+      payload.AllowedUser =  req.body.AllowedUser.map(userId => ({
+        UserId: userId,
+        Status: userStatusMap.get(userId.toString()) || false 
+    }));
+    payload.IsActionTaken = true
+    }
+   
+  
+    const projectEnquiry = await ProjectEnquiry.findByIdAndUpdate(req.params.id, payload, {
       new: true,
     });
-    if (!projectEnquiry) {
-      return res
-        .status(404)
-        .json({ error: "ProjectEnquiry not found", success: false });
-    }
-    res
-      .status(constants.status_code.header.ok)
-      .send({ statusCode: 200, message: constants.curd.update, success: true });
-  } catch (error) {
+
     return res
-      .status(constants.status_code.header.server_error)
-      .send({ statusCode: 500, error: error.message, success: false });
-  }
+    .status(constants.status_code.header.ok)
+    .send({ statusCode: 200, message: constants.curd.update, success: true });
+} catch (error) {
+  return res
+  .status(constants.status_code.header.server_error)
+  .send({ statusCode: 500, error: error.message, success: false });
+}
 };
 
 exports.deleteProjectEnquiry = async (req, res) => {
