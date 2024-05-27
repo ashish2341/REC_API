@@ -104,11 +104,12 @@ exports.getProjectEnquiryById = async (req, res) => {
 exports.updateProjectEnquiry = async (req, res) => {
   try {
     const payload = {...req.body}
-    if(req.body.AllowedUser?.length>0){
+    if(req.body.AllowedUser){
       const userStatusMap = new Map();
-      const users = await User.find({ _id: { $in: req.body.AllowedUser } }, { _id: 1, Status: 1 });
+      console.log
+      const users = await User.find({ _id: { $in: req.body.AllowedUser } }, { _id: 1, IsEnquiryVisiable: 1 });
       users.forEach(user => {
-          userStatusMap.set(user._id.toString(), user.Status);
+          userStatusMap.set(user._id.toString(), user.IsEnquiryVisiable);
       });
      
   
@@ -119,7 +120,6 @@ exports.updateProjectEnquiry = async (req, res) => {
     }));
     payload.IsActionTaken = true
     }
-   
   
     const projectEnquiry = await ProjectEnquiry.findByIdAndUpdate(req.params.id, payload, {
       new: true,
@@ -171,7 +171,7 @@ exports.getEnquiryByDeveloperId = async (req, res) => {
       IsDeleted: false,
       $or: [
         {DeveloperId: builder._id,},
-        { AllowedUser: { $in: [req.user._id] } },
+        { "AllowedUser.UserId": req.user._id },
       ]
     };
     let sortOptions = { CreatedDate: -1 };
