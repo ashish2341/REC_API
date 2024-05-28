@@ -12,7 +12,7 @@ exports.addProjectEnquiry = async (req, res) => {
      console.log(user)
       const projectEnquiry = await ProjectEnquiry.create({
         ...req.body,
-        IsVisiable:user?.IsEnquiryVisiable
+        AllowedUser:[{Status:user?.IsEnquiryVisiable,UserId:developer?.UserId}]
       });
       return res
       .status(constants.status_code.header.ok)
@@ -106,7 +106,6 @@ exports.updateProjectEnquiry = async (req, res) => {
     const payload = {...req.body}
     if(req.body.AllowedUser){
       const userStatusMap = new Map();
-      console.log
       const users = await User.find({ _id: { $in: req.body.AllowedUser } }, { _id: 1, IsEnquiryVisiable: 1 });
       users.forEach(user => {
           userStatusMap.set(user._id.toString(), user.IsEnquiryVisiable);
@@ -170,7 +169,6 @@ exports.getEnquiryByDeveloperId = async (req, res) => {
     const searchQuery = {
       IsDeleted: false,
       $or: [
-        {DeveloperId: builder._id,},
         { "AllowedUser.UserId": req.user._id },
       ]
     };
