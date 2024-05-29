@@ -110,7 +110,8 @@ exports.getDeveloperById = async (req, res) => {
   try {
     const { id } = req.params;
     const aggregationPipeline = [
-      { $match: { _id: new ObjectId(id) } },
+      { $match: { _id: new ObjectId(id), IsDeleted: false,
+        IsEnabled: true } },
       {
         $lookup: {
           from: 'properties',
