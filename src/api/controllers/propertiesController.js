@@ -186,7 +186,7 @@ exports.getPropertiesByDirections = async (req, res) => {
 
 exports.getPopularProperties = async (req, res) => {
   try {
-    const query = { IsDeleted: false, IsFeatured: true }
+    const query = { IsDeleted: false, IsFeatured: true, IsEnabled: true }
     const properties = await Properties.find(query);
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
@@ -204,6 +204,7 @@ exports.getPopularProperties = async (req, res) => {
 exports.getPropertiesByArea = async (req, res) => {
   try {
     const propertiesByCity = await Properties.aggregate([
+      {$match:{IsDeleted:false, IsEnabled: true}},
       {
         $group: {
           _id: '$Area',
@@ -242,6 +243,7 @@ exports.getPropertiesByType = async (req, res) => {
   try {
     let properties = await Properties.aggregate(
       [
+        {$match:{IsDeleted:false, IsEnabled: true}},
         {
           $group: {
             _id: '$PropertyType',
@@ -286,7 +288,7 @@ exports.getPropertiesByBudget = async (req, res) => {
       propertyType, 
       bhkType, facing, areaType,propertyStatus,posessionStatus,feature,bathroom,landArea,search } = req.body;
     
-    const queryObj = {IsDeleted: false, $or: [
+    const queryObj = {IsDeleted: false, IsEnabled: true, $or: [
       { Titile: { $regex: search || '', $options: 'i' } },
       { Description: { $regex: search || '', $options: 'i' } },
        
@@ -350,7 +352,7 @@ exports.getPropertiesByAreaOrPropertyType = async (req, res) => {
       const propertyTypeId = req.query.PropertyType;
       const searchQuery = {
           IsDeleted: false,
-          
+          IsEnabled: true
       };
 
       // Check if areaId is provided, then add it to the search query
@@ -494,6 +496,7 @@ exports.getPropertiesByUserId = async (req, res) => {
     const searchQuery = {
       CreatedBy: userId,
       IsDeleted: false,
+      IsEnabled: true,
     };
     let sortOptions = { CreatedDate: -1 };
 

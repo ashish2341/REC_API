@@ -42,7 +42,7 @@ exports.getAllUser = async (req, res) => {
           statusCode: 200,
           data: records,
           success: true,
-          totalCount: totalCount,
+          totalCount: totalCount>0 ? totalCount-1:totalCount,
           count: records.length,
           pageNumber: pageNumber,
           totalPages: totalPages,
