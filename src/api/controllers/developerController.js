@@ -64,7 +64,21 @@ exports.getAllDeveloper = async (req, res) => {
       },
       {
         $addFields: {
-          PropertiesLength: { $size: "$propertiesInfo" }
+          PropertiesLength: { 
+            $size: {
+              $filter: {
+                input: "$propertiesInfo",
+                as: "property",
+                cond: { 
+                  $and: [
+                    { $eq: ["$$property.IsDeleted", false] },
+                    { $eq: ["$$property.IsEnabled", true] },
+                    { $eq: ["$$property.IsFeatured", true] }
+                  ]
+                 }
+              }
+            }
+           }
         }
       },
       { $sort: { CreatedDate: -1 } },
@@ -119,7 +133,25 @@ exports.getDeveloperById = async (req, res) => {
           foreignField: 'Builder',
           as: 'properties'
         }
-      }
+        },
+        {
+          $addFields: {
+            properties: {
+              $filter: {
+                input: "$properties",
+                as: "property",
+                cond: {
+                  $and: [
+                    { $eq: ["$$property.IsDeleted", false] },
+                    { $eq: ["$$property.IsEnabled", true] },
+                    { $eq: ["$$property.IsFeatured", true] }
+                  ]
+                }
+              }
+            }
+          }
+        }
+        
     ];
 
    
