@@ -489,14 +489,14 @@ exports.getPropertiesForReview = async (req, res) => {
 exports.getPropertiesByUserId = async (req, res) => {
   try {
     const userId = req.user._id;
-    
+    const developer  = await Developer.findOne({UserId:userId})
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
     const searchQuery = {
-      CreatedBy: userId,
+      Builder:new ObjectId(developer?._id),
       IsDeleted: false,
-      IsEnabled: true,
+      IsEnabled: true
     };
     let sortOptions = { CreatedDate: -1 };
 
