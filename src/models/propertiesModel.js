@@ -5,7 +5,7 @@ const { dbCollectionName } = require('../helper/constants');
 
 
 const PropertySchema = new  mongoose.Schema({
-    Titile: {type:String,required:true},
+    Title: {type:String,required:true},
     Description:{type:String,required:true},
     Highlight: String,
     ProeprtyFor: { type: String, enum: ['Rent', 'Sale', 'Lease'],required:true },
@@ -13,7 +13,7 @@ const PropertySchema = new  mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Project",
     },
-    PropertyType: {type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.propertyWithSubTypes},
+    PropertySubtype: {type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.propertyWithSubTypes},
     IsDeleted: {type:Boolean,default:false},
     IsEnabled: {type:Boolean,default:false},
     IsExclusive: Boolean,
@@ -168,7 +168,38 @@ const PropertySchema = new  mongoose.Schema({
         Exterior: String,
         Kitchen: String,
         Toilets: String
-    }
+    },
+    OwnerName:String,
+    SuitableFor:String,
+    ZoneType:String,
+    LocationHub :String,
+    CustomLocationHub :String,
+    CustomSuitable :String,
+    CustomZoneType :String,
+    BuiltUpArea: Number,
+    PlotArea:Number,
+    PlotLength: Number,
+    Plotwidth: Number,
+    WallType: String,
+    CellingHeight: Number,
+    EntranceWidth: Number,
+    TaxCharge: {type:Boolean,default:false},
+    LeasedOrRented: {type:Boolean,default:false},
+    CurentRent: Number,   
+    LeaseYears: Number,
+    ExpectedReturn : Number,
+    DgUpsCharge: {type:Boolean,default:false} ,
+    AgeofProperty: Number,
+    Staircase :Number,
+    passengerLifts:Number,
+    ServiceLifts:Number,
+    PublicParking:Number,
+    PrivateParking:Number,
+    PublicWashroom:Number,
+    PrivateWashroom:Number,
+    CompletePercentage:Number,
+
+
 });
 
 const Property = mongoose.model('Properties', PropertySchema);

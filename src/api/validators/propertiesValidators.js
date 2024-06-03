@@ -1,12 +1,12 @@
 const Joi = require('joi');
 
 const propertySchema = Joi.object({
-    Titile: Joi.string().required(),
+    Title: Joi.string().required(),
     Description: Joi.string().required(),
     Highlight: Joi.string().required(),
     ProeprtyFor: Joi.string().valid('Rent', 'Sale', 'Lease').required(),
     ProjectId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    PropertyType:Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
+    PropertySubtype:Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
     IsDeleted: Joi.boolean(),
     IsEnabled: Joi.boolean(),
     IsExclusive: Joi.boolean(),
@@ -118,38 +118,47 @@ const propertySchema = Joi.object({
         Exterior: Joi.string(),
         Kitchen: Joi.string(),
         Toilets: Joi.string()
-    })
-    // PurchaseRentBy: Joi.object().optional().when('ProeprtyFor', {
-    //     is: 'Sale',
-    //     then: Joi.object({
-    //         BuyerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
-    //         PurchaseDate: Joi.date().required(),
-    //         PurchaseAmount: Joi.number().min(0).required(),
-    //         RegistryNumber: Joi.string().required(),
-    //         SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    //         Documents: Joi.array().items(Joi.string())
-    //     }).options({ presence: 'required' }),
-        // can put one more `then` for "Lease"
-    //     otherwise: Joi.object({
-    //     TenantId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    //     RentAmount: Joi.number().min(0),
-    //     RentStartDate: Joi.date(),
-    //     RentEndDate: Joi.date(),
-    //     RenewedOn: Joi.date(),
-    //     SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    //     Documents: Joi.array().items(Joi.string())
-    //     }).options({ presence: 'required' })
-    // }),
+    }),
+    OwnerName:Joi.string(),
+    SuitableFor:Joi.string(),
+    ZoneType:Joi.string(),
+    LocationHub :Joi.string(),
+    CustomLocationHub :Joi.string(),
+    CustomSuitable :Joi.string(),
+    CustomZoneType :Joi.string(),
+    BuiltUpArea: Joi.number(),
+    PlotArea:Joi.number(),
+    PlotLength: Joi.number(),
+    Plotwidth: Joi.number(),
+    WallType: Joi.string(),
+    CellingHeight: Joi.number(),
+    EntranceWidth: Joi.number(),
+    TaxCharge: Joi.boolean() ,
+    LeasedOrRented: Joi.boolean(),
+    CurentRent: Joi.number(),   
+    LeaseYears: Joi.number(),
+    ExpectedReturn : Joi.number(),
+    DgUpsCharge: Joi.boolean(),
+    AgeofProperty:Joi.number(),
+    Staircase :Joi.number(),
+    passengerLifts:Joi.number(),
+    ServiceLifts:Joi.number(),
+    PublicParking:Joi.number(),
+    PrivateParking:Joi.number(),
+    PublicWashroom:Joi.number(),
+    PrivateWashroom:Joi.number(),
+    CompletePercentage:Joi.number(),
+
    
 });
 const propertyUpdateSchema = Joi.object({
-    Titile: Joi.string(),
+    Title: Joi.string(),
     Description: Joi.string(),
     Highlight: Joi.string(),
     ProeprtyFor: Joi.string().valid('Rent', 'Sale', 'Lease'),
     ProjectId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     Builder: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    PropertyType:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
+    PropertySubtype:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     IsDeleted: Joi.boolean(),
     IsEnabled: Joi.boolean(),
     IsExclusive: Joi.boolean(),
@@ -259,28 +268,38 @@ const propertyUpdateSchema = Joi.object({
         Exterior: Joi.string(),
         Kitchen: Joi.string(),
         Toilets: Joi.string()
-    })
-    // PurchaseRentBy: Joi.object().optional().when('ProeprtyFor', {
-    //     is: 'Sale',
-    //     then: Joi.object({
-    //         BuyerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required(),
-    //         PurchaseDate: Joi.date().required(),
-    //         PurchaseAmount: Joi.number().min(0).required(),
-    //         RegistryNumber: Joi.string().required(),
-    //         SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    //         Documents: Joi.array().items(Joi.string())
-    //     }).options({ presence: 'required' }),
-        // can put one more `then` for "Lease"
-    //     otherwise: Joi.object({
-    //     TenantId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    //     RentAmount: Joi.number().min(0),
-    //     RentStartDate: Joi.date(),
-    //     RentEndDate: Joi.date(),
-    //     RenewedOn: Joi.date(),
-    //     SellerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
-    //     Documents: Joi.array().items(Joi.string())
-    //     }).options({ presence: 'required' })
-    // }),
+    }),
+    OwnerName:Joi.string(),
+    SuitableFor:Joi.string(),
+    ZoneType:Joi.string(),
+    LocationHub :Joi.string(),
+    CustomLocationHub :Joi.string(),
+    CustomSuitable :Joi.string(),
+    CustomZoneType :Joi.string(),
+    BuiltUpArea: Joi.number(),
+    PlotArea:Joi.number(),
+    PlotLength: Joi.number(),
+    Plotwidth: Joi.number(),
+    WallType: Joi.string(),
+    CellingHeight: Joi.number(),
+    EntranceWidth: Joi.number(),
+    TaxCharge: Joi.boolean() ,
+    LeasedOrRented: Joi.boolean(),
+    CurentRent: Joi.number(),   
+    LeaseYears: Joi.number(),
+    ExpectedReturn : Joi.number(),
+    DgUpsCharge: Joi.boolean(),
+    AgeofProperty:Joi.number(),
+    Staircase :Joi.number(),
+    passengerLifts:Joi.number(),
+    ServiceLifts:Joi.number(),
+    PublicParking:Joi.number(),
+    PrivateParking:Joi.number(),
+    PublicWashroom:Joi.number(),
+    PrivateWashroom:Joi.number(),
+    CompletePercentage:Joi.number(),
+
+    
    
 });
 const directionSchema = Joi.object({
