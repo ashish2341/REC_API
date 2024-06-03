@@ -7,6 +7,7 @@ const config = require('../../helper/config');
 const Developer = require("../../models/developerModel");
 const Role = require("../../models/roleModel");
 const Property = require("../../models/propertiesModel");
+const ProjectEnquiry = require("../../models/projectEnquiryModel");
 
 
 exports.getAllUser = async (req, res) => {
@@ -71,7 +72,26 @@ exports.getUserById = async (req, res) => {
       .send({ statusCode: 500, error: error.message, success: false });
   }
 };
-
+exports.getUserFullDetailsById = async (req, res) => {
+  try {
+    let user = await User.findById(req.params.id).populate('Roles');
+    if (!user) {
+      return res
+        .status(404)
+        .json({ error: "User not found", success: false });
+    }
+    const properties = await Property.find({IsDeleted:false,CreatedBy:req.params.id}).populate({path:"Facing",select:"_id Titile Facing"})
+    const enquiries = await ProjectEnquiry.find({IsDeleted:false,"AllowedUser.UserId":req.params.id}).populate({path:"PropertyId",select:"_id Titile"})
+    
+    return res
+      .status(constants.status_code.header.ok)
+      .send({ statusCode: 200, data: {user,properties,enquiries}, success: true });
+  } catch (error) {
+    return res
+      .status(constants.status_code.header.server_error)
+      .send({ statusCode: 500, error: error.message, success: false });
+  }
+};
 exports.updateUser = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
