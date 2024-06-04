@@ -8,7 +8,8 @@ const PropertySchema = new  mongoose.Schema({
     Title: {type:String,required:true},
     Description:{type:String,required:true},
     Highlight: String,
-    ProeprtyFor: { type: String, enum: ['Rent', 'Sale', 'Lease'],required:true },
+    ProeprtyFor: { type: String, enum: ['Sell'],required:true },
+    ProeprtyType: { type: String, enum: ["Residential", "Commercial"] },
     ProjectId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Project",
@@ -49,8 +50,8 @@ const PropertySchema = new  mongoose.Schema({
     Landmark: String,
     PinCode: String,
     Location: {
-        Latitude: Number,
-        Longitude: Number
+        Latitude: String,
+        Longitude: String
     },
     CreatedDate: { type: Date, default: Date.now },
     CreatedBy: {
