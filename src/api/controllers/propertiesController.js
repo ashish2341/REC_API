@@ -12,7 +12,7 @@ const Developer = require("../../models/developerModel");
 const User = require("../../models/userModel");
 const propertyPopulateField = [
   { path: "Facing", model: Facings },
-  { path: "PropertyType", model: PropertyWithSubTypes },
+  { path: "PropertySubtype", model: PropertyWithSubTypes },
   { path: "AreaUnits", model: AreaUnits },
   { path: "Soil", model: Soils },
   { path: "Preferences", model: Preferences },
@@ -59,7 +59,7 @@ exports.getAllProperties = async (req, res) => {
       IsDeleted: false,
       IsEnabled: true,
       $or: [
-        { Titile: { $regex: search, $options: 'i' } },
+        { Title: { $regex: search, $options: 'i' } },
         { Description: { $regex: search, $options: 'i' } },
         // { Area: { $regex: search, $options: 'i' } },
       ]
@@ -289,7 +289,7 @@ exports.getPropertiesByBudget = async (req, res) => {
       bhkType, facing, areaType,propertyStatus,posessionStatus,feature,bathroom,landArea,search } = req.body;
     
     const queryObj = {IsDeleted: false, IsEnabled: true, $or: [
-      { Titile: { $regex: search || '', $options: 'i' } },
+      { Title: { $regex: search || '', $options: 'i' } },
       { Description: { $regex: search || '', $options: 'i' } },
        
     ]};
@@ -323,7 +323,7 @@ exports.getPropertiesByBudget = async (req, res) => {
       queryObj.IsExclusive = req.query.IsExclusive
     }
     let sortOptions = {};
-    if (sortBy === 'Titile' || sortBy === 'TotalPrice.MinValue' || sortBy === 'TotalPrice.MaxValue' || sortBy === 'CreatedDate') {
+    if (sortBy === 'Title' || sortBy === 'TotalPrice.MinValue' || sortBy === 'TotalPrice.MaxValue' || sortBy === 'CreatedDate') {
       sortOptions[sortBy] = sortOrder;
     } 
     const properties = await Properties.find(queryObj)
