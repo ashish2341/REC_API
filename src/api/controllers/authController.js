@@ -49,7 +49,6 @@ exports.login = async (req, res) => {
     }
 
     const signUpData = await User.findById(user.UserId._id).populate("Roles");
-    console.log(signUpData)
         
     const userRoles = signUpData.Roles.map(role => role.Role);
     const token = jwt.sign({ _id: signUpData._id, roles:userRoles }, config.JWT_KEY)
