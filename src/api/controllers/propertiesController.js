@@ -246,7 +246,7 @@ exports.getPropertiesByType = async (req, res) => {
         {$match:{IsDeleted:false, IsEnabled: true}},
         {
           $group: {
-            _id: '$PropertyType',
+            _id: '$PropertySubtype',
             propertiesCount: { $count: {} }
           }
         },
