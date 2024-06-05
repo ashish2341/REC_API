@@ -58,7 +58,9 @@ exports.login = async (req, res) => {
       message: token,
       userId: signUpData._id,
       firstName: signUpData.FirstName,
-      role: userRoles
+      role: userRoles,
+      profilePhoto: signUpData.ProfilePhoto
+      
      });
   } catch (error) {
 

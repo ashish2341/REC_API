@@ -45,7 +45,7 @@ const propertySchema = Joi.object({
     IsNegotiable: Joi.boolean(),
     PosessionStatus: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
     PosessionDate: Joi.date().allow(""),
-    BhkType:Joi.string().required().allow(""),
+    BhkType:Joi.string().allow(""),
     FloorNumber: Joi.number().integer().min(0),
     TotalFloors: Joi.number().integer().min(0),
     IsSingleProperty: Joi.boolean(),
