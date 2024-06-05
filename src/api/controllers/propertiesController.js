@@ -296,7 +296,7 @@ exports.getPropertiesByBudget = async (req, res) => {
     if(isFeatured)queryObj.IsFeatured= true;
     if (buyType?.length>0)  queryObj.ProeprtyFor = { $in: buyType };
     
-    if (propertyType?.length>0)  queryObj.PropertyType = { $in: propertyType };
+    if (propertyType?.length>0)  queryObj.PropertySubtype = { $in: propertyType };
     if (bhkType?.length>0) queryObj.BhkType = { $in: bhkType };
     if (facing?.length>0) queryObj.Facing = { $in: facing };
     if (areaType?.length>0) queryObj.Area = { $in: areaType };
