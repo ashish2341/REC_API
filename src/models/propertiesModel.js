@@ -158,30 +158,12 @@ const PropertySchema = new  mongoose.Schema({
         Balcony: String
     },
     Fitting: {
-        Electrical: {
-            Name:String,
-            URL:String,
-        },
-        Toilets: {
-            Name:String,
-            URL:String,
-        },
-        Kitchen: {
-            Name:String,
-            URL:String,
-        },
-        Doors: {
-            Name:String,
-            URL:String,
-        },
-        Windows: {
-            Name:String,
-            URL:String,
-        },
-        Others: {
-            Name:String,
-            URL:String,
-        },
+        Electrical: String,
+        Toilets: String,
+        Kitchen:String ,
+        Doors: String,
+        Windows: String,
+        Others: String,
     },
     Brochure:String,
     WallAndCeiling: {
