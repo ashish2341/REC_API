@@ -73,7 +73,8 @@ const PropertySchema = new  mongoose.Schema({
     TotalPrice: {
         DisplayValue: String,
         MinValue:Number,
-        MaxValue:Number
+        MaxValue:Number,
+        PriceUnit:String,
     },
     PerUnitPrice: Number,
     LandAreaUnit:String,
