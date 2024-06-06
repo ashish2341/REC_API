@@ -34,6 +34,7 @@ const propertySchema = Joi.object({
     LandArea: Joi.number().min(0).allow(""),
     CoveredArea: Joi.number().min(0).allow(""),
     CarpetArea: Joi.number().min(0).allow(""),
+    LandAreaUnit:Joi.string().allow(""),
     TotalPrice: Joi.object({
         DisplayValue: Joi.string().allow(""),
         MinValue: Joi.number().allow(""),
@@ -105,12 +106,30 @@ const propertySchema = Joi.object({
         Balcony: Joi.string().allow("")
     }),
     Fitting: Joi.object({
-        Electrical: Joi.string().allow(""),
-        Toilets: Joi.string().allow(""),
-        Kitchen: Joi.string().allow(""),
-        Doors: Joi.string().allow(""),
-        Windows: Joi.string().allow(""),
-        Others: Joi.string().allow("")
+        Electrical: Joi.object({
+            Name:Joi.string().allow(""),
+            URL:Joi.string().allow("")
+        }),
+        Toilets: Joi.object({
+            Name:Joi.string().allow(""),
+            URL:Joi.string().allow("")
+        }),
+        Kitchen: Joi.object({
+            Name:Joi.string().allow(""),
+            URL:Joi.string().allow("")
+        }),
+        Doors: Joi.object({
+            Name:Joi.string().allow(""),
+            URL:Joi.string().allow("")
+        }),
+        Windows: Joi.object({
+            Name:Joi.string().allow(""),
+            URL:Joi.string().allow("")
+        }),
+        Others: Joi.object({
+            Name:Joi.string().allow(""),
+            URL:Joi.string().allow("")
+        }),
     }),
     Brochure:Joi.string().allow(""),
     WallAndCeiling: Joi.object({
@@ -183,9 +202,10 @@ const propertyUpdateSchema = Joi.object({
     Flooring: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
     Furnished: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
     BuiltAreaType: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
-    LandArea: Joi.number().min(0),
-    CoveredArea: Joi.number().min(0),
-    CarpetArea: Joi.number().min(0),
+    LandArea: Joi.number().min(0).allow(''),
+    CoveredArea: Joi.number().min(0).allow(''),
+    CarpetArea: Joi.number().min(0).allow(''),
+    LandAreaUnit:Joi.string().allow(""),
     TotalPrice: Joi.object({
         DisplayValue: Joi.string().allow(""),
         MinValue: Joi.number().allow(""),
@@ -256,12 +276,30 @@ const propertyUpdateSchema = Joi.object({
         Balcony: Joi.string().allow("")
     }),
     Fitting: Joi.object({
-        Electrical: Joi.string().allow(""),
-        Toilets: Joi.string().allow(""),
-        Kitchen: Joi.string().allow(""),
-        Doors: Joi.string().allow(""),
-        Windows: Joi.string().allow(""),
-        Others: Joi.string()
+        Electrical: Joi.object({
+            Name:Joi.string().allow(""),
+            URL:Joi.string().allow("")
+        }),
+        Toilets: Joi.object({
+            Name:Joi.string().allow(""),
+            URL:Joi.string().allow("")
+        }),
+        Kitchen: Joi.object({
+            Name:Joi.string().allow(""),
+            URL:Joi.string().allow("")
+        }),
+        Doors: Joi.object({
+            Name:Joi.string().allow(""),
+            URL:Joi.string().allow("")
+        }),
+        Windows: Joi.object({
+            Name:Joi.string().allow(""),
+            URL:Joi.string().allow("")
+        }),
+        Others: Joi.object({
+            Name:Joi.string().allow(""),
+            URL:Joi.string().allow("")
+        }),
     }),
     Brochure:Joi.string().allow(""),
     WallAndCeiling: Joi.object({
