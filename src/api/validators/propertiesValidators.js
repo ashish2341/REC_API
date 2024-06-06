@@ -107,30 +107,12 @@ const propertySchema = Joi.object({
         Balcony: Joi.string().allow("")
     }),
     Fitting: Joi.object({
-        Electrical: Joi.object({
-            Name:Joi.string().allow(""),
-            URL:Joi.string().allow("")
-        }),
-        Toilets: Joi.object({
-            Name:Joi.string().allow(""),
-            URL:Joi.string().allow("")
-        }),
-        Kitchen: Joi.object({
-            Name:Joi.string().allow(""),
-            URL:Joi.string().allow("")
-        }),
-        Doors: Joi.object({
-            Name:Joi.string().allow(""),
-            URL:Joi.string().allow("")
-        }),
-        Windows: Joi.object({
-            Name:Joi.string().allow(""),
-            URL:Joi.string().allow("")
-        }),
-        Others: Joi.object({
-            Name:Joi.string().allow(""),
-            URL:Joi.string().allow("")
-        }),
+        Electrical: Joi.string().allow(""),
+        Toilets: Joi.string().allow(""),
+        Kitchen: Joi.string().allow(""),
+        Doors: Joi.string().allow(""),
+        Windows: Joi.string().allow(""),
+        Others: Joi.string().allow(""),
     }),
     Brochure:Joi.string().allow(""),
     WallAndCeiling: Joi.object({
@@ -278,30 +260,12 @@ const propertyUpdateSchema = Joi.object({
         Balcony: Joi.string().allow("")
     }),
     Fitting: Joi.object({
-        Electrical: Joi.object({
-            Name:Joi.string().allow(""),
-            URL:Joi.string().allow("")
-        }),
-        Toilets: Joi.object({
-            Name:Joi.string().allow(""),
-            URL:Joi.string().allow("")
-        }),
-        Kitchen: Joi.object({
-            Name:Joi.string().allow(""),
-            URL:Joi.string().allow("")
-        }),
-        Doors: Joi.object({
-            Name:Joi.string().allow(""),
-            URL:Joi.string().allow("")
-        }),
-        Windows: Joi.object({
-            Name:Joi.string().allow(""),
-            URL:Joi.string().allow("")
-        }),
-        Others: Joi.object({
-            Name:Joi.string().allow(""),
-            URL:Joi.string().allow("")
-        }),
+        Electrical: Joi.string().allow(""),
+        Toilets: Joi.string().allow(""),
+        Kitchen: Joi.string().allow(""),
+        Doors: Joi.string().allow(""),
+        Windows: Joi.string().allow(""),
+        Others: Joi.string().allow(""),
     }),
     Brochure:Joi.string().allow(""),
     WallAndCeiling: Joi.object({
