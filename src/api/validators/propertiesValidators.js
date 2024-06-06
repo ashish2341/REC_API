@@ -39,7 +39,8 @@ const propertySchema = Joi.object({
         DisplayValue: Joi.string().allow(""),
         MinValue: Joi.number().allow(""),
         MaxValue: Joi.number().allow(""),
-        PriceUnit:Joi.string().allow("")
+        MinPriceUnit:Joi.string().allow(""),
+        MaxPriceUnit:Joi.string().allow("")
     }),
     DiscountPercentage: Joi.number().min(0),
     PerUnitPrice: Joi.number().min(0),
@@ -193,7 +194,8 @@ const propertyUpdateSchema = Joi.object({
         DisplayValue: Joi.string().allow(""),
         MinValue: Joi.number().allow(""),
         MaxValue: Joi.number().allow(""),
-        PriceUnit:Joi.string().allow("")
+        MinPriceUnit:Joi.string().allow(""),
+        MaxPriceUnit:Joi.string().allow("")
     }),
     DiscountPercentage: Joi.number().min(0),
     PerUnitPrice: Joi.number().min(0),
