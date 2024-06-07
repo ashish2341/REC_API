@@ -152,6 +152,8 @@ const propertySchema = Joi.object({
     PrivateWashroom:Joi.number().allow(""),
     CompletePercentage:Joi.number().allow(""),
     ProeprtyType: Joi.string().valid("Residential", "Commercial") ,
+    PaymentPlan:Joi.string().allow(""), 
+    FloorPlan:Joi.string().allow(""),
 
    
 });
@@ -306,8 +308,9 @@ const propertyUpdateSchema = Joi.object({
     PrivateWashroom:Joi.number().allow(""),
     CompletePercentage:Joi.number().allow(""),
     ProeprtyType: Joi.string().valid("Residential", "Commercial") ,
-
-    
+    PaymentPlan:Joi.string().allow(""), 
+    FloorPlan:Joi.string().allow(""),
+ 
    
 });
 const directionSchema = Joi.object({

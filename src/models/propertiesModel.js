@@ -202,6 +202,8 @@ const PropertySchema = new  mongoose.Schema({
     PublicWashroom:Number,
     PrivateWashroom:Number,
     CompletePercentage:Number,
+    PaymentPlan:String, 
+    FloorPlan:String,
 
 
 });
