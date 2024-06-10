@@ -9,7 +9,9 @@ const { addPropeties, getAllProperties, getPropertiesByDirections, getPopularPro
     getPropertiesByArea, getPropertiesByType, getPropertiesByBudget, getPropertiesById, updateProperties, deleteProperties, getPropertiesWithArea, getPropertiesByAreaOrPropertyType, getSimilarProperties, 
     getPropertiesByDob,
     getPropertiesForReview,
-    getPropertiesByUserId} = require('../controllers/propertiesController');
+    getPropertiesByUserId,
+    getDataForAdmin,
+    getDataForBuilder} = require('../controllers/propertiesController');
 const {propertySchema, directionSchema, budgetSchema, zodiacSchema, propertyUpdateSchema, getPropertySchema, userPropertySchema} = require('../validators/propertiesValidators');
 const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
 const { roleSchema } = require('../validators/authValidator');
@@ -31,7 +33,8 @@ router.get('/similarProperty/:id',getSimilarProperties)
 router.get('/zodiac/:dob',validate(zodiacSchema,'params'),getPropertiesByDob)
 router.get('/reviewProperty',validate(getPropertySchema,'query'),getPropertiesForReview)
 router.get('/propertyByUserId',auth,validate(getRecordsSchema,'query'),getPropertiesByUserId)
-
+router.get('/allDataGetForAdmin',auth,getDataForAdmin);
+router.get('/dataGetForBuilder',auth,getDataForBuilder);
 
  
 

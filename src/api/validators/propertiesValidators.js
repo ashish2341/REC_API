@@ -27,8 +27,8 @@ const propertySchema = Joi.object({
     Bedrooms: Joi.number().integer().min(0),
     Bathrooms: Joi.number().integer().min(0),
     Fencing: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
-    Flooring: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
-    Furnished: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
+    Flooring: Joi.string().allow(""),
+    Furnished: Joi.string().allow(""),
     BuiltAreaType: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
     Builder: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
     LandArea: Joi.number().min(0).allow(""),
@@ -154,6 +154,9 @@ const propertySchema = Joi.object({
     ProeprtyType: Joi.string().valid("Residential", "Commercial") ,
     PaymentPlan:Joi.string().allow(""), 
     FloorPlan:Joi.string().allow(""),
+    CustomFencing:Joi.string().allow(""), 
+    CustomFlooring:Joi.string().allow(""),
+    CustomWallType:Joi.string().allow(""), 
 
    
 });
@@ -185,8 +188,8 @@ const propertyUpdateSchema = Joi.object({
     Bedrooms: Joi.number().integer().min(0),
     Bathrooms: Joi.number().integer().min(0),
     Fencing: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
-    Flooring: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
-    Furnished: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
+    Flooring: Joi.string().allow(""),
+    Furnished: Joi.string().allow(""),
     BuiltAreaType: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
     LandArea: Joi.number().min(0).allow(''),
     CoveredArea: Joi.number().min(0).allow(''),
@@ -310,6 +313,9 @@ const propertyUpdateSchema = Joi.object({
     ProeprtyType: Joi.string().valid("Residential", "Commercial") ,
     PaymentPlan:Joi.string().allow(""), 
     FloorPlan:Joi.string().allow(""),
+    CustomFencing:Joi.string().allow(""), 
+    CustomFlooring:Joi.string().allow(""),
+    CustomWallType:Joi.string().allow(""), 
  
    
 });
