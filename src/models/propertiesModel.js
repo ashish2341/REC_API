@@ -39,8 +39,8 @@ const PropertySchema = new  mongoose.Schema({
     Builder:{type:mongoose.Schema.Types.ObjectId,ref:'Developer'},
     BhkType:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.bhkTypes},
     Area:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.area},
-    Fencing:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.fencings},
-    Flooring:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.floorings},
+    Fencing:String,
+    Flooring:String,
     Furnished:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.furnishedes},
     BuiltAreaType: {type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.builtAreaTypes},
     City: String,
@@ -204,6 +204,9 @@ const PropertySchema = new  mongoose.Schema({
     CompletePercentage:Number,
     PaymentPlan:String, 
     FloorPlan:String,
+    CustomFencing:String,
+    CustomFlooring:String,
+    CustomWallType:String,
 
 
 });

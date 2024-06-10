@@ -10,6 +10,8 @@ const Features = require("../../models/featuresModel");
 const Aminity = require("../../models/aminityModel");
 const Developer = require("../../models/developerModel");
 const User = require("../../models/userModel");
+const moment = require('moment');
+const ProjectEnquiry = require("../../models/projectEnquiryModel");
 const propertyPopulateField = [
   { path: "Facing", model: Facings },
   { path: "PropertySubtype", model: PropertyWithSubTypes },
@@ -19,8 +21,8 @@ const propertyPopulateField = [
   { path: "PropertyStatus", model: PropertyStatus },
   { path: "OwnershipType", model: OwnershipTypes },
   { path: "Area", model: Area },
-  { path: "Fencing", model: Fecnings },
-  { path: "Flooring", model: Floorings },
+  // { path: "Fencing", model: Fecnings },
+  // { path: "Flooring", model: Floorings },
   { path: "Furnished", model: Furnishedes },
   { path: "BuiltAreaType", model: BuiltAreaTypes },
   { path: "BhkType", model: BhkType },
@@ -527,3 +529,118 @@ exports.getPropertiesByUserId = async (req, res) => {
     });
   }
 };
+
+exports.getDataForAdmin = async (req, res) => {
+  try {
+
+    const startOfToday = moment().startOf('day').toDate();
+    const endOfToday = moment().endOf('day').toDate();
+    const TotalUser = await User.find({ IsDeleted: false })
+    const TodayUsers = await User.find({
+      IsDeleted: false,
+      CreatedDate: { $gte: startOfToday, $lt: endOfToday }
+    });
+
+    const TotalProperty = await Properties.find({ IsDeleted: false })
+    const UnderReviewProperty = await Properties.find({ IsEnabled: false, IsDeleted: false })
+    const ApprovedProperty = await Properties.find({ IsEnabled: true, IsDeleted: false })
+    const TodayAddProperty = await Properties.find({
+      IsDeleted: false,
+      CreatedDate: { $gte: startOfToday, $lt: endOfToday }
+    });
+
+    const TotalBuilder = await Developer.find({ IsDeleted: false })
+    const TodayAddBuilder = await Developer.find({
+      IsDeleted: false,
+      CreatedDate: { $gte: startOfToday, $lt: endOfToday }
+    });
+    const TotalBuilderProperty = await Properties.find({ 
+      IsDeleted: false,
+      Builder: { $exists: true, $ne: null }
+
+    })
+   
+    const TotalEnquiry = await ProjectEnquiry.find({ IsDeleted: false })
+    const TodayEnquiry = await ProjectEnquiry.find({
+      IsDeleted: false,
+      CreatedDate: { $gte: startOfToday, $lt: endOfToday }
+    });
+    const TotalEnquiryProperty = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Property" })
+    const TotalEnquiryAstrology = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Astrology" })
+    const TotalEnquiryContactUs = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "ContactUs" })
+
+    return res.status(constants.status_code.header.ok).send({
+      statusCode: 200,
+      totalUser: TotalUser.length,
+      todayUsers: TodayUsers.length,
+      totalProperty: TotalProperty.length,
+      underReviewProperty: UnderReviewProperty.length,
+      approvedProperty: ApprovedProperty.length,
+      todayAddProperty: TodayAddProperty.length,
+      totalBuilder: TotalBuilder.length,
+      todayAddBuilder: TodayAddBuilder.length,
+      totalBuilderProperty: TotalBuilderProperty.length,
+      totalEnquiry: TotalEnquiry.length,
+      todayEnquiry: TodayEnquiry.length,
+      totalEnquiryProperty: TotalEnquiryProperty.length,
+      totalEnquiryAstrology: TotalEnquiryAstrology.length,
+      totalEnquiryContactUs: TotalEnquiryContactUs.length,
+      success: true
+    });
+
+  } catch (error) {
+    return res.status(constants.status_code.header.server_error).send({
+      statusCode: 500,
+      error: error.message,
+      success: false
+    });
+  }
+};
+
+
+exports.getDataForBuilder = async (req, res) => {
+  try {
+    const startOfToday = moment().startOf('day').toDate();
+    const endOfToday = moment().endOf('day').toDate();
+    if (req.user.roles?.includes('Developer')) {
+      TotalPropertyBuilder = await Properties.countDocuments({ CreatedBy: req.user._id, IsDeleted: false })
+      UnderReviewProperty = await Properties.countDocuments({ IsEnabled: false, IsDeleted: false, CreatedBy: req.user._id, })
+      ApprovedProperty = await Properties.countDocuments({ IsEnabled: true, IsDeleted: false, CreatedBy: req.user._id, })
+      TodayAddProperty = await Properties.countDocuments({
+        IsDeleted: false,
+        CreatedDate: { $gte: startOfToday, $lt: endOfToday }
+      });
+    }
+    const TotalEnquiry = await ProjectEnquiry.find({ IsDeleted: false })
+    const TodayEnquiry = await ProjectEnquiry.find({
+      IsDeleted: false,
+      CreatedDate: { $gte: startOfToday, $lt: endOfToday }
+    });
+    const TotalEnquiryProperty = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Property" })
+    const TotalEnquiryAstrology = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Astrology" })
+    const TotalEnquiryContactUs = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "ContactUs" })
+
+    return res.status(constants.status_code.header.ok).send({
+      statusCode: 200,
+      totalProperty: TotalPropertyBuilder,
+      underReviewProperty: UnderReviewProperty,
+      approvedProperty: ApprovedProperty,
+      todayAddProperty: TodayAddProperty,
+      totalEnquiry: TotalEnquiry.length,
+      todayEnquiry: TodayEnquiry.length,
+      totalEnquiryProperty: TotalEnquiryProperty.length,
+      totalEnquiryAstrology: TotalEnquiryAstrology.length,
+      totalEnquiryContactUs: TotalEnquiryContactUs.length,
+
+      success: true
+    });
+
+  } catch (error) {
+    return res.status(constants.status_code.header.server_error).send({
+      statusCode: 500,
+      error: error.message,
+      success: false
+    });
+  }
+};
+
