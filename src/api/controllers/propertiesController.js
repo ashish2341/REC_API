@@ -536,12 +536,6 @@ exports.getDataForAdmin = async (req, res) => {
     const startOfToday = moment().startOf('day').toDate();
     const endOfToday = moment().endOf('day').toDate();
 
-    const startOfThisMonth = moment().startOf('month').toDate();
-    const endOfThisMonth = moment().endOf('month').toDate();
-
-    const startOfLastMonth = moment().subtract(1, 'month').startOf('month').toDate();
-    const endOfLastMonth = moment().subtract(1, 'month').endOf('month').toDate();
-
     const TotalUser = await User.find({ IsDeleted: false })
     const TodayUsers = await User.find({
       IsDeleted: false,
@@ -576,79 +570,7 @@ exports.getDataForAdmin = async (req, res) => {
     const TotalEnquiryAstrology = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Astrology" })
     const TotalEnquiryContactUs = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "ContactUs" })
     
-    const UsersAddedThisMonth = await User.find({
-      IsDeleted: false,
-      CreatedDate: { $gte: startOfThisMonth, $lt: endOfThisMonth }
-    });
 
-    const UsersAddedLastMonth = await User.find({
-      IsDeleted: false,
-      CreatedDate: { $gte: startOfLastMonth, $lt: endOfLastMonth }
-    });
-
-    const usersAddedThisMonthCount = UsersAddedThisMonth.length;
-    const usersAddedLastMonthCount = UsersAddedLastMonth.length;
-    
-    let percentageChangeInNewUsers = 0;
-    if ( usersAddedLastMonthCount != 0){
-    percentageChangeInNewUsers = ((usersAddedThisMonthCount - usersAddedLastMonthCount) / usersAddedLastMonthCount) * 100;
-    }
-
-    const PropertyAddedThisMonth = await Properties.find({
-      IsDeleted: false,
-      CreatedDate: { $gte: startOfThisMonth, $lt: endOfThisMonth }
-    });
-
-    const PropertyAddedLastMonth = await Properties.find({
-      IsDeleted: false,
-      CreatedDate: { $gte: startOfLastMonth, $lt: endOfLastMonth }
-    });
-    
-    const propertyAddedThisMonthCount = PropertyAddedThisMonth.length;
-    const propertyAddedLastMonthCount = PropertyAddedLastMonth.length;
-    
-    let percentageChangeInNewProperty = 0;
-    if ( propertyAddedLastMonthCount != 0){
-      percentageChangeInNewProperty = ((propertyAddedThisMonthCount - propertyAddedLastMonthCount) / propertyAddedLastMonthCount) * 100;
-      }
-  
-
-    const BuilderAddedThisMonth = await Developer.find({
-      IsDeleted: false,
-      CreatedDate: { $gte: startOfThisMonth, $lt: endOfThisMonth }
-    });
-
-    const BuilderAddedLastMonth = await Developer.find({
-      IsDeleted: false,
-      CreatedDate: { $gte: startOfLastMonth, $lt: endOfLastMonth }
-    });
-    
-    const builderAddedThisMonthCount = BuilderAddedThisMonth.length;
-    const builderAddedLastMonthCount = BuilderAddedLastMonth.length;
-    
-    let percentageChangeInNewBuilder = 0;
-    if (builderAddedLastMonthCount != 0){
-      percentageChangeInNewBuilder = ((builderAddedThisMonthCount - builderAddedLastMonthCount) / builderAddedLastMonthCount) * 100;
-      }
-
-      const EnquiryAddedThisMonth = await Developer.find({
-        IsDeleted: false,
-        CreatedDate: { $gte: startOfThisMonth, $lt: endOfThisMonth }
-      });
-  
-      const EnquiryAddedLastMonth = await Developer.find({
-        IsDeleted: false,
-        CreatedDate: { $gte: startOfLastMonth, $lt: endOfLastMonth }
-      });
-      
-      const enquiryAddedThisMonthCount = EnquiryAddedThisMonth.length;
-      const enquiryAddedLastMonthCount = EnquiryAddedLastMonth.length;
-      console.log(enquiryAddedLastMonthCount)
-      console.log(enquiryAddedThisMonthCount)
-      let percentageChangeInNewEnquiry = 0;
-      if (enquiryAddedLastMonthCount != 0){
-        percentageChangeInNewEnquiry = ((enquiryAddedThisMonthCount - enquiryAddedLastMonthCount) / enquiryAddedLastMonthCount) * 100;
-        }
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
       totalUser: TotalUser.length,
@@ -665,10 +587,6 @@ exports.getDataForAdmin = async (req, res) => {
       totalEnquiryProperty: TotalEnquiryProperty.length,
       totalEnquiryAstrology: TotalEnquiryAstrology.length,
       totalEnquiryContactUs: TotalEnquiryContactUs.length,
-      percentageChangeUsers: Math.round(percentageChangeInNewUsers),
-      percentageChangeProperties: Math.round(percentageChangeInNewProperty),
-      percentageChangeBuilder: Math.round(percentageChangeInNewBuilder),
-      percentageChangeEnquiry: Math.round(percentageChangeInNewEnquiry),
       success: true
     });
 
@@ -687,11 +605,6 @@ exports.getDataForBuilder = async (req, res) => {
     const startOfToday = moment().startOf('day').toDate();
     const endOfToday = moment().endOf('day').toDate();
 
-    const startOfThisMonth = moment().startOf('month').toDate();
-    const endOfThisMonth = moment().endOf('month').toDate();
-
-    const startOfLastMonth = moment().subtract(1, 'month').startOf('month').toDate();
-    const endOfLastMonth = moment().subtract(1, 'month').endOf('month').toDate();
     if (req.user.roles?.includes('Developer')) {
       TotalPropertyBuilder = await Properties.countDocuments({ CreatedBy: req.user._id, IsDeleted: false })
       UnderReviewProperty = await Properties.countDocuments({ IsEnabled: false, IsDeleted: false, CreatedBy: req.user._id, })
@@ -701,49 +614,28 @@ exports.getDataForBuilder = async (req, res) => {
         CreatedDate: { $gte: startOfToday, $lt: endOfToday }
       });
     }
-    const TotalEnquiry = await ProjectEnquiry.find({ IsDeleted: false })
+    const TotalEnquiry = await ProjectEnquiry.find({ IsDeleted: false,
+      $or: [
+        { "AllowedUser.UserId": req.user._id },
+      ]
+     })
     const TodayEnquiry = await ProjectEnquiry.find({
       IsDeleted: false,
-      CreatedDate: { $gte: startOfToday, $lt: endOfToday }
+      CreatedDate: { $gte: startOfToday, $lt: endOfToday },
+      $or: [
+        { "AllowedUser.UserId": req.user._id },
+      ]
     });
-    const TotalEnquiryProperty = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Property" })
-    const TotalEnquiryAstrology = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Astrology" })
-    const TotalEnquiryContactUs = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "ContactUs" })
-    const PropertyAddedThisMonth = await Properties.find({
-      IsDeleted: false,
-      CreatedDate: { $gte: startOfThisMonth, $lt: endOfThisMonth }
-    });
-
-    const PropertyAddedLastMonth = await Properties.find({
-      IsDeleted: false,
-      CreatedDate: { $gte: startOfLastMonth, $lt: endOfLastMonth }
-    });
-    
-    const propertyAddedThisMonthCount = PropertyAddedThisMonth.length;
-    const propertyAddedLastMonthCount = PropertyAddedLastMonth.length;
-    
-    let percentageChangeInNewProperty = 0;
-    if ( propertyAddedLastMonthCount != 0){
-      percentageChangeInNewProperty = ((propertyAddedThisMonthCount - propertyAddedLastMonthCount) / propertyAddedLastMonthCount) * 100;
-      }
-    
-      const EnquiryAddedThisMonth = await Developer.find({
-        IsDeleted: false,
-        CreatedDate: { $gte: startOfThisMonth, $lt: endOfThisMonth }
-      });
-  
-      const EnquiryAddedLastMonth = await Developer.find({
-        IsDeleted: false,
-        CreatedDate: { $gte: startOfLastMonth, $lt: endOfLastMonth }
-      });
-      
-      const enquiryAddedThisMonthCount = EnquiryAddedThisMonth.length;
-      const enquiryAddedLastMonthCount = EnquiryAddedLastMonth.length;
-      
-      let percentageChangeInNewEnquiry = 0;
-      if (enquiryAddedLastMonthCount != 0){
-        percentageChangeInNewEnquiry = ((enquiryAddedThisMonthCount - enquiryAddedLastMonthCount) / enquiryAddedLastMonthCount) * 100;
-        }
+    const TotalEnquiryProperty = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Property" , $or: [
+      { "AllowedUser.UserId": req.user._id },
+    ]})
+    const TotalEnquiryAstrology = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Astrology" , $or: [
+      { "AllowedUser.UserId": req.user._id },
+    ]})
+    const TotalEnquiryContactUs = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "ContactUs" , $or: [
+      { "AllowedUser.UserId": req.user._id },
+    ]})
+   
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
       totalProperty: TotalPropertyBuilder,
@@ -755,8 +647,6 @@ exports.getDataForBuilder = async (req, res) => {
       totalEnquiryProperty: TotalEnquiryProperty.length,
       totalEnquiryAstrology: TotalEnquiryAstrology.length,
       totalEnquiryContactUs: TotalEnquiryContactUs.length,
-      percentageChangeProperties: Math.round(percentageChangeInNewProperty),
-      percentageChangeEnquiry: Math.round(percentageChangeInNewEnquiry),
       success: true
     });
 
@@ -769,3 +659,133 @@ exports.getDataForBuilder = async (req, res) => {
   }
 };
 
+const getMonthName = (monthNumber) => {
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  return monthNames[monthNumber - 1] || "Unknown";
+};
+
+const createAggregationPipeline = (startDate, endDate) => ([
+  {
+    $match: {
+      CreatedDate: {
+        $gte: startDate,
+        $lt: endDate
+      },
+      IsEnabled: true,
+      IsDeleted: false,
+    }
+  },
+  {
+    $group: {
+      _id: { $month: "$CreatedDate" },
+      count: { $sum: 1 }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      month: { $arrayElemAt: [["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], { $subtract: ["$_id", 1] }] },
+      count: 1
+    }
+  },
+  {
+    $sort: { _id: 1 } 
+  }
+]);
+
+const createAggregationPipelineForBuilder = (startDate, endDate,{IsBuilder,id,IsProperty}) => ([
+  {
+    $match: {
+      CreatedDate: {
+        $gte: startDate,
+        $lt: endDate
+      },
+      IsEnabled: true,
+      IsDeleted: false,
+      ...(IsBuilder ? { $or: [{ "AllowedUser.UserId": id }] } : {}),
+      ...(IsProperty ? { $or: [{ CreatedBy: new ObjectId(id) }] } : {})
+    }
+  },
+  {
+    $group: {
+      _id: { $month: "$CreatedDate" },
+      count: { $sum: 1 }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      month: { $arrayElemAt: [["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], { $subtract: ["$_id", 1] }] },
+      count: 1
+    }
+  },
+  {
+    $sort: { _id: 1 } 
+  }
+]);
+
+exports.getChartDataForAdmin = async(req,res)=>{
+  try {
+    const startDate = new Date(new Date().getFullYear(), new Date().getMonth() - 6, 1);
+    const endDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+
+    const userPipeline = createAggregationPipeline(startDate, endDate);
+    const builderPipeline = createAggregationPipeline(startDate, endDate);
+    const propertiesPipeline = createAggregationPipeline(startDate, endDate);
+    const enquiryPipeline = createAggregationPipeline(startDate, endDate);
+
+    const [user, builder, properties, enquiry] = await Promise.all([
+      User.aggregate(userPipeline),
+      Developer.aggregate(builderPipeline),
+      Properties.aggregate(propertiesPipeline),
+      ProjectEnquiry.aggregate(enquiryPipeline)
+    ]);
+
+    return res.status(constants.status_code.header.ok).send({
+      statusCode: 200,
+      user,
+      builder,
+      properties,
+      enquiry,
+      success: true
+    });
+  } catch (error) {
+    return res.status(constants.status_code.header.server_error).send({
+      statusCode: 500,
+      error: error.message,
+      success: false
+    });
+  }
+}
+
+exports.getChartDataForBuilder = async(req,res)=>{
+  try {
+    const startDate = new Date(new Date().getFullYear(), new Date().getMonth() - 6, 1);
+    const endDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+ 
+    const propertiesPipeline = createAggregationPipelineForBuilder(startDate, endDate,{IsBuilder: false,id: req.user._id,IsProperty:true});
+    const enquiryPipeline = createAggregationPipelineForBuilder(startDate, endDate,{IsBuilder: true,id: req.user._id,IsProperty:false});
+
+    const [properties, enquiry] = await Promise.all([
+      
+      Properties.aggregate(propertiesPipeline),
+      ProjectEnquiry.aggregate(enquiryPipeline)
+    ]);
+
+    return res.status(constants.status_code.header.ok).send({
+      statusCode: 200,
+      properties,
+      enquiry,
+      success: true
+    });
+  } catch (error) {
+    return res.status(constants.status_code.header.server_error).send({
+      statusCode: 500,
+      error: error.message,
+      success: false
+    });
+  }
+}

@@ -11,7 +11,9 @@ const { addPropeties, getAllProperties, getPropertiesByDirections, getPopularPro
     getPropertiesForReview,
     getPropertiesByUserId,
     getDataForAdmin,
-    getDataForBuilder} = require('../controllers/propertiesController');
+    getDataForBuilder,
+    getChartDataForAdmin,
+    getChartDataForBuilder} = require('../controllers/propertiesController');
 const {propertySchema, directionSchema, budgetSchema, zodiacSchema, propertyUpdateSchema, getPropertySchema, userPropertySchema} = require('../validators/propertiesValidators');
 const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
 const { roleSchema } = require('../validators/authValidator');
@@ -35,6 +37,8 @@ router.get('/reviewProperty',validate(getPropertySchema,'query'),getPropertiesFo
 router.get('/propertyByUserId',auth,validate(getRecordsSchema,'query'),getPropertiesByUserId)
 router.get('/allDataGetForAdmin',auth,getDataForAdmin);
 router.get('/dataGetForBuilder',auth,getDataForBuilder);
+router.get('/getChartDataforAdmin',auth,getChartDataForAdmin);
+router.get('/getChartDataforBuilder',auth,getChartDataForBuilder);
 
  
 
