@@ -32,10 +32,7 @@ const PropertySchema = new  mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:dbCollectionName.facings,
     }],
-    AreaUnits: {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:dbCollectionName.areaUnits,
-    },
+    AreaUnits: String,
     Builder:{type:mongoose.Schema.Types.ObjectId,ref:'Developer'},
     BhkType:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.bhkTypes},
     Area:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.area},
