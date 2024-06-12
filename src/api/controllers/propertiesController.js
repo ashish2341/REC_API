@@ -535,6 +535,13 @@ exports.getDataForAdmin = async (req, res) => {
 
     const startOfToday = moment().startOf('day').toDate();
     const endOfToday = moment().endOf('day').toDate();
+
+    const startOfThisMonth = moment().startOf('month').toDate();
+    const endOfThisMonth = moment().endOf('month').toDate();
+
+    const startOfLastMonth = moment().subtract(1, 'month').startOf('month').toDate();
+    const endOfLastMonth = moment().subtract(1, 'month').endOf('month').toDate();
+
     const TotalUser = await User.find({ IsDeleted: false })
     const TodayUsers = await User.find({
       IsDeleted: false,
@@ -568,7 +575,80 @@ exports.getDataForAdmin = async (req, res) => {
     const TotalEnquiryProperty = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Property" })
     const TotalEnquiryAstrology = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Astrology" })
     const TotalEnquiryContactUs = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "ContactUs" })
+    
+    const UsersAddedThisMonth = await User.find({
+      IsDeleted: false,
+      CreatedDate: { $gte: startOfThisMonth, $lt: endOfThisMonth }
+    });
 
+    const UsersAddedLastMonth = await User.find({
+      IsDeleted: false,
+      CreatedDate: { $gte: startOfLastMonth, $lt: endOfLastMonth }
+    });
+
+    const usersAddedThisMonthCount = UsersAddedThisMonth.length;
+    const usersAddedLastMonthCount = UsersAddedLastMonth.length;
+    
+    let percentageChangeInNewUsers = 0;
+    if ( usersAddedLastMonthCount != 0){
+    percentageChangeInNewUsers = ((usersAddedThisMonthCount - usersAddedLastMonthCount) / usersAddedLastMonthCount) * 100;
+    }
+
+    const PropertyAddedThisMonth = await Properties.find({
+      IsDeleted: false,
+      CreatedDate: { $gte: startOfThisMonth, $lt: endOfThisMonth }
+    });
+
+    const PropertyAddedLastMonth = await Properties.find({
+      IsDeleted: false,
+      CreatedDate: { $gte: startOfLastMonth, $lt: endOfLastMonth }
+    });
+    
+    const propertyAddedThisMonthCount = PropertyAddedThisMonth.length;
+    const propertyAddedLastMonthCount = PropertyAddedLastMonth.length;
+    
+    let percentageChangeInNewProperty = 0;
+    if ( propertyAddedLastMonthCount != 0){
+      percentageChangeInNewProperty = ((propertyAddedThisMonthCount - propertyAddedLastMonthCount) / propertyAddedLastMonthCount) * 100;
+      }
+  
+
+    const BuilderAddedThisMonth = await Developer.find({
+      IsDeleted: false,
+      CreatedDate: { $gte: startOfThisMonth, $lt: endOfThisMonth }
+    });
+
+    const BuilderAddedLastMonth = await Developer.find({
+      IsDeleted: false,
+      CreatedDate: { $gte: startOfLastMonth, $lt: endOfLastMonth }
+    });
+    
+    const builderAddedThisMonthCount = BuilderAddedThisMonth.length;
+    const builderAddedLastMonthCount = BuilderAddedLastMonth.length;
+    
+    let percentageChangeInNewBuilder = 0;
+    if (builderAddedLastMonthCount != 0){
+      percentageChangeInNewBuilder = ((builderAddedThisMonthCount - builderAddedLastMonthCount) / builderAddedLastMonthCount) * 100;
+      }
+
+      const EnquiryAddedThisMonth = await Developer.find({
+        IsDeleted: false,
+        CreatedDate: { $gte: startOfThisMonth, $lt: endOfThisMonth }
+      });
+  
+      const EnquiryAddedLastMonth = await Developer.find({
+        IsDeleted: false,
+        CreatedDate: { $gte: startOfLastMonth, $lt: endOfLastMonth }
+      });
+      
+      const enquiryAddedThisMonthCount = EnquiryAddedThisMonth.length;
+      const enquiryAddedLastMonthCount = EnquiryAddedLastMonth.length;
+      console.log(enquiryAddedLastMonthCount)
+      console.log(enquiryAddedThisMonthCount)
+      let percentageChangeInNewEnquiry = 0;
+      if (enquiryAddedLastMonthCount != 0){
+        percentageChangeInNewEnquiry = ((enquiryAddedThisMonthCount - enquiryAddedLastMonthCount) / enquiryAddedLastMonthCount) * 100;
+        }
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
       totalUser: TotalUser.length,
@@ -585,6 +665,10 @@ exports.getDataForAdmin = async (req, res) => {
       totalEnquiryProperty: TotalEnquiryProperty.length,
       totalEnquiryAstrology: TotalEnquiryAstrology.length,
       totalEnquiryContactUs: TotalEnquiryContactUs.length,
+      percentageChangeUsers: Math.round(percentageChangeInNewUsers),
+      percentageChangeProperties: Math.round(percentageChangeInNewProperty),
+      percentageChangeBuilder: Math.round(percentageChangeInNewBuilder),
+      percentageChangeEnquiry: Math.round(percentageChangeInNewEnquiry),
       success: true
     });
 
@@ -602,6 +686,12 @@ exports.getDataForBuilder = async (req, res) => {
   try {
     const startOfToday = moment().startOf('day').toDate();
     const endOfToday = moment().endOf('day').toDate();
+
+    const startOfThisMonth = moment().startOf('month').toDate();
+    const endOfThisMonth = moment().endOf('month').toDate();
+
+    const startOfLastMonth = moment().subtract(1, 'month').startOf('month').toDate();
+    const endOfLastMonth = moment().subtract(1, 'month').endOf('month').toDate();
     if (req.user.roles?.includes('Developer')) {
       TotalPropertyBuilder = await Properties.countDocuments({ CreatedBy: req.user._id, IsDeleted: false })
       UnderReviewProperty = await Properties.countDocuments({ IsEnabled: false, IsDeleted: false, CreatedBy: req.user._id, })
@@ -619,7 +709,41 @@ exports.getDataForBuilder = async (req, res) => {
     const TotalEnquiryProperty = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Property" })
     const TotalEnquiryAstrology = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Astrology" })
     const TotalEnquiryContactUs = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "ContactUs" })
+    const PropertyAddedThisMonth = await Properties.find({
+      IsDeleted: false,
+      CreatedDate: { $gte: startOfThisMonth, $lt: endOfThisMonth }
+    });
 
+    const PropertyAddedLastMonth = await Properties.find({
+      IsDeleted: false,
+      CreatedDate: { $gte: startOfLastMonth, $lt: endOfLastMonth }
+    });
+    
+    const propertyAddedThisMonthCount = PropertyAddedThisMonth.length;
+    const propertyAddedLastMonthCount = PropertyAddedLastMonth.length;
+    
+    let percentageChangeInNewProperty = 0;
+    if ( propertyAddedLastMonthCount != 0){
+      percentageChangeInNewProperty = ((propertyAddedThisMonthCount - propertyAddedLastMonthCount) / propertyAddedLastMonthCount) * 100;
+      }
+    
+      const EnquiryAddedThisMonth = await Developer.find({
+        IsDeleted: false,
+        CreatedDate: { $gte: startOfThisMonth, $lt: endOfThisMonth }
+      });
+  
+      const EnquiryAddedLastMonth = await Developer.find({
+        IsDeleted: false,
+        CreatedDate: { $gte: startOfLastMonth, $lt: endOfLastMonth }
+      });
+      
+      const enquiryAddedThisMonthCount = EnquiryAddedThisMonth.length;
+      const enquiryAddedLastMonthCount = EnquiryAddedLastMonth.length;
+      
+      let percentageChangeInNewEnquiry = 0;
+      if (enquiryAddedLastMonthCount != 0){
+        percentageChangeInNewEnquiry = ((enquiryAddedThisMonthCount - enquiryAddedLastMonthCount) / enquiryAddedLastMonthCount) * 100;
+        }
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
       totalProperty: TotalPropertyBuilder,
@@ -631,7 +755,8 @@ exports.getDataForBuilder = async (req, res) => {
       totalEnquiryProperty: TotalEnquiryProperty.length,
       totalEnquiryAstrology: TotalEnquiryAstrology.length,
       totalEnquiryContactUs: TotalEnquiryContactUs.length,
-
+      percentageChangeProperties: Math.round(percentageChangeInNewProperty),
+      percentageChangeEnquiry: Math.round(percentageChangeInNewEnquiry),
       success: true
     });
 
