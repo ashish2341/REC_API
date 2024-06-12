@@ -15,7 +15,7 @@ const ProjectEnquiry = require("../../models/projectEnquiryModel");
 const propertyPopulateField = [
   { path: "Facing", model: Facings },
   { path: "PropertySubtype", model: PropertyWithSubTypes },
-  { path: "AreaUnits", model: AreaUnits },
+  // { path: "AreaUnits", model: AreaUnits },
   { path: "Soil", model: Soils },
   { path: "Preferences", model: Preferences },
   { path: "PropertyStatus", model: PropertyStatus },
