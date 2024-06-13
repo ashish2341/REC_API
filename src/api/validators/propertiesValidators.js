@@ -6,7 +6,7 @@ const propertySchema = Joi.object({
     Highlight: Joi.string().allow(""),
     ProeprtyFor: Joi.string().valid('Sell'),
     ProjectId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
-    PropertySubtype:Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required().allow(""),
+    PropertySubtype:Joi.string().pattern(/^[0-9a-fA-F]{24}$/).allow(""),
     IsDeleted: Joi.boolean(),
     IsEnabled: Joi.boolean(),
     IsExclusive: Joi.boolean(),
