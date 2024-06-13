@@ -495,6 +495,7 @@ exports.getPropertiesByUserId = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || '';
+    const isEnable = req.query.isEnable; 
 
     const searchQuery = {
       Builder:new ObjectId(developer?._id),
@@ -505,6 +506,10 @@ exports.getPropertiesByUserId = async (req, res) => {
         
       ]
     };
+   
+    if (isEnable === 'true' || isEnable === 'false') {
+      searchQuery.IsEnabled = isEnable;
+    }
     let sortOptions = { CreatedDate: -1 };
 
     const count = await Properties.countDocuments(searchQuery);
@@ -734,8 +739,8 @@ const createAggregationPipelineForBuilder = (startDate, endDate,{IsBuilder,id,Is
 
 exports.getChartDataForAdmin = async(req,res)=>{
   try {
-    const startDate = new Date(new Date().getFullYear(), new Date().getMonth() - 6, 1);
-    const endDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const startDate = new Date(new Date().getFullYear(), new Date().getMonth()-11, 1);
+    const endDate = new Date(new Date().getFullYear(), new Date().getMonth()+1, 1);
 
     const userPipeline = createAggregationPipeline(startDate, endDate);
     const builderPipeline = createAggregationPipeline(startDate, endDate);
@@ -768,8 +773,8 @@ exports.getChartDataForAdmin = async(req,res)=>{
 
 exports.getChartDataForBuilder = async(req,res)=>{
   try {
-    const startDate = new Date(new Date().getFullYear(), new Date().getMonth() - 6, 1);
-    const endDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const startDate = new Date(new Date().getFullYear(), new Date().getMonth()-11, 1);
+    const endDate = new Date(new Date().getFullYear(), new Date().getMonth()+1, 1);
  
     const propertiesPipeline = createAggregationPipelineForBuilder(startDate, endDate,{IsBuilder: false,id: req.user._id,IsProperty:true});
     const enquiryPipeline = createAggregationPipelineForBuilder(startDate, endDate,{IsBuilder: true,id: req.user._id,IsProperty:false});
