@@ -494,11 +494,16 @@ exports.getPropertiesByUserId = async (req, res) => {
     const developer  = await Developer.findOne({UserId:userId})
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || '';
 
     const searchQuery = {
       Builder:new ObjectId(developer?._id),
       IsDeleted: false,
-      IsEnabled: true
+      $or: [
+        { Title: { $regex: search, $options: 'i' } },
+        { ProeprtyType: { $regex: search, $options: 'i' } },
+        
+      ]
     };
     let sortOptions = { CreatedDate: -1 };
 
