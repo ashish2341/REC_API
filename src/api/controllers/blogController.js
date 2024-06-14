@@ -26,6 +26,7 @@ exports.getAllBlog = async (req, res) => {
        
     const searchQuery = {
       IsDeleted: false,
+      IsEnabled: true,
       Title: { $regex: search, $options: 'i' }
         
     };

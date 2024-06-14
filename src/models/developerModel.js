@@ -12,11 +12,12 @@ const developerSchema = new mongoose.Schema({
         LinkedIn:String,
         Instagram :String
     },
-    Mobile: Number,
+    Mobile: String,
     EmailId: String,
-    WhatsApp: Number,
+    WhatsApp: String,
     Area:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.area},
     Description:String,
+    DetailNote:String,
     Logo: String,
     EstablishDate:Date,
     CreatedDate: {
@@ -60,18 +61,10 @@ const developerSchema = new mongoose.Schema({
     },
     VerificationDate: Date,
     BranchOffices: [{
-        Phone: Number,
-        Mobile: Number,
+        Phone: String,
+        Mobile: String,
         EmailId: String,
-        WhatsApp: Number,
-        IsEnabled: {
-            type: Boolean,
-            default: true
-        },
-        IsDeleted: {
-            type: Boolean,
-            default: false
-        },
+        WhatsApp: String,
         Area: String,
         City: String,
         State: String,
@@ -79,17 +72,9 @@ const developerSchema = new mongoose.Schema({
         PinCode: String,
         ContactPerson: [{
             Name: String,
-            Mobile: Number,
+            Mobile: String,
             EmailId: String,
-            Phone: Number,
-            IsDeleted: {
-                type: Boolean,
-                default: false
-            },
-            IsEnabled: {
-                type: Boolean,
-                default: true
-            },
+            Phone: String,
             Designation: String
         }]
     }],

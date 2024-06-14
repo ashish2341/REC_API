@@ -6,15 +6,15 @@ const router = express.Router()
 const { validate } = require('../../helper/customValidation');
 const auth = require('../middleware/auth');
 const { getRecordsSchema, idSchema } = require('../validators/commonValidator');
-const { addProjectEnquiry, getAllProjectEnquiry, getProjectEnquiryById, updateProjectEnquiry, deleteProjectEnquiry } = require('../controllers/projectEnquiryController');
-const projectEnquiryValidationSchema = require('../validators/projectEnquiryValidator');
+const { addProjectEnquiry, getAllProjectEnquiry, getProjectEnquiryById, updateProjectEnquiry, deleteProjectEnquiry, getEnquiryByDeveloperId } = require('../controllers/projectEnquiryController');
+const {projectEnquiryValidationSchema,getEnquirySchema, getEnquiryByDeveloperSchema} = require('../validators/projectEnquiryValidator');
 
 router.post('/addProjectEnquiry',validate(projectEnquiryValidationSchema,'body'),addProjectEnquiry)
-router.get('/allProjectEnquiry',validate(projectEnquiryValidationSchema.getEnquirySchema,'query'),getAllProjectEnquiry)
+router.get('/allProjectEnquiry',validate(getEnquirySchema,'query'),getAllProjectEnquiry)
 router.get('/projectEnquiry/:id',auth,validate(idSchema,'params'),getProjectEnquiryById)
 router.patch('/updateProjectEnquiry/:id',validate(idSchema,'params'),auth,updateProjectEnquiry)
 router.delete('/deleteProjectEnquiry/:id',auth,validate(idSchema,'params'),deleteProjectEnquiry)
-
+router.get('/enquiryGetByDeveloperId',auth,getEnquiryByDeveloperId)
  
 
 module.exports = router

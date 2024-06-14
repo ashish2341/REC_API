@@ -5,17 +5,18 @@ const { dbCollectionName } = require('../helper/constants');
 
 
 const PropertySchema = new  mongoose.Schema({
-    Titile: {type:String,required:true},
+    Title: {type:String,required:true},
     Description:{type:String,required:true},
     Highlight: String,
-    ProeprtyFor: { type: String, enum: ['Rent', 'Sale', 'Lease'],required:true },
+    ProeprtyFor: { type: String, enum: ['Sell'],required:true },
+    ProeprtyType: { type: String, enum: ["Residential", "Commercial"] },
     ProjectId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Project",
     },
-    PropertyType: {type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.propertyWithSubTypes},
+    PropertySubtype: {type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.propertyWithSubTypes},
     IsDeleted: {type:Boolean,default:false},
-    IsEnabled: {type:Boolean,default:true},
+    IsEnabled: {type:Boolean,default:false},
     IsExclusive: Boolean,
     IsFeatured: Boolean,
     IsNew: Boolean,
@@ -31,15 +32,12 @@ const PropertySchema = new  mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:dbCollectionName.facings,
     }],
-    AreaUnits: {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:dbCollectionName.areaUnits,
-    },
+    AreaUnits: String,
     Builder:{type:mongoose.Schema.Types.ObjectId,ref:'Developer'},
     BhkType:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.bhkTypes},
     Area:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.area},
-    Fencing:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.fencings},
-    Flooring:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.floorings},
+    Fencing:String,
+    Flooring:String,
     Furnished:{type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.furnishedes},
     BuiltAreaType: {type:mongoose.Schema.Types.ObjectId,ref:dbCollectionName.builtAreaTypes},
     City: String,
@@ -49,8 +47,8 @@ const PropertySchema = new  mongoose.Schema({
     Landmark: String,
     PinCode: String,
     Location: {
-        Latitude: Number,
-        Longitude: Number
+        Latitude: String,
+        Longitude: String
     },
     CreatedDate: { type: Date, default: Date.now },
     CreatedBy: {
@@ -72,9 +70,12 @@ const PropertySchema = new  mongoose.Schema({
     TotalPrice: {
         DisplayValue: String,
         MinValue:Number,
-        MaxValue:Number
+        MaxValue:Number,
+        MinPriceUnit:String,
+        MaxPriceUnit:String
     },
     PerUnitPrice: Number,
+    LandAreaUnit:String,
     IsDisplayPrice: Boolean,
     IsNegotiable: Boolean,
     PosessionStatus: {
@@ -123,24 +124,18 @@ const PropertySchema = new  mongoose.Schema({
         Titile: String,
         URL: String,
         Type: String,
-        IsDeleted: Boolean,
-        IsEnabled: Boolean
     }],
     Documents: [{
         Name: String,
         Titile: String,
         URL: String,
         Type: String,
-        IsDeleted: Boolean,
-        IsEnabled: Boolean
     }],
     Videos: [{
         Name: String,
         Titile: String,
         URL: String,
         Type: String,
-        IsDeleted: Boolean,
-        IsEnabled: Boolean
     }],
     IsSold: Boolean,
     // PurchaseRentBy:mongoose.Schema.Types.Mixed,
@@ -163,10 +158,10 @@ const PropertySchema = new  mongoose.Schema({
     Fitting: {
         Electrical: String,
         Toilets: String,
-        Kitchen: String,
+        Kitchen:String ,
         Doors: String,
         Windows: String,
-        Others: String
+        Others: String,
     },
     Brochure:String,
     WallAndCeiling: {
@@ -174,7 +169,43 @@ const PropertySchema = new  mongoose.Schema({
         Exterior: String,
         Kitchen: String,
         Toilets: String
-    }
+    },
+    OwnerName:String,
+    SuitableFor:String,
+    ZoneType:String,
+    LocationHub :String,
+    CustomLocationHub :String,
+    CustomSuitable :String,
+    CustomZoneType :String,
+    BuiltUpArea: Number,
+    PlotArea:Number,
+    PlotLength: Number,
+    Plotwidth: Number,
+    WallType: String,
+    CellingHeight: Number,
+    EntranceWidth: Number,
+    TaxCharge: {type:Boolean,default:false},
+    LeasedOrRented: {type:Boolean,default:false},
+    CurentRent: Number,   
+    LeaseYears: Number,
+    ExpectedReturn : Number,
+    DgUpsCharge: {type:Boolean,default:false} ,
+    AgeofProperty: Number,
+    Staircase :Number,
+    passengerLifts:Number,
+    ServiceLifts:Number,
+    PublicParking:Number,
+    PrivateParking:Number,
+    PublicWashroom:Number,
+    PrivateWashroom:Number,
+    CompletePercentage:Number,
+    PaymentPlan:String, 
+    FloorPlan:String,
+    CustomFencing:String,
+    CustomFlooring:String,
+    CustomWallType:String,
+
+
 });
 
 const Property = mongoose.model('Properties', PropertySchema);

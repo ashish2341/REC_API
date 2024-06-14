@@ -25,6 +25,7 @@ exports.getAllFeature = async (req, res) => {
        
     const searchQuery = {
       IsDeleted: false,
+      IsEnabled: true,
         $or: [
             { Feature: { $regex: search, $options: 'i' } }, 
         ]

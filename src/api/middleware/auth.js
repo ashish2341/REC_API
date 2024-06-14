@@ -7,12 +7,11 @@ const Login = require('../../models/loginModel')
 const auth = async(req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '')
-        const data = jwt.verify(token, config.JWT_KEY)
-        const user = await Login.findOne({ _id: data._id })
-        if (!user) {
-            throw new Error()
+        if(!token){
+            return res.status(401).json({ error: 'Token is required' });
         }
-        req.user = user
+        const data = jwt.verify(token, config.JWT_KEY)
+        req.user = data
         req.token = token
         next()
     } catch (error) {

@@ -5,7 +5,10 @@ const bcrypt = require('bcryptjs');
 const { PORT } = require("../../helper/config");
 const { sendOtpHandle, verifyOtpHandle } = require("../../helper/otp");
 const Role = require("../../models/roleModel");
+const Developer = require('../../models/developerModel')
 const { errorResponse } = require("../../helper/responseTransformer");
+const config = require('../../helper/config')
+const jwt =require ('jsonwebtoken')
 // Register an user
 exports.register = async (req, res) => {
   try {
@@ -23,6 +26,11 @@ exports.register = async (req, res) => {
         UserId: user._id
     });
     await login.save();
+    // save builder profile
+    if(role=='Developer'){
+         const developerObj = new Developer({Name:req.body.FirstName,UserId:user._id})
+         await developerObj.save()
+    }
     return res.status(constants.status_code.header.ok).send({ message: constants.auth.register_success,success:true});
   } catch (error) {
     return res.status(constants.status_code.header.server_error).send({ error: errorResponse(error),success:false });
@@ -33,18 +41,27 @@ exports.login = async (req, res) => {
   try {
     const { Mobile, Password } = req.body;
    
-    const user = await Login.findOne({ Mobile });
-   console.log('user new ',user)
+    const user = await Login.findOne({ Mobile }).populate("UserId");
+    console.log('user new ',user)
     // Check if user exists and password matches
     if (!user || !(await bcrypt.compare(Password, user.Password))) {
       return res.status(401).json({ success:false, error: 'Invalid Mobile or Password' });
     }
 
-    // Generate token
-    const token = await user.generateAuthToken();
-
+    const signUpData = await User.findById(user.UserId._id).populate("Roles");
+        
+    const userRoles = signUpData.Roles.map(role => role.Role);
+    const token = jwt.sign({ _id: signUpData._id, roles:userRoles }, config.JWT_KEY)
     // Send token in response
-    res.status(constants.status_code.header.ok).send({ success:true, message: token });
+    res.status(constants.status_code.header.ok).send({ 
+      success:true, 
+      message: token,
+      userId: signUpData._id,
+      firstName: signUpData.FirstName,
+      role: userRoles,
+      profilePhoto: signUpData.ProfilePhoto
+      
+     });
   } catch (error) {
 
     return res.status(constants.status_code.header.server_error).send({ success:false, error: error.message });
@@ -53,8 +70,8 @@ exports.login = async (req, res) => {
 
 exports.uploadSingleImage = async (req, res) => {
   try {
-
-    const imageUrl = `${req.protocol}://${req.hostname}:${PORT}/uploads/${req.file.filename}`;
+    const portPath = req.hostname === "localhost" ? `:${PORT}/uploads/${req.file.filename}`: `/uploads/${req.file.filename}`
+    const imageUrl = `${req.protocol}://${req.hostname}${portPath}`;
     res.status(200).send({ imageUrl, success: true });
   } catch (error) {
 
@@ -70,7 +87,8 @@ exports.uploadMultipleFile = async (req, res) => {
 
     const imageUrls = [];
     req.files.forEach(file => {
-      const imageUrl = `${req.protocol}://${req.hostname}:${PORT}/uploads/${file.filename}`;
+      const portPath = req.hostname === "localhost" ? `:${PORT}/uploads/${file.filename}`: `/uploads/${file.filename}`
+      const imageUrl = `${req.protocol}://${req.hostname}${portPath}`;
       imageUrls.push(imageUrl);
     });
 

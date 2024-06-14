@@ -25,6 +25,7 @@ exports.getAllFAQ = async (req, res) => {
        
     const searchQuery = {
       IsDeleted: false,
+      IsEnabled: true,
         $or: [
             { Subject: { $regex: search, $options: 'i' } }, 
         ]

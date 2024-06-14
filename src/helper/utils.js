@@ -12,46 +12,69 @@ const  formatNumber = (number) => {
     }
 }
 const getDirection = (dob) => {
-    const finalDate = new Date(dob);
-    const month = finalDate.getMonth() + 1;
-    const day = finalDate.getDate();
+    const date = new Date(dob)
+    const month = date.getMonth() + 1; // Adding 1 because getMonth() returns zero-based index
+    const day = date.getDate();
+    let sign = "";
+    let direction = "";
 
-    // Mapping of zodiac signs to directions
-    const directionMapping = {
-        'Aries': 'East',
-        'Taurus': 'South',
-        'Gemini': 'West',
-        'Cancer': 'North',
-        'Leo': 'East',
-        'Virgo': 'South',
-        'Libra': 'West',
-        'Scorpio': 'North',
-        'Sagittarius': 'East',
-        'Capricorn': 'South',
-        'Aquarius': 'West',
-        'Pisces': 'North'
-    };
+    switch(month) {
+        case 3:
+            sign = (day >= 21) ? "Aries" : "Pisces";
+            direction = (day >= 21) ? "East" : "North";
+            break;
+        case 4:
+            sign = (day <= 19) ? "Aries" : "Taurus";
+            direction = (day <= 19) ? "East" : "North";
+            break;
+        case 5:
+            sign = (day <= 20) ? "Taurus" : "Gemini";
+            direction = (day <= 20) ? "North" : "West";
+            break;
+        case 6:
+            sign = (day <= 20) ? "Gemini" : "Cancer";
+            direction = (day <= 20) ? "West" : "North";
+            break;
+        case 7:
+            sign = (day <= 22) ? "Cancer" : "Leo";
+            direction = (day <= 22) ? "West" : "South";
+            break;
+        case 8:
+            sign = (day <= 22) ? "Leo" : "Virgo";
+            direction = (day <= 22) ? "South" : "West";
+            break;
+        case 9:
+            sign = (day <= 22) ? "Virgo" : "Libra";
+            direction = (day <= 22) ? "South" : "East";
+            break;
+        case 10:
+            sign = (day <= 22) ? "Libra" : "Scorpio";
+            direction = (day <= 22) ? "East" : "South";
+            break;
+        case 11:
+            sign = (day <= 21) ? "Scorpio" : "Sagittarius";
+            direction = (day <= 21) ? "East" : "South";
+            break;
+        case 12:
+            sign = (day <= 21) ? "Sagittarius" : "Capricorn";
+            direction = (day <= 21) ? "South" : "East";
+            break;
+        case 1:
+            sign = (day <= 19) ? "Capricorn" : "Aquarius";
+            direction = (day <= 19) ? "South" : "West";
+            break;
+        case 2:
+            sign = (day <= 18) ? "Aquarius" : "Pisces";
+            direction = (day <= 18) ? "West" : "North";
+            break;
+        default:
+            sign = "Invalid date";
+            direction = "";
+    }
 
-    // Mapping of zodiac signs to months
-    const rashiMapping = {
-        1: 'Capricorn',
-        2: 'Aquarius',
-        3: 'Pisces',
-        4: 'Aries',
-        5: 'Taurus',
-        6: 'Gemini',
-        7: 'Cancer',
-        8: 'Leo',
-        9: 'Virgo',
-        10: 'Libra',
-        11: 'Scorpio',
-        12: 'Sagittarius'
-    };
+    return { sign, direction };
 
-    const rashi = rashiMapping[month];
-    const direction = directionMapping[rashi];
-
-    return { direction, rashi };
+    
 };
 
 

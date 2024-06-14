@@ -2,6 +2,7 @@ const Joi = require('joi');
 
 const AddDeveloperSchema = Joi.object({
     Name: Joi.string().required(),
+    Password: Joi.string().required(),
     SocialMediaProfileLinks: Joi.object({
         Twitter: Joi.string().allow(''),
         Facebook: Joi.string().allow(''),
@@ -34,22 +35,33 @@ const AddDeveloperSchema = Joi.object({
     })),
     DetailNote: Joi.string().allow(''),
     BranchOffices: Joi.array().items(Joi.object({
-        Phone: Joi.string(),
-        Mobile: Joi.string(),
+        Phone: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+            'string.pattern.base': 'Phone number must be a 10-digit number'
+        }),
+        Mobile: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+            'string.pattern.base': 'Mobile number must be a 10-digit number'
+        }),
         EmailId: Joi.string().email(),
-        WhatsApp: Joi.string(),
-        IsEnabled: Joi.boolean(),
-        IsDeleted: Joi.boolean(),
+        WhatsApp: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+            'string.pattern.base': 'Whatsapp number must be a 10-digit number'
+        }),
+    
         Area: Joi.string(),
         City: Joi.string(),
         State: Joi.string(),
         Country: Joi.string(),
-        PinCode: Joi.string(),
+        PinCode: Joi.string().pattern(/^[0-9]{6}$/).messages({
+            'string.pattern.base': 'PinCode must be a 6-digit number'
+        }),
         ContactPerson: Joi.array().items(Joi.object({
             Name: Joi.string(),
-            Mobile: Joi.string(),
+            Mobile: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+                'string.pattern.base': 'Mobile number must be a 10-digit number'
+            }),
             EmailId: Joi.string().email(),
-            Phone: Joi.string(),
+            Phone: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+                'string.pattern.base': 'Phone number must be a 10-digit number'
+            }),
             Designation: Joi.string()
         }))
     })),
@@ -90,23 +102,36 @@ const UpdateDeveloperSchema = Joi.object({
     })),
     DetailNote: Joi.string().allow(''),
     BranchOffices: Joi.array().items(Joi.object({
-        Phone: Joi.string(),
-        Mobile: Joi.string(),
+        Phone: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+            'string.pattern.base': 'Phone number must be a 10-digit number'
+        }),
+        Mobile: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+            'string.pattern.base': 'Mobile number must be a 10-digit number'
+        }),
         EmailId: Joi.string().email(),
-        WhatsApp: Joi.string(),
-        IsEnabled: Joi.boolean(),
-        IsDeleted: Joi.boolean(),
+        WhatsApp: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+            'string.pattern.base': 'Whatsapp must be a 10-digit number'
+        }),
+    
         Area: Joi.string(),
         City: Joi.string(),
         State: Joi.string(),
         Country: Joi.string(),
-        PinCode: Joi.string(),
+        PinCode: Joi.string().pattern(/^[0-9]{6}$/).messages({
+            'string.pattern.base': 'PinCode must be a 10-digit number'
+        }),
+        _id: Joi.string(),
         ContactPerson: Joi.array().items(Joi.object({
             Name: Joi.string(),
-            Mobile: Joi.string(),
+            Mobile: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+                'string.pattern.base': 'Mobile number must be a 10-digit number'
+            }),
             EmailId: Joi.string().email(),
-            Phone: Joi.string(),
-            Designation: Joi.string()
+            Phone: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+                'string.pattern.base': 'Phone number must be a 10-digit number'
+            }),
+            Designation: Joi.string(),
+            _id: Joi.string()
         }))
     })),
    

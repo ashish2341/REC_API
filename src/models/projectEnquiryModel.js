@@ -5,22 +5,31 @@ const projectEnquirySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    AllowedUser:[{UserId:String,Status:Boolean}],
+    IsActionTaken:{type:Boolean,default:false},  
     Email: {
         type: String,
-        required: true
     },
     Message: {
         type: String,
         required: true
     },
-    EnquiryData:{
-        type:Date
-    },
+    EnquiryDate:{
+        type:Date },
     EnquiryType:String,
     MolileNumber: {
         type:String,
         required: true
     },
+    PropertyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Properties' 
+    },
+    DeveloperId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Developer' 
+    },
+   
     IsDeleted: {
         type: Boolean,
         default: false
@@ -29,6 +38,14 @@ const projectEnquirySchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    IsActive: {
+        type: Boolean,
+        default: false
+    },
+    CreatedDate:{
+        type:Date,
+        default:Date.now()
+    }
 });
 
 const ProjectEnquiry = mongoose.model('ProjectEnquiry', projectEnquirySchema);

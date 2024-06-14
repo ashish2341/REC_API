@@ -26,6 +26,7 @@ exports.getAllProject = async (req, res) => {
        
     const searchQuery = {
       IsDeleted: false,
+      IsEnabled: true,
         $or: [
             { Title: { $regex: search, $options: 'i' } }, 
         ]

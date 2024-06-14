@@ -16,11 +16,8 @@ const validateRole = (roles) => async (req, res, next) => {
 
         const decoded = jwt.verify(token, config.JWT_KEY);
         
-        const login = await Login.findById(decoded._id).populate("UserId");
-        const user = await User.findById(login.UserId._id).populate("Roles");
-        const routeRoles = roles;
-        const userRoles = user.Roles.map(role => role.Role);
-        const result = userRoles.some(r => routeRoles.includes(r));
+        
+        const result = decoded.roles.some(r => roles.includes(r));
        
         if (!result) {
             return res.status(403).json({ error: 'Unauthorized' });
