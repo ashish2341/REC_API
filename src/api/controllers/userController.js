@@ -8,6 +8,7 @@ const Developer = require("../../models/developerModel");
 const Role = require("../../models/roleModel");
 const Property = require("../../models/propertiesModel");
 const ProjectEnquiry = require("../../models/projectEnquiryModel");
+const moment = require('moment');
 
 
 exports.getAllUser = async (req, res) => {
@@ -16,14 +17,19 @@ exports.getAllUser = async (req, res) => {
         const pageNumber = parseInt(page) || 1;
         const size = parseInt(pageSize) || 10;
         const search = req.query.search || '';
-           
+        const todayUserString = req.query.todayUser || '';  
         const searchQuery = {
           IsDeleted: false,
             $or: [
                 { FirstName: { $regex: search, $options: 'i' } }, 
             ]
         };
-    
+      
+        if(todayUserString == 'yes'){
+                 const startOfToday = moment().startOf('day').toDate();
+                 const endOfToday = moment().endOf('day').toDate();
+                 searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
+               }
         const users = await User.find(searchQuery)
           .populate('Roles')
           .sort({ CreatedDate: -1 })

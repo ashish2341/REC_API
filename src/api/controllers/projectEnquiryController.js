@@ -2,6 +2,7 @@ const constants = require("../../helper/constants");
 const Developer = require("../../models/developerModel");
 const ProjectEnquiry = require("../../models/projectEnquiryModel");
 const User = require("../../models/userModel");
+const moment = require('moment');
 
 exports.addProjectEnquiry = async (req, res) => {
   try {
@@ -39,6 +40,7 @@ exports.getAllProjectEnquiry = async (req, res) => {
     const pageNumber = parseInt(page) || 1;
     const size = parseInt(pageSize) || 10;
     const search = req.query.search || '';
+    const todayEnquiryString = req.query.todayEnquiry || '';
        
     const searchQuery = {
         IsDeleted: false,
@@ -53,6 +55,12 @@ exports.getAllProjectEnquiry = async (req, res) => {
     if (filter) {
       searchQuery.EnquiryType = filter;
   }
+  
+ if(todayEnquiryString == 'yes'){
+          const startOfToday = moment().startOf('day').toDate();
+          const endOfToday = moment().endOf('day').toDate();
+          searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
+        }
   if (startDate && endDate) {
     searchQuery.EnquiryDate = {
       $gte: new Date(startDate),

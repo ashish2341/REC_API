@@ -16,6 +16,7 @@ const getEnquirySchema = Joi.object({
     pageSize: Joi.number().integer().min(1).required(),
     search: Joi.string().allow(''),
     filter:Joi.string().valid('Project','Property','Astrology','ContactUs'),
+    todayEnquiry: Joi.string().allow(''),
     startDate:Joi.date(),
     endDate:Joi.date()
   });

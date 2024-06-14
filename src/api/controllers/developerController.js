@@ -5,6 +5,7 @@ const Role = require("../../models/roleModel");
 const User = require("../../models/userModel");
 const Login = require("../../models/loginModel");
 const Property = require("../../models/propertiesModel");
+const moment = require('moment');
 
 exports.addDeveloper = async (req, res) => {
   try {
@@ -42,6 +43,7 @@ exports.getAllDeveloper = async (req, res) => {
     const { page, pageSize, search } = req.query;
     const pageNumber = parseInt(page) || 1;
     const size = parseInt(pageSize) || 10;
+    const todayBuilderString = req.query.todayBuilder || '';
     
     const matchQuery = {
       IsDeleted: false,
@@ -51,7 +53,11 @@ exports.getAllDeveloper = async (req, res) => {
         { Description: { $regex: search || '', $options: 'i' } }
       ]
     };
-    
+    if(todayBuilderString == 'yes'){
+      const startOfToday = moment().startOf('day').toDate();
+      const endOfToday = moment().endOf('day').toDate();
+      matchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
+    }
     const aggregationPipeline = [
       { $match: matchQuery },
       {
