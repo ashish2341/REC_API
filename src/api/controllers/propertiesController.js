@@ -56,6 +56,8 @@ exports.getAllProperties = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || '';
+    const todayPropertyString = req.query.todayProperty || '';
+    const typeBuilder = req.query.type || '';
 
     const searchQuery = {
       IsDeleted: false,
@@ -67,7 +69,15 @@ exports.getAllProperties = async (req, res) => {
       ]
     };
     
+    if(todayPropertyString == 'yes'){
+      const startOfToday = moment().startOf('day').toDate();
+      const endOfToday = moment().endOf('day').toDate();
+      searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
+    }
 
+    if(typeBuilder ==='builder'){
+      searchQuery.Builder = { $exists: true, $ne: null }
+    }
     const count = await Properties.countDocuments(searchQuery);
     const totalPages = Math.ceil(count / limit);
     const currentPage = Math.min(Math.max(page, 1), totalPages);
