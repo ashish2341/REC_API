@@ -632,13 +632,14 @@ exports.getDataForBuilder = async (req, res) => {
   try {
     const startOfToday = moment().startOf('day').toDate();
     const endOfToday = moment().endOf('day').toDate();
-
+    const developer  = await Developer.findOne({UserId:req.user._id})
     if (req.user.roles?.includes('Developer')) {
-      TotalPropertyBuilder = await Properties.countDocuments({ CreatedBy: req.user._id, IsDeleted: false })
-      UnderReviewProperty = await Properties.countDocuments({ IsEnabled: false, IsDeleted: false, CreatedBy: req.user._id, })
-      ApprovedProperty = await Properties.countDocuments({ IsEnabled: true, IsDeleted: false, CreatedBy: req.user._id, })
+      TotalPropertyBuilder = await Properties.countDocuments({ Builder:new ObjectId(developer?._id), IsDeleted: false })
+      UnderReviewProperty = await Properties.countDocuments({ IsEnabled: false, IsDeleted: false, Builder:new ObjectId(developer?._id), })
+      ApprovedProperty = await Properties.countDocuments({ IsEnabled: true, IsDeleted: false, Builder:new ObjectId(developer?._id), })
       TodayAddProperty = await Properties.countDocuments({
         IsDeleted: false,
+        Builder:new ObjectId(developer?._id),
         CreatedDate: { $gte: startOfToday, $lt: endOfToday }
       });
     }
