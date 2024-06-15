@@ -508,7 +508,7 @@ exports.getPropertiesByUserId = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || '';
     const isEnable = req.query.isEnable; 
-
+    const todayPropertyString = req.query.todayPropertyString || '';
     const searchQuery = {
       Builder:new ObjectId(developer?._id),
       IsDeleted: false,
@@ -521,6 +521,12 @@ exports.getPropertiesByUserId = async (req, res) => {
    
     if (isEnable === 'true' || isEnable === 'false') {
       searchQuery.IsEnabled = isEnable;
+    }
+    
+    if(todayPropertyString == 'yes'){
+      const startOfToday = moment().startOf('day').toDate();
+      const endOfToday = moment().endOf('day').toDate();
+      searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
     }
     let sortOptions = { CreatedDate: -1 };
 
