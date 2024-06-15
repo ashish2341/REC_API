@@ -77,6 +77,7 @@ exports.getAllProperties = async (req, res) => {
 
     if(typeBuilder ==='builder'){
       searchQuery.Builder = { $exists: true, $ne: null }
+      delete searchQuery.IsEnabled 
     }
     const count = await Properties.countDocuments(searchQuery);
     const totalPages = Math.ceil(count / limit);
