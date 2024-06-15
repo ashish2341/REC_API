@@ -84,6 +84,7 @@ exports.getAllProperties = async (req, res) => {
     const currentPage = Math.min(Math.max(page, 1), totalPages);
     const skip = (currentPage - 1) * limit;
     const properties = await Properties.find(searchQuery).populate(propertyPopulateField)
+      .sort({ CreatedDate: -1 }) 
       .skip(skip<0 ? 1 : skip)
       .limit(limit);
     return res.status(constants.status_code.header.ok).send({
