@@ -70,9 +70,9 @@ exports.login = async (req, res) => {
 
 exports.uploadSingleImage = async (req, res) => {
   try {
-    const portPath = req.hostname === "localhost" ? `:${PORT}/uploads/${req.file.filename}`: `/uploads/${req.file.filename}`
-    const imageUrl = `${req.protocol}://${req.hostname}${portPath}`;
-    res.status(200).send({ imageUrl, success: true });
+    // const portPath = req.hostname === "localhost" ? `:${PORT}/uploads/${req.file.filename}`: `/uploads/${req.file.filename}`
+    // const imageUrl = `${req.protocol}://${req.hostname}${portPath}`;
+    res.status(200).send({ imageUrl:req.file.filename, success: true });
   } catch (error) {
 
     return res.status(500).json({ error: error.message, success: false });
@@ -87,9 +87,9 @@ exports.uploadMultipleFile = async (req, res) => {
 
     const imageUrls = [];
     req.files.forEach(file => {
-      const portPath = req.hostname === "localhost" ? `:${PORT}/uploads/${file.filename}`: `/uploads/${file.filename}`
-      const imageUrl = `${req.protocol}://${req.hostname}${portPath}`;
-      imageUrls.push(imageUrl);
+      // const portPath = req.hostname === "localhost" ? `:${PORT}/uploads/${file.filename}`: `/uploads/${file.filename}`
+      // const imageUrl = `${req.protocol}://${req.hostname}${portPath}`;
+      imageUrls.push(req.file.filename);
     });
 
     res.status(200).send({ imageUrls, success: true });
