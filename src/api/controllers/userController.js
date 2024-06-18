@@ -127,7 +127,7 @@ exports.updatePassword = async (req, res) => {
 
         const decoded = jwt.verify(req.token, config.JWT_KEY);
         
-        const login = await Login.findById(decoded._id);
+        const login = await Login.findOne({UserId:decoded._id});
   
     const isMatch = await bcrypt.compare(OldPassword, login.Password);
     if (!isMatch) {

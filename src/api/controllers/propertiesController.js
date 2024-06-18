@@ -465,9 +465,13 @@ exports.getPropertiesForReview = async (req, res) => {
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || '';
     const searchQuery = {
       IsDeleted: false,
-      IsEnabled:false
+      IsEnabled:false,
+      $or: [
+        { Title: { $regex: search, $options: 'i' } },
+      ]
     };
     let sortOptions = {CreatedDate:-1};
    
