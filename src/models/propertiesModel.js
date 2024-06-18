@@ -204,6 +204,7 @@ const PropertySchema = new  mongoose.Schema({
     CustomFencing:String,
     CustomFlooring:String,
     CustomWallType:String,
+    EditedItems: [String],
 
 
 });

@@ -315,7 +315,8 @@ const propertyUpdateSchema = Joi.object({
     FloorPlan:Joi.string().allow(""),
     CustomFencing:Joi.string().allow(""), 
     CustomFlooring:Joi.string().allow(""),
-    CustomWallType:Joi.string().allow(""), 
+    CustomWallType:Joi.string().allow(""),
+    EditedItems:Joi.array().items(Joi.string()), 
  
    
 });
@@ -328,6 +329,7 @@ const getPropertySchema = Joi.object({
     sortOrder:Joi.string().allow(''),
     IsFeatured :Joi.boolean().allow(''),
     IsExclusive: Joi.boolean().allow(''),
+    search:Joi.string().allow(''),
 
 
   });
