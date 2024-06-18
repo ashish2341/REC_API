@@ -5,10 +5,10 @@ const { dbCollectionName } = require('../helper/constants');
 
 
 const PropertySchema = new  mongoose.Schema({
-    Title: {type:String,required:true},
-    Description:{type:String,required:true},
+    Title: {type:String},
+    Description:{type:String},
     Highlight: String,
-    ProeprtyFor: { type: String, enum: ['Sell'],required:true },
+    ProeprtyFor: { type: String, enum: ['Sell'] },
     ProeprtyType: { type: String, enum: ["Residential", "Commercial"] },
     ProjectId:{
         type:mongoose.Schema.Types.ObjectId,
@@ -23,14 +23,17 @@ const PropertySchema = new  mongoose.Schema({
     Features:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Features",
+        // default:new mongoose.Types.ObjectId('6617b657bf11c18a9a7cfc15') 
     }],
     Aminities: [{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Aminity",
+        // default:new mongoose.Types.ObjectId('661e4404ea049beeabafa5ff') 
     }],
     Facing: [{
         type:mongoose.Schema.Types.ObjectId,
         ref:dbCollectionName.facings,
+        // default:new mongoose.Types.ObjectId('66225fee21f766d4d73181c7') 
     }],
     AreaUnits: String,
     Builder:{type:mongoose.Schema.Types.ObjectId,ref:'Developer'},
@@ -204,6 +207,7 @@ const PropertySchema = new  mongoose.Schema({
     CustomFencing:String,
     CustomFlooring:String,
     CustomWallType:String,
+    AvgPrice:String,
 
 
 });

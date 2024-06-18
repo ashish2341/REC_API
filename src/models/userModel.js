@@ -18,7 +18,6 @@ const userSchema = mongoose.Schema({
     Mobile: {
         type: String,
         required: true,
-        unique:true,
     },
     Phone: String,
     Area: String,
@@ -65,7 +64,6 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
         lowercase: true,
-        unique:true,
     },
 
 },)

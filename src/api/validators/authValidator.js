@@ -65,6 +65,10 @@ const passwordSchema = Joi.object().keys({
         profilePic: Joi.string(),
        
       });
+      const csvFileSchema = Joi.object({
+        csvFile: Joi.string(),
+       
+      });
       const verifyOtpSchema = Joi.object({
         Mobile: Joi.string().pattern(/^[0-9]{10}$/).required().error(new Error('Mobile number is required and should be 10 digits')),
        Otp:Joi.string().length(6).required()
@@ -83,5 +87,6 @@ module.exports = {
     verifyOtpSchema,
     sendOtpSchema,
     forgetSchema,
-    imageSchema
+    imageSchema,
+    csvFileSchema
 };

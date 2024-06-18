@@ -156,7 +156,8 @@ const propertySchema = Joi.object({
     FloorPlan:Joi.string().allow(""),
     CustomFencing:Joi.string().allow(""), 
     CustomFlooring:Joi.string().allow(""),
-    CustomWallType:Joi.string().allow(""), 
+    CustomWallType:Joi.string().allow(""),
+    AvgPrice:Joi.string().allow(""),
 
    
 });
