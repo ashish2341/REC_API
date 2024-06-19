@@ -60,6 +60,10 @@ exports.getAllProjectEnquiry = async (req, res) => {
           const startOfToday = moment().startOf('day').toDate();
           const endOfToday = moment().endOf('day').toDate();
           searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
+          delete searchQuery.IsEnabled;
+          if(searchQuery.EnquiryType===""){
+            delete searchQuery.EnquiryType 
+          }
         }
   if (startDate && endDate) {
     searchQuery.EnquiryDate = {
