@@ -13,7 +13,8 @@ router.post('/sendOtp',validate(sendOtpSchema,'body'),authController.sendOtp)
 router.post('/verifyOtp',validate(verifyOtpSchema,'body'),authController.verifyOtp)
 router.post('/upload',handleFileUpload(uploadSingleFile.single('profilePic')),validate(imageSchema,'body'),authController.uploadSingleImage)
 router.post('/uploadMultipleFiles', handleFileUpload(uploadSingleFile.array('multipleFiles')),authController.uploadMultipleFile)
- 
+router.post('/emailSendForForget',authController.sendMailforFogetPassword)
+router.post('/reset/:userId/:token',authController.resetPassword)
  
 
 module.exports = router

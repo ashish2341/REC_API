@@ -12,6 +12,9 @@ const Developer = require("../../models/developerModel");
 const User = require("../../models/userModel");
 const moment = require('moment');
 const ProjectEnquiry = require("../../models/projectEnquiryModel");
+const config = require("../../helper/config");
+const jwt = require('jsonwebtoken')
+
 const propertyPopulateField = [
   { path: "Facing", model: Facings },
   { path: "PropertySubtype", model: PropertyWithSubTypes },
@@ -58,7 +61,7 @@ exports.getAllProperties = async (req, res) => {
     const search = req.query.search || '';
     const todayPropertyString = req.query.todayProperty || '';
     const typeBuilder = req.query.type || '';
-
+    const typeAdmin = req.query.type || '';
     const searchQuery = {
       IsDeleted: false,
       IsEnabled: true,
@@ -76,9 +79,16 @@ exports.getAllProperties = async (req, res) => {
       delete searchQuery.IsEnabled
     }
 
+    const token = req.header('Authorization').replace('Bearer ', '')
+    const data = jwt.verify(token, config.JWT_KEY)
+
     if(typeBuilder ==='builder'){
-      searchQuery.Builder = { $exists: true, $ne: null }
+      searchQuery.CreatedBy = { $ne:new ObjectId(data._id)}
       delete searchQuery.IsEnabled 
+    }
+    if(typeAdmin ==='Admin'){
+      searchQuery.CreatedBy = new ObjectId(data._id)
+      delete searchQuery.IsEnabled  
     }
     const count = await Properties.countDocuments(searchQuery);
     const totalPages = Math.ceil(count / limit);
@@ -588,13 +598,17 @@ exports.getDataForAdmin = async (req, res) => {
       IsDeleted: false,
       CreatedDate: { $gte: startOfToday, $lt: endOfToday }
     });
-    const TotalBuilderProperty = await Properties.find({ 
+    // const TotalBuilderProperty = await Properties.find({ 
+    //   IsDeleted: false,
+    //   Builder: { $exists: true, $ne: null }
+
+    // })
+
+    const TotalAdminProperty = await Properties.find({ 
       IsDeleted: false,
-      Builder: { $exists: true, $ne: null }
+      CreatedBy: new ObjectId(req.user._id)
 
     })
-
-    const TotalAdminProperty = TotalProperty.length -TotalBuilderProperty.length
     
    
     const TotalEnquiry = await ProjectEnquiry.find({ IsDeleted: false })
@@ -617,8 +631,8 @@ exports.getDataForAdmin = async (req, res) => {
       todayAddProperty: TodayAddProperty.length,
       totalBuilder: TotalBuilder.length,
       todayAddBuilder: TodayAddBuilder.length,
-      totalBuilderProperty: TotalBuilderProperty.length,
-      TotalAdminProperty:TotalAdminProperty,
+      totalBuilderProperty:TotalProperty.length- TotalAdminProperty.length,
+      TotalAdminProperty:TotalAdminProperty.length,
       totalEnquiry: TotalEnquiry.length,
       todayEnquiry: TodayEnquiry.length,
       totalEnquiryProperty: TotalEnquiryProperty.length,
