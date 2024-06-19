@@ -8,7 +8,8 @@ const getRecordsSchema = Joi.object({
     todayProperty: Joi.string().allow(''),
     todayUser: Joi.string().allow(''),
     type: Joi.string().allow(''),
-    todayPropertyString:Joi.string().allow('')
+    todayPropertyString:Joi.string().allow(''),
+    typeAdmin:Joi.string().allow('')
   });
   const idSchema = Joi.object({
     id: Joi.string().required().length(24).error(new Error('Id is inValid')),
