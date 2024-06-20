@@ -73,8 +73,8 @@ exports.getAllProperties = async (req, res) => {
     };
     
     if(todayPropertyString == 'yes'){
-      const startOfToday = moment().startOf('day').toDate();
-      const endOfToday = moment().endOf('day').toDate();
+      const startOfToday = moment().utc().startOf('day').toDate();
+      const endOfToday = moment().utc().endOf('day').toDate();
       searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
       delete searchQuery.IsEnabled
     }
@@ -539,8 +539,8 @@ exports.getPropertiesByUserId = async (req, res) => {
     }
     
     if(todayPropertyString == 'yes'){
-      const startOfToday = moment().startOf('day').toDate();
-      const endOfToday = moment().endOf('day').toDate();
+      const startOfToday = moment().utc().startOf('day').toDate();
+      const endOfToday = moment().utc().endOf('day').toDate();
       searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
     }
     let sortOptions = { CreatedDate: -1 };
@@ -576,8 +576,8 @@ exports.getPropertiesByUserId = async (req, res) => {
 exports.getDataForAdmin = async (req, res) => {
   try {
 
-    const startOfToday = moment().startOf('day').toDate();
-    const endOfToday = moment().endOf('day').toDate();
+    const startOfToday = moment().utc().startOf('day').toDate();
+    const endOfToday = moment().utc().endOf('day').toDate();
 
     const TotalUser = await User.find({ IsDeleted: false })
     const TodayUsers = await User.find({
@@ -654,8 +654,8 @@ exports.getDataForAdmin = async (req, res) => {
 
 exports.getDataForBuilder = async (req, res) => {
   try {
-    const startOfToday = moment().startOf('day').toDate();
-    const endOfToday = moment().endOf('day').toDate();
+    const startOfToday = moment().utc().startOf('day').toDate();
+    const endOfToday = moment().utc().endOf('day').toDate();
     const developer  = await Developer.findOne({UserId:req.user._id})
     if (req.user.roles?.includes('Developer')) {
       TotalPropertyBuilder = await Properties.countDocuments({ Builder:new ObjectId(developer?._id), IsDeleted: false })

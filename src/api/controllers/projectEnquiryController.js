@@ -57,8 +57,8 @@ exports.getAllProjectEnquiry = async (req, res) => {
   }
   
  if(todayEnquiryString == 'yes'){
-          const startOfToday = moment().startOf('day').toDate();
-          const endOfToday = moment().endOf('day').toDate();
+          const startOfToday = moment().utc().startOf('day').toDate();
+          const endOfToday = moment().utc().endOf('day').toDate();
           searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
           delete searchQuery.IsEnabled;
           if(searchQuery.EnquiryType===""){
@@ -187,8 +187,8 @@ exports.getEnquiryByDeveloperId = async (req, res) => {
       ]
     };
     if(todayEnquiryString == 'yes'){
-      const startOfToday = moment().startOf('day').toDate();
-      const endOfToday = moment().endOf('day').toDate();
+      const startOfToday = moment().utc().startOf('day').toDate();
+      const endOfToday = moment().utc().endOf('day').toDate();
       searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
     }
 

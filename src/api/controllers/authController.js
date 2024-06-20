@@ -20,6 +20,10 @@ exports.register = async (req, res) => {
      if(!roleId){
       return res.status(constants.status_code.header.ok).send({ statusCode: 200, error: "Role is not exist in DB",success:false });
      }
+     const checklogin = await Login.findOne({Mobile:req.body.Mobile})
+     if(checklogin){
+      return res.status(constants.status_code.header.ok).send({ statusCode: 200, error: "Mobile is already Exist",success:false });
+     }
     const user = new User({...restBody,Roles:[roleId._id]});
  
     await user.save();
@@ -174,7 +178,7 @@ exports.sendMailforFogetPassword = async(req,res) => {
         }).save();
     }
 
-    const link = `localhost:3000/password-reset/${user._id}/${token.Token}`;
+    const link = `http://localhost:3000/forgetPassword/${user._id}/${token.Token}`
     await sendEmail(user.EmailId, "Password reset", link);
    
     return res.status(200).json({ message: 'password reset link sent to your email account',success:true });

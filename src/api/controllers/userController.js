@@ -26,8 +26,8 @@ exports.getAllUser = async (req, res) => {
         };
       
         if(todayUserString == 'yes'){
-                 const startOfToday = moment().startOf('day').toDate();
-                 const endOfToday = moment().endOf('day').toDate();
+                 const startOfToday = moment().utc().startOf('day').toDate();
+                 const endOfToday = moment().utc().endOf('day').toDate();
                  searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
                }
         const users = await User.find(searchQuery)
