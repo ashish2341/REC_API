@@ -12,6 +12,9 @@ const Developer = require("../../models/developerModel");
 const User = require("../../models/userModel");
 const moment = require('moment');
 const ProjectEnquiry = require("../../models/projectEnquiryModel");
+const config = require("../../helper/config");
+const jwt = require('jsonwebtoken')
+
 const propertyPopulateField = [
   { path: "Facing", model: Facings },
   { path: "PropertySubtype", model: PropertyWithSubTypes },
@@ -58,7 +61,7 @@ exports.getAllProperties = async (req, res) => {
     const search = req.query.search || '';
     const todayPropertyString = req.query.todayProperty || '';
     const typeBuilder = req.query.type || '';
-
+    const typeAdmin = req.query.type || '';
     const searchQuery = {
       IsDeleted: false,
       IsEnabled: true,
@@ -70,19 +73,29 @@ exports.getAllProperties = async (req, res) => {
     };
     
     if(todayPropertyString == 'yes'){
-      const startOfToday = moment().startOf('day').toDate();
-      const endOfToday = moment().endOf('day').toDate();
+      const startOfToday = moment().utc().startOf('day').toDate();
+      const endOfToday = moment().utc().endOf('day').toDate();
       searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
+      delete searchQuery.IsEnabled
     }
 
+    const token = req.header('Authorization').replace('Bearer ', '')
+    const data = jwt.verify(token, config.JWT_KEY)
+
     if(typeBuilder ==='builder'){
-      searchQuery.Builder = { $exists: true, $ne: null }
+      searchQuery.CreatedBy = { $ne:new ObjectId(data._id)}
+      delete searchQuery.IsEnabled 
+    }
+    if(typeAdmin ==='Admin'){
+      searchQuery.CreatedBy = new ObjectId(data._id)
+      delete searchQuery.IsEnabled  
     }
     const count = await Properties.countDocuments(searchQuery);
     const totalPages = Math.ceil(count / limit);
     const currentPage = Math.min(Math.max(page, 1), totalPages);
     const skip = (currentPage - 1) * limit;
     const properties = await Properties.find(searchQuery).populate(propertyPopulateField)
+      .sort({ CreatedDate: -1 }) 
       .skip(skip<0 ? 1 : skip)
       .limit(limit);
     return res.status(constants.status_code.header.ok).send({
@@ -199,7 +212,7 @@ exports.getPropertiesByDirections = async (req, res) => {
 exports.getPopularProperties = async (req, res) => {
   try {
     const query = { IsDeleted: false, IsFeatured: true, IsEnabled: true }
-    const properties = await Properties.find(query);
+    const properties = await Properties.find(query).populate(propertyPopulateField);
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
       data: properties,
@@ -408,7 +421,7 @@ exports.getSimilarProperties = async (req, res) => {
       'TotalPrice.MaxValue': { $lte: maxPrice},
       Area: property.Area, 
         _id: { $ne: property._id }
-    });
+    }).populate(propertyPopulateField);
   
     const count =  properties.length;
    
@@ -463,9 +476,13 @@ exports.getPropertiesForReview = async (req, res) => {
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || '';
     const searchQuery = {
       IsDeleted: false,
-      IsEnabled:false
+      IsEnabled:false,
+      $or: [
+        { Title: { $regex: search, $options: 'i' } },
+      ]
     };
     let sortOptions = {CreatedDate:-1};
    
@@ -506,7 +523,7 @@ exports.getPropertiesByUserId = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || '';
     const isEnable = req.query.isEnable; 
-
+    const todayPropertyString = req.query.todayPropertyString || '';
     const searchQuery = {
       Builder:new ObjectId(developer?._id),
       IsDeleted: false,
@@ -519,6 +536,12 @@ exports.getPropertiesByUserId = async (req, res) => {
    
     if (isEnable === 'true' || isEnable === 'false') {
       searchQuery.IsEnabled = isEnable;
+    }
+    
+    if(todayPropertyString == 'yes'){
+      const startOfToday = moment().utc().startOf('day').toDate();
+      const endOfToday = moment().utc().endOf('day').toDate();
+      searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
     }
     let sortOptions = { CreatedDate: -1 };
 
@@ -553,8 +576,8 @@ exports.getPropertiesByUserId = async (req, res) => {
 exports.getDataForAdmin = async (req, res) => {
   try {
 
-    const startOfToday = moment().startOf('day').toDate();
-    const endOfToday = moment().endOf('day').toDate();
+    const startOfToday = moment().utc().startOf('day').toDate();
+    const endOfToday = moment().utc().endOf('day').toDate();
 
     const TotalUser = await User.find({ IsDeleted: false })
     const TodayUsers = await User.find({
@@ -575,11 +598,18 @@ exports.getDataForAdmin = async (req, res) => {
       IsDeleted: false,
       CreatedDate: { $gte: startOfToday, $lt: endOfToday }
     });
-    const TotalBuilderProperty = await Properties.find({ 
+    // const TotalBuilderProperty = await Properties.find({ 
+    //   IsDeleted: false,
+    //   Builder: { $exists: true, $ne: null }
+
+    // })
+
+    const TotalAdminProperty = await Properties.find({ 
       IsDeleted: false,
-      Builder: { $exists: true, $ne: null }
+      CreatedBy: new ObjectId(req.user._id)
 
     })
+    
    
     const TotalEnquiry = await ProjectEnquiry.find({ IsDeleted: false })
     const TodayEnquiry = await ProjectEnquiry.find({
@@ -589,7 +619,7 @@ exports.getDataForAdmin = async (req, res) => {
     const TotalEnquiryProperty = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Property" })
     const TotalEnquiryAstrology = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Astrology" })
     const TotalEnquiryContactUs = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "ContactUs" })
-    
+    const TotalEnquiryProject = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Project" })
 
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
@@ -601,12 +631,14 @@ exports.getDataForAdmin = async (req, res) => {
       todayAddProperty: TodayAddProperty.length,
       totalBuilder: TotalBuilder.length,
       todayAddBuilder: TodayAddBuilder.length,
-      totalBuilderProperty: TotalBuilderProperty.length,
+      totalBuilderProperty:TotalProperty.length- TotalAdminProperty.length,
+      TotalAdminProperty:TotalAdminProperty.length,
       totalEnquiry: TotalEnquiry.length,
       todayEnquiry: TodayEnquiry.length,
       totalEnquiryProperty: TotalEnquiryProperty.length,
       totalEnquiryAstrology: TotalEnquiryAstrology.length,
       totalEnquiryContactUs: TotalEnquiryContactUs.length,
+      totalEnquiryProject:TotalEnquiryProject.length,
       success: true
     });
 
@@ -622,15 +654,16 @@ exports.getDataForAdmin = async (req, res) => {
 
 exports.getDataForBuilder = async (req, res) => {
   try {
-    const startOfToday = moment().startOf('day').toDate();
-    const endOfToday = moment().endOf('day').toDate();
-
+    const startOfToday = moment().utc().startOf('day').toDate();
+    const endOfToday = moment().utc().endOf('day').toDate();
+    const developer  = await Developer.findOne({UserId:req.user._id})
     if (req.user.roles?.includes('Developer')) {
-      TotalPropertyBuilder = await Properties.countDocuments({ CreatedBy: req.user._id, IsDeleted: false })
-      UnderReviewProperty = await Properties.countDocuments({ IsEnabled: false, IsDeleted: false, CreatedBy: req.user._id, })
-      ApprovedProperty = await Properties.countDocuments({ IsEnabled: true, IsDeleted: false, CreatedBy: req.user._id, })
+      TotalPropertyBuilder = await Properties.countDocuments({ Builder:new ObjectId(developer?._id), IsDeleted: false })
+      UnderReviewProperty = await Properties.countDocuments({ IsEnabled: false, IsDeleted: false, Builder:new ObjectId(developer?._id), })
+      ApprovedProperty = await Properties.countDocuments({ IsEnabled: true, IsDeleted: false, Builder:new ObjectId(developer?._id), })
       TodayAddProperty = await Properties.countDocuments({
         IsDeleted: false,
+        Builder:new ObjectId(developer?._id),
         CreatedDate: { $gte: startOfToday, $lt: endOfToday }
       });
     }
@@ -655,6 +688,9 @@ exports.getDataForBuilder = async (req, res) => {
     const TotalEnquiryContactUs = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "ContactUs" , $or: [
       { "AllowedUser.UserId": req.user._id },
     ]})
+    const TotalEnquiryProject = await ProjectEnquiry.find({ IsDeleted: false, EnquiryType: "Project" , $or: [
+      { "AllowedUser.UserId": req.user._id },
+    ]})
    
     return res.status(constants.status_code.header.ok).send({
       statusCode: 200,
@@ -667,6 +703,7 @@ exports.getDataForBuilder = async (req, res) => {
       totalEnquiryProperty: TotalEnquiryProperty.length,
       totalEnquiryAstrology: TotalEnquiryAstrology.length,
       totalEnquiryContactUs: TotalEnquiryContactUs.length,
+      totalEnquiryProject:TotalEnquiryProject.length,
       success: true
     });
 

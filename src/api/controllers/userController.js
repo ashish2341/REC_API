@@ -26,8 +26,8 @@ exports.getAllUser = async (req, res) => {
         };
       
         if(todayUserString == 'yes'){
-                 const startOfToday = moment().startOf('day').toDate();
-                 const endOfToday = moment().endOf('day').toDate();
+                 const startOfToday = moment().utc().startOf('day').toDate();
+                 const endOfToday = moment().utc().endOf('day').toDate();
                  searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
                }
         const users = await User.find(searchQuery)
@@ -127,7 +127,7 @@ exports.updatePassword = async (req, res) => {
 
         const decoded = jwt.verify(req.token, config.JWT_KEY);
         
-        const login = await Login.findById(decoded._id);
+        const login = await Login.findOne({UserId:decoded._id});
   
     const isMatch = await bcrypt.compare(OldPassword, login.Password);
     if (!isMatch) {

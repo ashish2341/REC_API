@@ -23,7 +23,7 @@ app.use(cors());
 app.use("/v1", allRouters);
 
 
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 
 

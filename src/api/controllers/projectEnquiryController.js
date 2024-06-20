@@ -57,9 +57,13 @@ exports.getAllProjectEnquiry = async (req, res) => {
   }
   
  if(todayEnquiryString == 'yes'){
-          const startOfToday = moment().startOf('day').toDate();
-          const endOfToday = moment().endOf('day').toDate();
+          const startOfToday = moment().utc().startOf('day').toDate();
+          const endOfToday = moment().utc().endOf('day').toDate();
           searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
+          delete searchQuery.IsEnabled;
+          if(searchQuery.EnquiryType===""){
+            delete searchQuery.EnquiryType 
+          }
         }
   if (startDate && endDate) {
     searchQuery.EnquiryDate = {
@@ -174,12 +178,23 @@ exports.getEnquiryByDeveloperId = async (req, res) => {
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const todayEnquiryString = req.query.todayEnquiryString || '';
+    const typeEnquiry = req.query.type || '';
     const searchQuery = {
       IsDeleted: false,
       $or: [
         { "AllowedUser.UserId": req.user._id },
       ]
     };
+    if(todayEnquiryString == 'yes'){
+      const startOfToday = moment().utc().startOf('day').toDate();
+      const endOfToday = moment().utc().endOf('day').toDate();
+      searchQuery.CreatedDate = { $gte: startOfToday, $lt: endOfToday }
+    }
+
+    if(typeEnquiry){
+      searchQuery.EnquiryType = typeEnquiry;
+    }
     let sortOptions = { CreatedDate: -1 };
 
     const count = await ProjectEnquiry.countDocuments(searchQuery);

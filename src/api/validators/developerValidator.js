@@ -76,7 +76,7 @@ const UpdateDeveloperSchema = Joi.object({
         LinkedIn: Joi.string().allow(''),
         Instagram: Joi.string().allow('')
     }),
-    Logo: Joi.string().allow(''),
+    Logo: Joi.string().required(),
     Area:Joi.string().pattern(/^[0-9a-fA-F]{24}$/),
     Mobile: Joi.number().integer().min(1000000000).max(9999999999).messages({
         'number.base': 'Mobile number must be a number',
@@ -91,14 +91,14 @@ const UpdateDeveloperSchema = Joi.object({
         'number.min': 'Mobile number must be at least 10 digits long',
         'number.max': 'Mobile number cannot be longer than 10 digits'
     }),
-    Description:Joi.string(),
+    Description:Joi.string().allow(""),
     EstablishDate:Joi.date(),
-    Images: Joi.array().items(Joi.string()),
+    Images: Joi.array().items(Joi.string()).required(),
     Documents: Joi.array().items(Joi.object({
         Type: Joi.string(),
         DocName: Joi.string(),
-        URL: Joi.string(),
-        Description: Joi.string(),  
+        URL: Joi.string().required(),
+        Description: Joi.string()
     })),
     DetailNote: Joi.string().allow(''),
     BranchOffices: Joi.array().items(Joi.object({
@@ -113,11 +113,11 @@ const UpdateDeveloperSchema = Joi.object({
             'string.pattern.base': 'Whatsapp must be a 10-digit number'
         }),
     
-        Area: Joi.string(),
-        City: Joi.string(),
-        State: Joi.string(),
-        Country: Joi.string(),
-        PinCode: Joi.string().pattern(/^[0-9]{6}$/).messages({
+        Area: Joi.string().allow(""),
+        City: Joi.string().allow(""),
+        State: Joi.string().allow(""),
+        Country: Joi.string().allow(""),
+        PinCode: Joi.string().pattern(/^[0-9]{6}$/).allow("").messages({
             'string.pattern.base': 'PinCode must be a 10-digit number'
         }),
         _id: Joi.string(),
@@ -130,14 +130,13 @@ const UpdateDeveloperSchema = Joi.object({
             Phone: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
                 'string.pattern.base': 'Phone number must be a 10-digit number'
             }),
-            Designation: Joi.string(),
+            Designation: Joi.string().allow(""),
             _id: Joi.string()
         }))
     })),
    
     
 });
-
 
   
 
