@@ -168,8 +168,7 @@ exports.sendMailforFogetPassword = async(req,res) => {
   try {
     const user = await User.findOne({ EmailId: req.body.email });
     if (!user)
-        return res.status(400).send("user with given email doesn't exist");
-
+        return res.status(200).json({ message: 'user with given email does not exist',success:false });
     let token = await Token.findOne({ UserId: user._id });
     if (!token) {
         token = await new Token({
@@ -182,7 +181,6 @@ exports.sendMailforFogetPassword = async(req,res) => {
     await sendEmail(user.EmailId, "Password reset", link);
    
     return res.status(200).json({ message: 'password reset link sent to your email account',success:true });
-    // res.send("password reset link sent to your email account");
 } catch (error) {
     return res.status(500).json({ error: error.message, success: false })
 }
@@ -193,22 +191,21 @@ exports.resetPassword = async(req,res) => {
   try {
     const user = await User.findById(req.params.userId);
     const login = await Login.findOne({UserId:req.params.userId});
-    if (!user) return res.status(400).send("invalid link or expired");
-
+    if (!user) return res.status(400).json({ message: 'invalid link or expired',success:false });
     const token = await Token.findOne({
         UserId: user._id,
         Token: req.params.token,
     });
-    if (!token) return res.status(400).send("Invalid link or expired");
+    if (!token) return res.status(400).json({ message: 'invalid link or expired',success:false });
     login.Password = req.body.password;
     await login.save();
     await Token.findByIdAndDelete(token._id)
     return res.status(200).json({ message: 'password reset sucessfully.',success:true });
 } catch (error) {
     return res.status(500).json({ error: error.message, success: false })
-    console.log(error);
 }
 }
+
 
 
 
