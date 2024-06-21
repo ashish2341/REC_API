@@ -13,7 +13,7 @@ const sendEmail = async (email, subject, text) => {
             },
         });
     
-    const htmlContent = `Hi,Here is your link to reset your password<br/><a href="#">${text}</a>`;
+        const htmlContent = `Hi, Here is your <a href="${text}">Link</a> to reset your password`;
         await transporter.sendMail({
             from: "contacthospitaldoctor@gmail.com",
             to: email,

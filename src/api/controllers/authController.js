@@ -49,8 +49,9 @@ exports.login = async (req, res) => {
     const { Mobile, Password } = req.body;
    
     const user = await Login.findOne({ Mobile }).populate("UserId");
+    const UserCheck = await User.findOne({ Mobile })
     // Check if user exists and password matches
-    if (!user || !(await bcrypt.compare(Password, user.Password))) {
+    if (!UserCheck ||!user || !(await bcrypt.compare(Password, user.Password))) {
       return res.status(401).json({ success:false, error: 'Invalid Mobile or Password' });
     }
 
@@ -177,7 +178,7 @@ exports.sendMailforFogetPassword = async(req,res) => {
         }).save();
     }
 
-    const link = `http://localhost:3000/forgetPassword/${user._id}/${token.Token}`
+    const link = `https://recui.netlify.app/forgetPassword/${user._id}/${token.Token}`
     await sendEmail(user.EmailId, "Password reset", link);
    
     return res.status(200).json({ message: 'password reset link sent to your email account',success:true });

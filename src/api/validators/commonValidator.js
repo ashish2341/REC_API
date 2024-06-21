@@ -12,7 +12,7 @@ const getRecordsSchema = Joi.object({
     typeAdmin:Joi.string().allow('')
   });
   const idSchema = Joi.object({
-    id: Joi.string().required().length(24).error(new Error('Id is inValid')),
+    id: Joi.string().required().length(24).error(new Error('Id is InValid')),
    
   });
 module.exports = {getRecordsSchema,idSchema}
