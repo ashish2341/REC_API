@@ -178,7 +178,7 @@ exports.sendMailforFogetPassword = async(req,res) => {
         }).save();
     }
 
-    const link = `https://recui.netlify.app/forgetPassword/${user._id}/${token.Token}`
+    const link = `http://recadmin-001-site2.etempurl.com/forgetPassword/${user._id}/${token.Token}`
     await sendEmail(user.EmailId, "Password reset", link);
    
     return res.status(200).json({ message: 'password reset link sent to your email account',success:true });
