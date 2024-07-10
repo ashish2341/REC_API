@@ -6,6 +6,7 @@ const User = require("../../models/userModel");
 const Login = require("../../models/loginModel");
 const Property = require("../../models/propertiesModel");
 const moment = require('moment');
+const { Soils, Facings, PropertyWithSubTypes, Preferences, PropertyStatus, OwnershipTypes, Area,Furnishedes, BuiltAreaTypes, BhkType, Banks, PossessionStatus } = require("../../models/masterModel");
 
 exports.addDeveloper = async (req, res) => {
   try {
@@ -129,6 +130,22 @@ exports.getAllDeveloper = async (req, res) => {
 exports.getDeveloperById = async (req, res) => {
   try {
     const { id } = req.params;
+    const propertyPopulateField = [
+      { path: "Facing", model: Facings },
+      { path: "PropertySubtype", model: PropertyWithSubTypes },
+      { path: "Soil", model: Soils },
+      { path: "Preferences", model: Preferences },
+      { path: "PropertyStatus", model: PropertyStatus },
+      { path: "OwnershipType", model: OwnershipTypes },
+      { path: "Area", model: Area },
+      { path: "Furnished", model: Furnishedes },
+      { path: "BuiltAreaType", model: BuiltAreaTypes },
+      { path: "BhkType", model: BhkType },
+      { path: "LoanDetails.ByBank", model: Banks },
+      { path: "PosessionStatus", model: PossessionStatus },
+      {path:"Builder",model:Developer},
+      {path:"CreatedBy",model:User},
+    ]
     const aggregationPipeline = [
       { $match: { _id: new ObjectId(id), IsDeleted: false,
         IsEnabled: true } },
@@ -163,10 +180,13 @@ exports.getDeveloperById = async (req, res) => {
    
     const [developer] = await Developer.aggregate(aggregationPipeline);
     await Developer.populate(developer, { path: 'Area' });
-
     if (!developer) {
       return res.status(404).json({ message: 'Developer not found' });
     }
+    const populatedProperties = await Property.find({Builder: new ObjectId(id)}).populate(propertyPopulateField);
+    developer.properties = populatedProperties;
+
+    
 
     return res.status(200).json({
       statusCode: 200,
