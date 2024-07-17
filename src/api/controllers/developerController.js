@@ -146,35 +146,24 @@ exports.getDeveloperById = async (req, res) => {
       {path:"Builder",model:Developer},
       {path:"CreatedBy",model:User},
     ]
+   
     const aggregationPipeline = [
-      { $match: { _id: new ObjectId(id), IsDeleted: false,
-        IsEnabled: true } },
+      { $match: { _id: new ObjectId(id), IsDeleted: false, IsEnabled: true } },
       {
         $lookup: {
           from: 'properties',
-          localField: '_id',
-          foreignField: 'Builder',
+          let: { builderId: '$_id' },
+          pipeline: [
+            { $match: { $expr: { $and: [
+              { $eq: ['$Builder', '$$builderId'] },
+              { $eq: ['$IsDeleted', false] },
+              { $eq: ['$IsEnabled', true] },
+              { $eq: ['$IsFeatured', true] }
+            ]}}}
+          ],
           as: 'properties'
         }
-        },
-        {
-          $addFields: {
-            properties: {
-              $filter: {
-                input: "$properties",
-                as: "property",
-                cond: {
-                  $and: [
-                    { $eq: ["$$property.IsDeleted", false] },
-                    { $eq: ["$$property.IsEnabled", true] },
-                    { $eq: ["$$property.IsFeatured", true] }
-                  ]
-                }
-              }
-            }
-          }
-        }
-        
+      }
     ];
 
    
