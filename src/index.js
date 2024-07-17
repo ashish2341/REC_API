@@ -17,7 +17,13 @@ connectDB().catch(err => {
 
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
+// const corsOptions = {
+//   origin: 'https://www.therec.co.in',
+//   optionsSuccessStatus: 200 
+// }
+// app.use(cors(corsOptions));
 app.use(cors());
+app.options("*", cors());
 
 //routes
 app.use("/v1", allRouters);
