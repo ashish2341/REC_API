@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-const sendEmail = async (email, subject, text) => {
+const sendEmail = async (email, subject, htmlContent) => {
     try {
         const transporter = nodemailer.createTransport({
             host: "contacthospitaldoctor@gmail.com",
@@ -13,7 +13,7 @@ const sendEmail = async (email, subject, text) => {
             },
         });
     
-        const htmlContent = `Hi, Here is your <a href="${text}">Link</a> to reset your password`;
+        
         await transporter.sendMail({
             from: "contacthospitaldoctor@gmail.com",
             to: email,
