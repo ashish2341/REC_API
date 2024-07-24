@@ -11,8 +11,7 @@ const projectEnquirySchema = new mongoose.Schema({
         type: String,
     },
     Message: {
-        type: String,
-        required: true
+        type: String
     },
     EnquiryDate:{
         type:Date },
