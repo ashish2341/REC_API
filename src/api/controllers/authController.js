@@ -38,6 +38,19 @@ exports.register = async (req, res) => {
          const developerObj = new Developer({Name:req.body.FirstName,UserId:user._id})
          await developerObj.save()
     }
+    
+   
+    const htmlContent = `
+    <p>Hi ${req.body.FirstName},</p>
+    <p>Your account has been created successfully. Here are your login credentials:</p>
+    <p>
+      Mobile: <b> ${req.body.Mobile} </b> <br>
+      Password:  <b>${Password} </b>
+    </p>
+  `;
+  
+   
+   await sendEmail(req.body.EmailId, "Account Creatiion", htmlContent);
     return res.status(constants.status_code.header.ok).send({ message: constants.auth.register_success,success:true});
   } catch (error) {
     return res.status(constants.status_code.header.server_error).send({ error: errorResponse(error),success:false });
@@ -177,9 +190,10 @@ exports.sendMailforFogetPassword = async(req,res) => {
             Token: crypto.randomBytes(32).toString("hex"),
         }).save();
     }
-
-    const link = `https://www.therec.in/forgetPassword/${user._id}/${token.Token}`
-    await sendEmail(user.EmailId, "Password reset", link);
+     const link = `https://www.therec.in/forgetPassword/${user._id}/${token.Token}`
+    const htmlContent = `Hi, Here is your <a href="${link}">Link</a> to reset your password`;
+    
+    await sendEmail(user.EmailId, "Password reset", htmlContent);
    
     return res.status(200).json({ message: 'password reset link sent to your email account',success:true });
 } catch (error) {
