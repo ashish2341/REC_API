@@ -4,7 +4,7 @@ const projectEnquiryValidationSchema = Joi.object({
     Name: Joi.string().required(),
     AllowedUser:Joi.array().items(Joi.object({UserId:Joi.string(),Status:Joi.boolean()})),
     Email: Joi.string().email(),
-    Message: Joi.string().required(),
+    Message: Joi.string(),
     MolileNumber: Joi.string().required(),
     PropertyId: Joi.string(),
     DeveloperId: Joi.string(),
