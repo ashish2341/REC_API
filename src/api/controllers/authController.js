@@ -50,7 +50,7 @@ exports.register = async (req, res) => {
   `;
   
    
-   await sendEmail(req.body.EmailId, "Account Creatiion", htmlContent);
+   await sendEmail(req.body.EmailId, "Account Creation", htmlContent);
     return res.status(constants.status_code.header.ok).send({ message: constants.auth.register_success,success:true});
   } catch (error) {
     return res.status(constants.status_code.header.server_error).send({ error: errorResponse(error),success:false });
